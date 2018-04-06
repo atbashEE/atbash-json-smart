@@ -18,12 +18,11 @@ package be.atbash.json.parser;
 /**
  * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
  */
-// FIXME REname
-public interface JSONEncoder {
+public interface CustomJSONEncoder {
 
     Object parse(Object data);
 
-    class NOPJSONEncoder implements JSONEncoder {
+    class NOPJSONEncoderCustom implements CustomJSONEncoder {
 
         @Override
         public Object parse(Object data) {

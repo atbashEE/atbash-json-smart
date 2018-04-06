@@ -45,114 +45,114 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONReader {
-    private final ConcurrentHashMap<Type, Mapper<?>> cache;
+    private final ConcurrentHashMap<Type, JSONEncoder<?>> cache;
 
-    public Mapper<JSONAware> DEFAULT;
-    public Mapper<JSONAware> DEFAULT_ORDERED;
+    public JSONEncoder<JSONAware> DEFAULT;
+    public JSONEncoder<JSONAware> DEFAULT_ORDERED;
 
     public JSONReader() {
         cache = new ConcurrentHashMap<>(100);
 
-        cache.put(Date.class, BeansMapper.MAPPER_DATE);
+        cache.put(Date.class, BeansJSONEncoder.JSONEncoderDate);
 
-        cache.put(int[].class, ArraysMapper.MAPPER_PRIM_INT);
-        cache.put(Integer[].class, ArraysMapper.MAPPER_INT);
+        cache.put(int[].class, ArraysJSONEncoder.JSONEncoderPrimInt);
+        cache.put(Integer[].class, ArraysJSONEncoder.JSONEncoderInt);
 
-        cache.put(short[].class, ArraysMapper.MAPPER_PRIM_INT);
-        cache.put(Short[].class, ArraysMapper.MAPPER_INT);
+        cache.put(short[].class, ArraysJSONEncoder.JSONEncoderPrimInt);
+        cache.put(Short[].class, ArraysJSONEncoder.JSONEncoderInt);
 
-        cache.put(long[].class, ArraysMapper.MAPPER_PRIM_LONG);
-        cache.put(Long[].class, ArraysMapper.MAPPER_LONG);
+        cache.put(long[].class, ArraysJSONEncoder.JSONEncoderPrimLong);
+        cache.put(Long[].class, ArraysJSONEncoder.JSONEncoderLong);
 
-        cache.put(byte[].class, ArraysMapper.MAPPER_PRIM_BYTE);
-        cache.put(Byte[].class, ArraysMapper.MAPPER_BYTE);
+        cache.put(byte[].class, ArraysJSONEncoder.JSONEncoderPrimByte);
+        cache.put(Byte[].class, ArraysJSONEncoder.JSONEncoderByte);
 
-        cache.put(char[].class, ArraysMapper.MAPPER_PRIM_CHAR);
-        cache.put(Character[].class, ArraysMapper.MAPPER_CHAR);
+        cache.put(char[].class, ArraysJSONEncoder.JSONEncoderPrimChar);
+        cache.put(Character[].class, ArraysJSONEncoder.JSONEncoderChar);
 
-        cache.put(float[].class, ArraysMapper.MAPPER_PRIM_FLOAT);
-        cache.put(Float[].class, ArraysMapper.MAPPER_FLOAT);
+        cache.put(float[].class, ArraysJSONEncoder.JSONEncoderPrimFloat);
+        cache.put(Float[].class, ArraysJSONEncoder.JSONEncoderFloat);
 
-        cache.put(double[].class, ArraysMapper.MAPPER_PRIM_DOUBLE);
-        cache.put(Double[].class, ArraysMapper.MAPPER_DOUBLE);
+        cache.put(double[].class, ArraysJSONEncoder.JSONEncoderPrimDouble);
+        cache.put(Double[].class, ArraysJSONEncoder.JSONEncoderDouble);
 
-        cache.put(boolean[].class, ArraysMapper.MAPPER_PRIM_BOOL);
-        cache.put(Boolean[].class, ArraysMapper.MAPPER_BOOL);
+        cache.put(boolean[].class, ArraysJSONEncoder.JSONEncoderPrimBool);
+        cache.put(Boolean[].class, ArraysJSONEncoder.JSONEncoderBool);
 
-        this.DEFAULT = new DefaultMapper<>(this);
-        this.DEFAULT_ORDERED = new DefaultMapperOrdered(this);
+        this.DEFAULT = new DefaultJSONEncoder<>(this);
+        this.DEFAULT_ORDERED = new DefaultJSONEncoderOrdered(this);
 
         cache.put(JSONAware.class, this.DEFAULT);
         cache.put(JSONArray.class, this.DEFAULT);
         cache.put(JSONObject.class, this.DEFAULT);
     }
 
-    public <T> void registerReader(Class<T> type, Mapper<T> mapper) {
-        cache.put(type, mapper);
+    public <T> void registerReader(Class<T> type, JSONEncoder<T> JSONEncoder) {
+        cache.put(type, JSONEncoder);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Mapper<T> getMapper(Type type) {
+    public <T> JSONEncoder<T> getEncoder(Type type) {
         if (type instanceof ParameterizedType) {
-            return getMapper((ParameterizedType) type);
+            return getEncoder((ParameterizedType) type);
         }
-        return getMapper((Class<T>) type);
+        return getEncoder((Class<T>) type);
     }
 
     /**
-     * Get the corresponding mapper Class, or create it on first call
+     * Get the corresponding Encoder Class, or create it on first call
      *
      * @param type to be map
      */
-    public <T> Mapper<T> getMapper(Class<T> type) {
-        // look for cached Mapper
+    public <T> JSONEncoder<T> getEncoder(Class<T> type) {
+        // look for cached JSONEncoder
         @SuppressWarnings("unchecked")
-        Mapper<T> map = (Mapper<T>) cache.get(type);
-        if (map != null) {
-            return map;
+        JSONEncoder<T> encoder = (JSONEncoder<T>) cache.get(type);
+        if (encoder != null) {
+            return encoder;
         }
         /*
          * Special handle
          */
         if (type instanceof Class) {
             if (Map.class.isAssignableFrom(type)) {
-                map = new DefaultMapperCollection<>(this, type);
+                encoder = new DefaultJSONEncoderCollection<>(this, type);
             } else if (List.class.isAssignableFrom(type)) {
-                map = new DefaultMapperCollection<>(this, type);
+                encoder = new DefaultJSONEncoderCollection<>(this, type);
             }
-            if (map != null) {
-                cache.put(type, map);
-                return map;
+            if (encoder != null) {
+                cache.put(type, encoder);
+                return encoder;
             }
         }
 
         if (type.isArray()) {
-            map = new ArraysMapper.GenericMapper<>(this, type);
+            encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(this, type);
         } else if (List.class.isAssignableFrom(type)) {
-            map = new CollectionMapper.ListClass<>(this, type);
+            encoder = new CollectionMapper.ListClass<>(this, type);
         } else if (Map.class.isAssignableFrom(type)) {
-            map = new CollectionMapper.MapClass<>(this, type);
+            encoder = new CollectionMapper.MapClass<>(this, type);
         } else
         // use bean class
         {
 
             MappedBy mappedBy = type.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
-                if (!(mappedBy.mapper().equals(CustomMapper.NOPCustomMapper.class))) {
-                    map = ClassUtils.newInstance(mappedBy.mapper(), this);
+                if (!(mappedBy.decoder().equals(CustomJSONEncoder.NOPCustomJSONEncoder.class))) {
+                    encoder = ClassUtils.newInstance(mappedBy.decoder(), this);
                 }
             }
-            if (map == null) {
-                map = new BeansMapper.Bean<>(this, type);
+            if (encoder == null) {
+                encoder = new BeansJSONEncoder.Bean<>(this, type);
             }
         }
-        cache.putIfAbsent(type, map);
-        return map;
+        cache.putIfAbsent(type, encoder);
+        return encoder;
     }
 
     @SuppressWarnings("unchecked")
-    public <T> Mapper<T> getMapper(ParameterizedType type) {
-        Mapper<T> map = (Mapper<T>) cache.get(type);
+    public <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
+        JSONEncoder<T> map = (JSONEncoder<T>) cache.get(type);
         if (map != null) {
             return map;
         }

@@ -41,15 +41,15 @@ import java.util.Date;
 import java.util.HashMap;
 
 @SuppressWarnings("unchecked")
-public abstract class BeansMapper<T> extends Mapper<T> {
+public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
 
-    public BeansMapper(JSONReader base) {
+    public BeansJSONEncoder(JSONReader base) {
         super(base);
     }
 
     public abstract Object getValue(Object current, String key);
 
-    public static class Bean<T> extends Mapper<T> {
+    public static class Bean<T> extends JSONEncoder<T> {
         final Class<T> clz;
         final BeansAccess<T> ba;
         final HashMap<String, Accessor> index;
@@ -88,21 +88,21 @@ public abstract class BeansMapper<T> extends Mapper<T> {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
+        public JSONEncoder<?> startArray(String key) {
             Accessor nfo = index.get(key);
             if (nfo == null) {
                 throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
             }
-            return base.getMapper(nfo.getGenericType());
+            return base.getEncoder(nfo.getGenericType());
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
+        public JSONEncoder<?> startObject(String key) {
             Accessor f = index.get(key);
             if (f == null) {
                 throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
             }
-            return base.getMapper(f.getGenericType());
+            return base.getEncoder(f.getGenericType());
         }
 
         @Override
@@ -111,7 +111,7 @@ public abstract class BeansMapper<T> extends Mapper<T> {
         }
     }
 
-    public static Mapper<Date> MAPPER_DATE = new ArraysMapper<Date>(null) {
+    public static JSONEncoder<Date> JSONEncoderDate = new ArraysJSONEncoder<Date>(null) {
         @Override
         public Date convert(Object current) {
             return ConvertDate.convertToDate(current);

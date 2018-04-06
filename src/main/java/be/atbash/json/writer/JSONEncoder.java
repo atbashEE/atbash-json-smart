@@ -35,21 +35,22 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
- * Default datatype mapper use by Json-smart ton store data.
+ * Default datatype decoder use by Json-smart to store data.
+ * JSONEncoder creates from JSON an instance.
  *
  * @param <T>
  * @author uriel Chemouni
  */
 // Original name was JsonReaderI
-public abstract class Mapper<T> {
+public abstract class JSONEncoder<T> {
     public final JSONReader base;
 
     /**
-     * Reader can be link to the JsonReader Base
+     * Encoder is linked to a JsonReader.
      *
      * @param base
      */
-    public Mapper(JSONReader base) {
+    public JSONEncoder(JSONReader base) {
         this.base = base;
     }
 
@@ -58,7 +59,7 @@ public abstract class Mapper<T> {
     /**
      * called when json-smart parser meet an object key
      */
-    public Mapper<?> startObject(String key) throws IOException {
+    public JSONEncoder<?> startObject(String key) throws IOException {
         throw new RuntimeException(ERR_MSG + " startObject(String key) in " + this.getClass() + " key=" + key);
     }
 
@@ -67,7 +68,7 @@ public abstract class Mapper<T> {
      *
      * @param key the destination key name, or null.
      */
-    public Mapper<?> startArray(String key) throws IOException {
+    public JSONEncoder<?> startArray(String key) throws IOException {
         throw new RuntimeException(ERR_MSG + " startArray in " + this.getClass() + " key=" + key);
     }
 
@@ -112,7 +113,7 @@ public abstract class Mapper<T> {
     }
 
     /**
-     * Allow a mapper to converte a temprary structure to the final data format.
+     * Allow a decoder to converte a temprary structure to the final data format.
      * <p>
      * example: convert an List&lt;Integer&gt; to an int[]
      */

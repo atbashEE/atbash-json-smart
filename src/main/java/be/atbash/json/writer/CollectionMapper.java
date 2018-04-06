@@ -43,7 +43,7 @@ import java.util.Map;
 
 public class CollectionMapper {
 
-    public static class MapType<T> extends Mapper<T> {
+    public static class MapType<T> extends JSONEncoder<T> {
         final ParameterizedType type;
         final Class<?> rawClass;
         final Class<?> instance;
@@ -55,7 +55,7 @@ public class CollectionMapper {
         final Class<?> keyClass;
         final Class<?> valueClass;
 
-        Mapper<?> subMapper;
+        JSONEncoder<?> subJSONEncoder;
 
         public MapType(JSONReader base, ParameterizedType type) {
             super(base);
@@ -93,19 +93,19 @@ public class CollectionMapper {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(valueType);
+        public JSONEncoder<?> startArray(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(valueType);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(valueType);
+        public JSONEncoder<?> startObject(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(valueType);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
 
         @SuppressWarnings("unchecked")
@@ -127,12 +127,12 @@ public class CollectionMapper {
         }
     }
 
-    public static class MapClass<T> extends Mapper<T> {
+    public static class MapClass<T> extends JSONEncoder<T> {
         final Class<?> type;
         final Class<?> instance;
         final BeansAccess<?> ba;
 
-        Mapper<?> subMapper;
+        JSONEncoder<?> subJSONEncoder;
 
         public MapClass(JSONReader base, Class<?> type) {
             super(base);
@@ -151,12 +151,12 @@ public class CollectionMapper {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
+        public JSONEncoder<?> startArray(String key) {
             return base.DEFAULT; // _ARRAY
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
+        public JSONEncoder<?> startObject(String key) {
             return base.DEFAULT; // _MAP
         }
 
@@ -178,7 +178,7 @@ public class CollectionMapper {
         }
     }
 
-    public static class ListType<T> extends Mapper<T> {
+    public static class ListType<T> extends JSONEncoder<T> {
         final ParameterizedType type;
         final Class<?> rawClass;
         final Class<?> instance;
@@ -187,7 +187,7 @@ public class CollectionMapper {
         final Type valueType;
         final Class<?> valueClass;
 
-        Mapper<?> subMapper;
+        JSONEncoder<?> subJSONEncoder;
 
         public ListType(JSONReader base, ParameterizedType type) {
             super(base);
@@ -213,19 +213,19 @@ public class CollectionMapper {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(type.getActualTypeArguments()[0]);
+        public JSONEncoder<?> startArray(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(type.getActualTypeArguments()[0]);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(type.getActualTypeArguments()[0]);
+        public JSONEncoder<?> startObject(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(type.getActualTypeArguments()[0]);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
 
         @SuppressWarnings("unchecked")
@@ -235,12 +235,12 @@ public class CollectionMapper {
         }
     }
 
-    public static class ListClass<T> extends Mapper<T> {
+    public static class ListClass<T> extends JSONEncoder<T> {
         final Class<?> type;
         final Class<?> instance;
         final BeansAccess<?> ba;
 
-        Mapper<?> subMapper;
+        JSONEncoder<?> subJSONEncoder;
 
         public ListClass(JSONReader base, Class<?> clazz) {
             super(base);
@@ -259,12 +259,12 @@ public class CollectionMapper {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
+        public JSONEncoder<?> startArray(String key) {
             return base.DEFAULT;// _ARRAY;
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
+        public JSONEncoder<?> startObject(String key) {
             return base.DEFAULT;// _MAP;
         }
 

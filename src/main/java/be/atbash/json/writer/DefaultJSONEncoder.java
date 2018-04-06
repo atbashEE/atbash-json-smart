@@ -16,7 +16,7 @@
 package be.atbash.json.writer;
 
 /*
- *    Copyright 2011 JSON-SMART authors
+ *    Copyright 2011-2014 JSON-SMART authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,33 +33,42 @@ package be.atbash.json.writer;
 
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONAware;
+import be.atbash.json.JSONObject;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-
-public class DefaultMapperOrdered extends Mapper<JSONAware> {
-    protected DefaultMapperOrdered(JSONReader base) {
+/**
+ * Simple Reader Class for generic Map
+ *
+ * @param <T>
+ * @author uriel
+ */
+public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
+    protected DefaultJSONEncoder(JSONReader base) {
         super(base);
     }
 
     @Override
-    public Mapper<JSONAware> startObject(String key) {
-        return base.DEFAULT_ORDERED;
+    public JSONEncoder<JSONAware> startObject(String key) {
+        return base.DEFAULT;
     }
 
     @Override
-    public Mapper<JSONAware> startArray(String key) {
-        return base.DEFAULT_ORDERED;
-    }
-
-    @SuppressWarnings("unchecked")
-    public void setValue(Object current, String key, Object value) {
-        ((Map<String, Object>) current).put(key, value);
+    public JSONEncoder<JSONAware> startArray(String key) {
+        return base.DEFAULT;
     }
 
     @Override
     public Object createObject() {
-        return new LinkedHashMap<String, Object>();
+        return new JSONObject();
+    }
+
+    @Override
+    public Object createArray() {
+        return new JSONArray();
+    }
+
+    @Override
+    public void setValue(Object current, String key, Object value) {
+        ((JSONObject) current).put(key, value);
     }
 
     @Override
@@ -67,8 +76,4 @@ public class DefaultMapperOrdered extends Mapper<JSONAware> {
         ((JSONArray) current).add(value);
     }
 
-    @Override
-    public Object createArray() {
-        return new JSONArray();
-    }
 }

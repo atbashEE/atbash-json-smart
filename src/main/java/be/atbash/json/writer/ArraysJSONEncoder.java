@@ -35,8 +35,8 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArraysMapper<T> extends Mapper<T> {
-    public ArraysMapper(JSONReader base) {
+public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
+    public ArraysJSONEncoder(JSONReader base) {
         super(base);
     }
 
@@ -57,11 +57,11 @@ public class ArraysMapper<T> extends Mapper<T> {
         return (T) current;
     }
 
-    public static class GenericMapper<T> extends ArraysMapper<T> {
+    public static class GenericJSONEncoder<T> extends ArraysJSONEncoder<T> {
         final Class<?> componentType;
-        Mapper<?> subMapper;
+        JSONEncoder<?> subJSONEncoder;
 
-        public GenericMapper(JSONReader base, Class<T> type) {
+        public GenericJSONEncoder(JSONReader base, Class<T> type) {
             super(base);
             this.componentType = type.getComponentType();
         }
@@ -79,23 +79,23 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
 
         @Override
-        public Mapper<?> startArray(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(componentType);
+        public JSONEncoder<?> startArray(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(componentType);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
 
         @Override
-        public Mapper<?> startObject(String key) {
-            if (subMapper == null) {
-                subMapper = base.getMapper(componentType);
+        public JSONEncoder<?> startObject(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = base.getEncoder(componentType);
             }
-            return subMapper;
+            return subJSONEncoder;
         }
     }
 
-    public static Mapper<int[]> MAPPER_PRIM_INT = new ArraysMapper<int[]>(null) {
+    public static JSONEncoder<int[]> JSONEncoderPrimInt = new ArraysJSONEncoder<int[]>(null) {
         @Override
         public int[] convert(Object current) {
             int p = 0;
@@ -107,7 +107,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Integer[]> MAPPER_INT = new ArraysMapper<Integer[]>(null) {
+    public static JSONEncoder<Integer[]> JSONEncoderInt = new ArraysJSONEncoder<Integer[]>(null) {
         @Override
         public Integer[] convert(Object current) {
             int p = 0;
@@ -127,7 +127,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<short[]> MAPPER_PRIM_SHORT = new ArraysMapper<short[]>(null) {
+    public static JSONEncoder<short[]> JSONEncoderPrimShort = new ArraysJSONEncoder<short[]>(null) {
         @Override
         public short[] convert(Object current) {
             int p = 0;
@@ -139,7 +139,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Short[]> MAPPER_SHORT = new ArraysMapper<Short[]>(null) {
+    public static JSONEncoder<Short[]> JSONEncoderShort = new ArraysJSONEncoder<Short[]>(null) {
         @Override
         public Short[] convert(Object current) {
             int p = 0;
@@ -159,7 +159,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<byte[]> MAPPER_PRIM_BYTE = new ArraysMapper<byte[]>(null) {
+    public static JSONEncoder<byte[]> JSONEncoderPrimByte = new ArraysJSONEncoder<byte[]>(null) {
         @Override
         public byte[] convert(Object current) {
             int p = 0;
@@ -171,7 +171,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Byte[]> MAPPER_BYTE = new ArraysMapper<Byte[]>(null) {
+    public static JSONEncoder<Byte[]> JSONEncoderByte = new ArraysJSONEncoder<Byte[]>(null) {
         @Override
         public Byte[] convert(Object current) {
             int p = 0;
@@ -191,7 +191,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<char[]> MAPPER_PRIM_CHAR = new ArraysMapper<char[]>(null) {
+    public static JSONEncoder<char[]> JSONEncoderPrimChar = new ArraysJSONEncoder<char[]>(null) {
         @Override
         public char[] convert(Object current) {
             int p = 0;
@@ -203,7 +203,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Character[]> MAPPER_CHAR = new ArraysMapper<Character[]>(null) {
+    public static JSONEncoder<Character[]> JSONEncoderChar = new ArraysJSONEncoder<Character[]>(null) {
         @Override
         public Character[] convert(Object current) {
             int p = 0;
@@ -219,7 +219,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<long[]> MAPPER_PRIM_LONG = new ArraysMapper<long[]>(null) {
+    public static JSONEncoder<long[]> JSONEncoderPrimLong = new ArraysJSONEncoder<long[]>(null) {
         @Override
         public long[] convert(Object current) {
             int p = 0;
@@ -231,7 +231,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Long[]> MAPPER_LONG = new ArraysMapper<Long[]>(null) {
+    public static JSONEncoder<Long[]> JSONEncoderLong = new ArraysJSONEncoder<Long[]>(null) {
         @Override
         public Long[] convert(Object current) {
             int p = 0;
@@ -251,7 +251,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<float[]> MAPPER_PRIM_FLOAT = new ArraysMapper<float[]>(null) {
+    public static JSONEncoder<float[]> JSONEncoderPrimFloat = new ArraysJSONEncoder<float[]>(null) {
         @Override
         public float[] convert(Object current) {
             int p = 0;
@@ -263,7 +263,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Float[]> MAPPER_FLOAT = new ArraysMapper<Float[]>(null) {
+    public static JSONEncoder<Float[]> JSONEncoderFloat = new ArraysJSONEncoder<Float[]>(null) {
         @Override
         public Float[] convert(Object current) {
             int p = 0;
@@ -283,7 +283,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<double[]> MAPPER_PRIM_DOUBLE = new ArraysMapper<double[]>(null) {
+    public static JSONEncoder<double[]> JSONEncoderPrimDouble = new ArraysJSONEncoder<double[]>(null) {
         @Override
         public double[] convert(Object current) {
             int p = 0;
@@ -295,7 +295,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Double[]> MAPPER_DOUBLE = new ArraysMapper<Double[]>(null) {
+    public static JSONEncoder<Double[]> JSONEncoderDouble = new ArraysJSONEncoder<Double[]>(null) {
         @Override
         public Double[] convert(Object current) {
             int p = 0;
@@ -315,7 +315,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<boolean[]> MAPPER_PRIM_BOOL = new ArraysMapper<boolean[]>(null) {
+    public static JSONEncoder<boolean[]> JSONEncoderPrimBool = new ArraysJSONEncoder<boolean[]>(null) {
         @Override
         public boolean[] convert(Object current) {
             int p = 0;
@@ -327,7 +327,7 @@ public class ArraysMapper<T> extends Mapper<T> {
         }
     };
 
-    public static Mapper<Boolean[]> MAPPER_BOOL = new ArraysMapper<Boolean[]>(null) {
+    public static JSONEncoder<Boolean[]> JSONEncoderBool = new ArraysJSONEncoder<Boolean[]>(null) {
         @Override
         public Boolean[] convert(Object current) {
             int p = 0;

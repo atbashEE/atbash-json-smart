@@ -15,7 +15,6 @@
  */
 package be.atbash.json.writer;
 
-
 /*
  *    Copyright 2011 JSON-SMART authors
  *
@@ -32,38 +31,44 @@ package be.atbash.json.writer;
  * limitations under the License.
  */
 
-public class FakeMapper extends Mapper<Object> {
-    private FakeMapper() {
-        super(null);
-    }
+import be.atbash.json.JSONArray;
+import be.atbash.json.JSONAware;
 
-    public static Mapper<Object> DEFAULT = new FakeMapper();
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    @Override
-    public Mapper<?> startObject(String key) {
-        return this;
-    }
-
-    @Override
-    public Mapper<?> startArray(String key) {
-        return this;
+public class DefaultJSONEncoderOrdered extends JSONEncoder<JSONAware> {
+    protected DefaultJSONEncoderOrdered(JSONReader base) {
+        super(base);
     }
 
     @Override
+    public JSONEncoder<JSONAware> startObject(String key) {
+        return base.DEFAULT_ORDERED;
+    }
+
+    @Override
+    public JSONEncoder<JSONAware> startArray(String key) {
+        return base.DEFAULT_ORDERED;
+    }
+
+    @SuppressWarnings("unchecked")
     public void setValue(Object current, String key, Object value) {
-    }
-
-    @Override
-    public void addValue(Object current, Object value) {
+        ((Map<String, Object>) current).put(key, value);
     }
 
     @Override
     public Object createObject() {
-        return null;
+        return new LinkedHashMap<String, Object>();
+    }
+
+    @Override
+    public void addValue(Object current, Object value) {
+        ((JSONArray) current).add(value);
     }
 
     @Override
     public Object createArray() {
-        return null;
+        return new JSONArray();
     }
 }

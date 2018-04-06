@@ -15,8 +15,9 @@
  */
 package be.atbash.json.writer;
 
+
 /*
- *    Copyright 2011-2014 JSON-SMART authors
+ *    Copyright 2011 JSON-SMART authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,49 +32,38 @@ package be.atbash.json.writer;
  * limitations under the License.
  */
 
-import be.atbash.json.JSONArray;
-import be.atbash.json.JSONAware;
-import be.atbash.json.JSONObject;
+public class FakeJSONEncoder extends JSONEncoder<Object> {
+    private FakeJSONEncoder() {
+        super(null);
+    }
 
-/**
- * Simple Reader Class for generic Map
- *
- * @param <T>
- * @author uriel
- */
-public class DefaultMapper<T> extends Mapper<T> {
-    protected DefaultMapper(JSONReader base) {
-        super(base);
+    public static JSONEncoder<Object> DEFAULT = new FakeJSONEncoder();
+
+    @Override
+    public JSONEncoder<?> startObject(String key) {
+        return this;
     }
 
     @Override
-    public Mapper<JSONAware> startObject(String key) {
-        return base.DEFAULT;
-    }
-
-    @Override
-    public Mapper<JSONAware> startArray(String key) {
-        return base.DEFAULT;
-    }
-
-    @Override
-    public Object createObject() {
-        return new JSONObject();
-    }
-
-    @Override
-    public Object createArray() {
-        return new JSONArray();
+    public JSONEncoder<?> startArray(String key) {
+        return this;
     }
 
     @Override
     public void setValue(Object current, String key, Object value) {
-        ((JSONObject) current).put(key, value);
     }
 
     @Override
     public void addValue(Object current, Object value) {
-        ((JSONArray) current).add(value);
     }
 
+    @Override
+    public Object createObject() {
+        return null;
+    }
+
+    @Override
+    public Object createArray() {
+        return null;
+    }
 }

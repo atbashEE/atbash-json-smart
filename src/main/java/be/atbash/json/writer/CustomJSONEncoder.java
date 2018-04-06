@@ -21,7 +21,7 @@ import be.atbash.util.reflection.ClassUtils;
  * Atbash added file
  */
 
-public abstract class CustomMapper<T> extends Mapper<T> {
+public abstract class CustomJSONEncoder<T> extends JSONEncoder<T> {
 
     protected final Class<T> clz;
 
@@ -31,7 +31,7 @@ public abstract class CustomMapper<T> extends Mapper<T> {
      * @param base
      * @param type
      */
-    public CustomMapper(JSONReader base, Class<T> type) {
+    public CustomJSONEncoder(JSONReader base, Class<T> type) {
         super(base);
         clz = type;
     }
@@ -41,14 +41,14 @@ public abstract class CustomMapper<T> extends Mapper<T> {
         return (T) ClassUtils.newInstance(clz);
     }
 
-    public static class NOPCustomMapper extends CustomMapper<Object> {
+    public static class NOPCustomJSONEncoder extends CustomJSONEncoder<Object> {
 
         /**
          * Reader can be link to the JsonReader Base
          *
          * @param base
          */
-        public NOPCustomMapper(JSONReader base) {
+        public NOPCustomJSONEncoder(JSONReader base) {
             super(base, Object.class);
         }
     }

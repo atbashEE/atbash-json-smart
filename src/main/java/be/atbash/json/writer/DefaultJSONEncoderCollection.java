@@ -37,11 +37,11 @@ import java.lang.reflect.Constructor;
 import java.util.List;
 import java.util.Map;
 
-public class DefaultMapperCollection<T> extends Mapper<T> {
+public class DefaultJSONEncoderCollection<T> extends JSONEncoder<T> {
     Class<T> clz;
 
     //? extends Collection
-    public DefaultMapperCollection(JSONReader base, Class<T> clz) {
+    public DefaultJSONEncoderCollection(JSONReader base, Class<T> clz) {
         super(base);
         this.clz = clz;
     }
@@ -49,12 +49,12 @@ public class DefaultMapperCollection<T> extends Mapper<T> {
     // public static AMapper<JSONAwareEx> DEFAULT = new
     // DefaultMapperCollection<JSONAwareEx>();
     @Override
-    public Mapper<T> startObject(String key) {
+    public JSONEncoder<T> startObject(String key) {
         return this;
     }
 
     @Override
-    public Mapper<T> startArray(String key) {
+    public JSONEncoder<T> startArray(String key) {
         return this;
     }
 

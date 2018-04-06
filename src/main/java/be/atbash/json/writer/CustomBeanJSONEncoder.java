@@ -26,7 +26,7 @@ import java.util.HashMap;
  * Atbash added file
  */
 
-public abstract class CustomBeanMapper<T> extends CustomMapper<T> {
+public abstract class CustomBeanJSONEncoder<T> extends CustomJSONEncoder<T> {
 
     private final BeansAccess<T> ba;
     private final HashMap<String, Accessor> index;
@@ -37,7 +37,7 @@ public abstract class CustomBeanMapper<T> extends CustomMapper<T> {
      * @param base
      * @param type
      */
-    public CustomBeanMapper(JSONReader base, Class<T> type) {
+    public CustomBeanJSONEncoder(JSONReader base, Class<T> type) {
         super(base, type);
         this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
         this.index = ba.getMap();

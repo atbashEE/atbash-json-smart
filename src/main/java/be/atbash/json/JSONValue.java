@@ -36,9 +36,9 @@ import be.atbash.json.parser.ParseException;
 import be.atbash.json.reader.JSONWriter;
 import be.atbash.json.reader.JsonWriterI;
 import be.atbash.json.style.JSONStyle;
-import be.atbash.json.writer.FakeMapper;
+import be.atbash.json.writer.FakeJSONEncoder;
 import be.atbash.json.writer.JSONReader;
-import be.atbash.json.writer.Mapper;
+import be.atbash.json.writer.JSONEncoder;
 
 import java.io.IOException;
 import java.util.List;
@@ -75,7 +75,7 @@ public class JSONValue {
      */
     public static <T> T parse(String in, Class<T> mapTo) {
         JSONParser p = new JSONParser();
-        return p.parse(in, defaultReader.getMapper(mapTo));
+        return p.parse(in, defaultReader.getEncoder(mapTo));
     }
 
     /**
@@ -96,7 +96,7 @@ public class JSONValue {
      */
     public static boolean isValidJson(String s) {
         try {
-            new JSONParser().parse(s, FakeMapper.DEFAULT);
+            new JSONParser().parse(s, FakeJSONEncoder.DEFAULT);
             return true;
         } catch (ParseException e) {
             return false;
@@ -113,8 +113,8 @@ public class JSONValue {
     /**
      * register a deserializer for a class.
      */
-    public static <T> void registerReader(Class<T> type, Mapper<T> mapper) {
-        defaultReader.registerReader(type, mapper);
+    public static <T> void registerReader(Class<T> type, JSONEncoder<T> JSONEncoder) {
+        defaultReader.registerReader(type, JSONEncoder);
     }
 
     /**
