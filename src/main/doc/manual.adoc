@@ -13,6 +13,7 @@ User manual for Atbash configuration.
 
 . Initial release, based on the code of JSON smart v2.
 . Support for @MappedBy for easy customized mapping logic.
+. Support for _top-level_ Parameterized Types
 . Optimization for use within Octopus JWT
 
 == Introduction
@@ -32,6 +33,18 @@ That was the reason to start from the original code and tailor it to my needs (s
 
 Converts the JSON to instance of T.
 
+----
+  List<Bean> data = (List<Bean>) JSONValue.parse("<json>", new TypeReference<List<Bean>>(){});
+----
+
+Converts the <json> to instance of List containing Bean instances.
+
+Without the TypeReference information, Atbash JSON is only capable of creating a List of JSONObject.
+
+----
+  List<JSONObject> data = JSONValue.parse("<json>", ArrayList.class);
+----
+
 
 ----
   String JSONValue.toJSONString(T);
@@ -42,5 +55,7 @@ Converts the POJO to a JSON String
 == Customizations
 
 @JsonIgnore
+
+JSONAware
 
 @MappedBy

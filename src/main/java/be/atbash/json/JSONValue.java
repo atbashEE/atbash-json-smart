@@ -37,8 +37,8 @@ import be.atbash.json.reader.JSONWriter;
 import be.atbash.json.reader.JsonWriterI;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.FakeJSONEncoder;
-import be.atbash.json.writer.JSONReader;
 import be.atbash.json.writer.JSONEncoder;
+import be.atbash.json.writer.JSONReader;
 
 import java.io.IOException;
 import java.util.List;
@@ -76,6 +76,11 @@ public class JSONValue {
     public static <T> T parse(String in, Class<T> mapTo) {
         JSONParser p = new JSONParser();
         return p.parse(in, defaultReader.getEncoder(mapTo));
+    }
+
+    public static Object parse(String in, TypeReference mapTo) {
+        JSONParser p = new JSONParser();
+        return p.parse(in, defaultReader.getEncoder(mapTo.getType()));
     }
 
     /**
@@ -125,7 +130,6 @@ public class JSONValue {
      * <p>
      *
      * @see JSONObject#writeJSON(Map, Appendable)
-     * @see JSONArray#writeJSONString(List, Appendable)
      */
     @SuppressWarnings("unchecked")
     public static void writeJSONString(Object value, Appendable out) throws IOException {

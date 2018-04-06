@@ -111,20 +111,6 @@ public class JSONReader {
         if (encoder != null) {
             return encoder;
         }
-        /*
-         * Special handle
-         */
-        if (type instanceof Class) {
-            if (Map.class.isAssignableFrom(type)) {
-                encoder = new DefaultJSONEncoderCollection<>(this, type);
-            } else if (List.class.isAssignableFrom(type)) {
-                encoder = new DefaultJSONEncoderCollection<>(this, type);
-            }
-            if (encoder != null) {
-                cache.put(type, encoder);
-                return encoder;
-            }
-        }
 
         if (type.isArray()) {
             encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(this, type);
