@@ -1,0 +1,46 @@
+= Atbash JSON Smart
+Rudy De Busscher <rdebusscher@gmail.com>
+v0.9.0, ??/??/2018
+:example-caption!:
+ifndef::imagesdir[:imagesdir: images]
+ifndef::sourcedir[:sourcedir: ../../main/java]
+
+User manual for Atbash configuration.
+
+== Release Notes
+
+=== 0.9.0
+
+. Initial release, based on the code of JSON smart v2.
+. Support for @MappedBy for easy customized mapping logic.
+. Optimization for use within Octopus JWT
+
+== Introduction
+
+https://github.com/netplex/json-smart-v2[JSON Smart v2], is a small fast library for converting POJO to and from JSON.
+
+When creating the JSON and JWT support within Octopus, I found out it was difficult to have custom logic for a few cases.
+
+That was the reason to start from the original code and tailor it to my needs (since the library itself is no longer maintained).
+
+
+== Standard usage
+
+----
+  T JSONValue.parse(String, Class<T>);
+----
+
+Converts the JSON to instance of T.
+
+
+----
+  String JSONValue.toJSONString(T);
+----
+
+Converts the POJO to a JSON String
+
+== Customizations
+
+@JsonIgnore
+
+@MappedBy
