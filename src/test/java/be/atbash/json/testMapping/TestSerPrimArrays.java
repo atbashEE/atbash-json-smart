@@ -23,7 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestSerPrimArrays {
     private SimpleDateFormat sdf;
@@ -42,13 +42,14 @@ public class TestSerPrimArrays {
     public void testDate() {
         String s = "'" + testDateString + "'";
         Date dt = JSONValue.parse(s, Date.class);
-        assertEquals(dt, this.testDate);
+        assertThat(dt).isEqualTo(this.testDate);
     }
 
-    public void testDtObj() throws Exception {
+    @Test
+    public void testDtObj()  {
         String s = "{date:'" + testDateString + "'}";
         ADate dt = JSONValue.parse(s, ADate.class);
-        assertEquals(dt.date, this.testDate);
+        assertThat(dt.date).isEqualTo(this.testDate);
     }
 
     public static class ADate {

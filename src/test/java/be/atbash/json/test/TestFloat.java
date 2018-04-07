@@ -19,8 +19,7 @@ import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestFloat {
     static String[] TRUE_NUMBERS = new String[]{"1.0", "123.456", "1.0E1", "123.456E12", "1.0E+1",
@@ -38,7 +37,7 @@ public class TestFloat {
             Double val = Double.valueOf(s.trim());
             JSONObject obj = (JSONObject) p.parse(json);
             Object value = obj.get("v");
-            assertEquals("Should be parse as double", val, value);
+            assertThat(value).as("Should be parse as double").isEqualTo(val);
         }
     }
 
@@ -48,10 +47,10 @@ public class TestFloat {
         for (String s : FALSE_NUMBERS) {
             String json = "{v:" + s + "}";
             JSONObject obj = (JSONObject) p.parse(json);
-            assertEquals("Should be parse as string", s, obj.get("v"));
+            assertThat(obj.get("v")).as("Should be parse as string").isEqualTo(s);
 
             String correct = "{\"v\":\"" + s + "\"}";
-            assertEquals("Should be re serialized as", correct, obj.toJSONString());
+            assertThat(obj.toJSONString()).as("Should be re serialized as").isEqualTo(correct);
         }
     }
 
@@ -64,6 +63,6 @@ public class TestFloat {
         JSONObject obj = new JSONObject();
         obj.put("uuid", UUID);
         String compressed = obj.toJSONString();
-        assertTrue(compressed.contains("\"uuid\":\""));
+        assertThat(compressed).contains("\"uuid\":\"");
     }
 }

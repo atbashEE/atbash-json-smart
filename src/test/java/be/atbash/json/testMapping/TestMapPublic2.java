@@ -21,7 +21,7 @@ import org.junit.Test;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestMapPublic2 {
     String s = "{\"data\":{\"a\":\"b\"}}";
@@ -29,16 +29,14 @@ public class TestMapPublic2 {
     @Test
     public void testMapPublicInterface() {
         T5 r = JSONValue.parse(s, T5.class);
-        assertEquals(1, r.data.size());
+        assertThat(r.data.size()).isEqualTo(1);
     }
 
     @Test
     public void testMapPublicMapClass() {
         T6 r = JSONValue.parse(s, T6.class);
-        assertEquals(1, r.data.size());
+        assertThat(r.data.size()).isEqualTo(1);
     }
-
-    String MultiTyepJson = "{\"name\":\"B\",\"age\":120,\"cost\":12000,\"flag\":3,\"valid\":true,\"f\":1.2,\"d\":1.5,\"l\":12345678912345}";
 
     public static class T5 {
         public Map<String, String> data;

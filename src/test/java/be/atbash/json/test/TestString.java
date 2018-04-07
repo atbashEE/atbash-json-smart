@@ -20,7 +20,10 @@ import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
+import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public class TestString {
 
@@ -33,35 +36,38 @@ public class TestString {
     public void testS1() {
         String text = "My Test";
         String s = "{t:\"" + text + "\"}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), text);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(text);
     }
 
     @Test
     public void testS2() {
         String text = "My Test";
         String s = "{t:'" + text + "'}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), text);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(text);
     }
 
-    public void testSEscape() throws Exception {
+    @Test
+    public void testSEscape() {
         String text = "My\r\nTest";
         String text2 = "My\\r\\nTest";
         String s = "{t:'" + text2 + "'}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), text);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(text);
     }
 
-    public void testBadString() throws Exception {
+    @Test
+    public void testBadString()  {
         String s = "{\"t\":\"Before\u000CAfter\"}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals("Before\u000CAfter", o.get("t"));
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo("Before\u000CAfter");
         try {
-            o = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
-            assertEquals("nothink", o.get("t"));
+            // FIXME
+            new JSONParser(MODE_RFC4627).parse(s);
+            fail("Parsing should fail in RFC4627 mode");
         } catch (ParseException e) {
-            assertEquals("Exception", "Exception");
+            // expected
         }
     }
 }

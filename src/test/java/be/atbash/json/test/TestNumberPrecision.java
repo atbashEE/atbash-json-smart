@@ -21,7 +21,7 @@ import org.junit.Test;
 
 import java.math.BigInteger;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestNumberPrecision {
 
@@ -31,7 +31,7 @@ public class TestNumberPrecision {
         String s = "[" + v + "]";
         JSONArray array = (JSONArray) JSONValue.parse(s);
         Object r = array.get(0);
-        assertEquals(v, r);
+        assertThat(r).isEqualTo(v);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class TestNumberPrecision {
         String s = "[" + v + "]";
         JSONArray array = (JSONArray) JSONValue.parse(s);
         Object r = array.get(0);
-        assertEquals(v, r);
+        assertThat(r).isEqualTo(v);
     }
 
     @Test
@@ -49,7 +49,7 @@ public class TestNumberPrecision {
         String s = "[" + v + "]";
         JSONArray array = (JSONArray) JSONValue.parse(s);
         Object r = array.get(0);
-        assertEquals(v, r);
+        assertThat(r).isEqualTo(v);
     }
 
     @Test
@@ -58,6 +58,6 @@ public class TestNumberPrecision {
         String s = "[" + v + "]";
         JSONArray array = (JSONArray) JSONValue.parse(s);
         Object r = array.get(0);
-        assertEquals(v, r);
+        assertThat(r).isEqualTo(v);
     }
 }

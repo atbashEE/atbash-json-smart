@@ -20,14 +20,14 @@ import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestMisc {
 
     @Test
     public void testIssue23() {
         String s = JSONValue.toJSONString(new int[]{1, 2, 50, 1234, 10000});
-        assertEquals("[1,2,50,1234,10000]", s);
+        assertThat(s).isEqualTo("[1,2,50,1234,10000]");
     }
 
     @Test
@@ -35,9 +35,9 @@ public class TestMisc {
         String s = "{\"key1\":\"v1\", \"key2\":{}, \"key3\":[]}";
         JSONObject o = (JSONObject) JSONValue.parse(s);
 
-        assertEquals(o.get("key1"), "v1");
-        assertEquals(((JSONObject) o.get("key2")).size(), 0);
-        assertEquals(((JSONArray) o.get("key3")).size(), 0);
+        assertThat(o.get("key1")).isEqualTo("v1");
+        assertThat((JSONObject) o.get("key2")).isEmpty();
+        assertThat((JSONArray) o.get("key3")).isEmpty();
     }
 
     @Test
@@ -45,44 +45,44 @@ public class TestMisc {
         String s = "{\"key1\":\"v1\", \"key2\":{}, \"key3\":[]}";
         JSONObject o = (JSONObject) JSONValue.parse(s);
 
-        assertEquals(o.get("key1"), "v1");
-        assertEquals(((JSONObject) o.get("key2")).size(), 0);
-        assertEquals(((JSONArray) o.get("key3")).size(), 0);
+        assertThat(o.get("key1")).isEqualTo("v1");
+        assertThat((JSONObject) o.get("key2")).isEmpty();
+        assertThat((JSONArray) o.get("key3")).isEmpty();
     }
 
     @Test
     public void testInt() {
         String s = "123";
         Object o = JSONValue.parse(s);
-        assertEquals(o, 123);
+        assertThat(o).isEqualTo(123);
     }
 
     @Test
     public void testFloat() {
         String s = "123.5";
         Object o = JSONValue.parse(s);
-        assertEquals(o, 123.5);
+        assertThat(o).isEqualTo(123.5);
     }
 
     @Test
     public void testFloat2() {
         String s = "123.5E1";
         Object o = JSONValue.parse(s);
-        assertEquals(o, 1235d);
+        assertThat(o).isEqualTo(1235d);
     }
 
     @Test
     public void testFloat3() {
         String s = "123..5";
         Object o = JSONValue.parse(s);
-        assertEquals(o, "123..5");
+        assertThat(o).isEqualTo("123..5");
     }
 
     @Test
     public void testFloat4() {
         String s = "123é.5";
         Object o = JSONValue.parse(s);
-        assertEquals(o, 123);
+        assertThat(o).isEqualTo(123);
     }
 
 }

@@ -17,13 +17,14 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
-import be.atbash.json.parser.ParseException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.ParseException.ERROR_UNEXPECTED_TOKEN;
+import static be.atbash.json.test.MustThrows.testInvalidJson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestInts {
 
@@ -31,41 +32,41 @@ public class TestInts {
     public void testIntMax() {
         String s = "{t:" + Integer.MAX_VALUE + "}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), Integer.MAX_VALUE);
+        assertThat(o.get("t")).isEqualTo(Integer.MAX_VALUE);
     }
 
     @Test
     public void testIntMin() {
         String s = "{t:" + Integer.MIN_VALUE + "}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), Integer.MIN_VALUE);
+        assertThat(o.get("t")).isEqualTo(Integer.MIN_VALUE);
     }
 
     @Test
     public void testIntResult() {
         String s = "{\"t\":1}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
-        assertEquals(o.get("t"), 1);
+        assertThat(o.get("t")).isEqualTo(1);
 
         o = (JSONObject) new JSONParser(JSONParser.MODE_JSON_SIMPLE).parse(s);
-        assertEquals(o.get("t"), 1L);
+        assertThat(o.get("t")).isEqualTo(1L);
 
         o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), 1);
+        assertThat(o.get("t")).isEqualTo(1);
     }
 
     @Test
     public void testInt() {
         String s = "{t:90}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), 90);
+        assertThat(o.get("t")).isEqualTo(90);
     }
 
     @Test
     public void testIntNeg() {
         String s = "{t:-90}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), -90);
+        assertThat(o.get("t")).isEqualTo(-90);
     }
 
     @Test
@@ -78,7 +79,7 @@ public class TestInts {
         BigInteger big = new BigInteger(bigText, 10);
         String s = "{t:" + bigText + "}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), big);
+        assertThat(o.get("t")).isEqualTo(big);
     }
 
     @Test
@@ -96,23 +97,23 @@ public class TestInts {
         BigDecimal big = new BigDecimal(bigText);
         String s = "{\"t\":" + bigText + "}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
-        assertEquals(o.get("t"), big);
+        assertThat(o.get("t")).isEqualTo(big);
         o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), big);
+        assertThat(o.get("t")).isEqualTo(big);
     }
 
     @Test
-    public void testjunkTaillingData() {
+    public void testJunkTrailingData() {
         String s = "{\"t\":124}$ifsisg045";
 
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_JSON_SIMPLE).parse(s);
-        assertEquals(o.get("t"), 124L);
+        assertThat(o.get("t")).isEqualTo(124L);
 
-        MustThrows.testInvalidJson(s, JSONParser.MODE_RFC4627, ParseException.ERROR_UNEXPECTED_TOKEN);
+        testInvalidJson(s, JSONParser.MODE_RFC4627, ERROR_UNEXPECTED_TOKEN);
         // o = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
         // assertEquals(o.get("t"), 124);
 
         o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), 124);
+        assertThat(o.get("t")).isEqualTo(124);
     }
 }

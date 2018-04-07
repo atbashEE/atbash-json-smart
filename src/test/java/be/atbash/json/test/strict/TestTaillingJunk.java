@@ -21,45 +21,46 @@ import be.atbash.json.parser.ParseException;
 import be.atbash.json.test.MustThrows;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.JSONParser.*;
+import static be.atbash.json.parser.ParseException.ERROR_UNEXPECTED_TOKEN;
+import static be.atbash.json.test.MustThrows.testInvalidJson;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @since 1.0.7
  */
 public class TestTaillingJunk {
 
     @Test
-    public void testTaillingSpace() {
+    public void testTrailingSpace() {
         String s = "{\"t\":0}   ";
-        MustThrows.testInvalidJson(s, JSONParser.MODE_STRICTEST, ParseException.ERROR_UNEXPECTED_TOKEN);
+        testInvalidJson(s, MODE_STRICTEST, ERROR_UNEXPECTED_TOKEN);
 
-        s = "{\"t\":0}   ";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_STRICTEST | JSONParser.ACCEPT_TAILLING_SPACE).parse(s);
-        assertEquals(o.get("t"), 0);
+        JSONObject o = (JSONObject) new JSONParser(MODE_STRICTEST | ACCEPT_TAILLING_SPACE).parse(s);
+        assertThat(o.get("t")).isEqualTo(0);
     }
 
     @Test
-    public void testTaillingSpace2() {
+    public void testTrailingSpace2() {
         String s = "{\"t\":0}   \r\n ";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_STRICTEST | JSONParser.ACCEPT_TAILLING_SPACE).parse(s);
-        assertEquals(o.get("t"), 0);
+        JSONObject o = (JSONObject) new JSONParser(MODE_STRICTEST | ACCEPT_TAILLING_SPACE).parse(s);
+        assertThat(o.get("t")).isEqualTo(0);
     }
 
     @Test
-    public void testTaillingData() {
+    public void testTrailingData() {
         String s = "{\"t\":0}  0";
         MustThrows.testInvalidJson(s, JSONParser.MODE_STRICTEST, ParseException.ERROR_UNEXPECTED_TOKEN, null);
     }
 
     @Test
-    public void testTaillingDataPermisive() {
+    public void testTrailingDataPermissive() {
         String s = "{\"t\":0}  0";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), 0);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(0);
     }
 
     @Test
-    public void testTaillingDataWithSpaceAllowed() {
+    public void testTrailingDataWithSpaceAllowed() {
         String s = "{\"t\":0}{";
         MustThrows.testInvalidJson(s, JSONParser.MODE_STRICTEST | JSONParser.ACCEPT_TAILLING_SPACE, ParseException.ERROR_UNEXPECTED_TOKEN);
     }

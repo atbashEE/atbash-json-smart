@@ -16,23 +16,23 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
-import net.minidev.asm.BeansAccessConfig;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static net.minidev.asm.BeansAccessConfig.addTypeMapper;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAdvancedMapper {
-    static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     @Test
     public void testCustomBean() {
-        BeansAccessConfig.addTypeMapper(Object.class, MyLocalConverterot.class);
+        addTypeMapper(Object.class, MyLocalConverterot.class);
         String s = "{'val':2,'date':'19/04/2010'}";
         TestBean r = JSONValue.parse(s, TestBean.class);
-        assertEquals("19/04/2010", sdf.format(r.date));
+        assertThat(sdf.format(r.date)).isEqualTo("19/04/2010");
     }
 
     public static class TestBean {

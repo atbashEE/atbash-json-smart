@@ -19,7 +19,6 @@ import be.atbash.json.JSONValue;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 
 public class TestMapPrimArrays {
 
@@ -27,22 +26,22 @@ public class TestMapPrimArrays {
     public void testInts() {
         String s = "[1,2,3]";
         int[] r = JSONValue.parse(s, int[].class);
-        assertEquals(3, r[2]);
+        assertThat(r[2]).isEqualTo(3);
     }
 
     @Test
     public void testIntss() {
         String s = "[[1],[2],[3,4]]";
         int[][] r = JSONValue.parse(s, int[][].class);
-        assertEquals(3, r[2][0]);
-        assertEquals(4, r[2][1]);
+        assertThat(r[2][0]).isEqualTo(3);
+        assertThat(r[2][1]).isEqualTo(4);
     }
 
     @Test
     public void testLongs() {
         String s = "[1,2,3]";
         long[] r = JSONValue.parse(s, long[].class);
-        assertEquals(3, r[2]);
+        assertThat(r[2]).isEqualTo(3);
     }
 
     @Test
@@ -63,7 +62,7 @@ public class TestMapPrimArrays {
     public void testBooleans() {
         String s = "[true,true,false]";
         boolean[] r = JSONValue.parse(s, boolean[].class);
-        assertEquals(true, r[1]);
-        assertEquals(false, r[2]);
+        assertThat(r[1]).isEqualTo(true);
+        assertThat(r[2]).isEqualTo(false);
     }
 }

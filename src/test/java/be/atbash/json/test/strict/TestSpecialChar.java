@@ -21,7 +21,8 @@ import be.atbash.json.parser.ParseException;
 import be.atbash.json.test.MustThrows;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test control charaters
@@ -36,8 +37,8 @@ public class TestSpecialChar {
         String s = String.format("[\"%c\"]", 127);
         MustThrows.testInvalidJson(s, JSONParser.MODE_STRICTEST, ParseException.ERROR_UNEXPECTED_CHAR);
 
-        JSONArray o = (JSONArray) new JSONParser(JSONParser.MODE_RFC4627).parse(s);
-        assertEquals(o.get(0), s127);
+        JSONArray o = (JSONArray) new JSONParser(MODE_RFC4627).parse(s);
+        assertThat(o.get(0)).isEqualTo(s127);
     }
 
     @Test

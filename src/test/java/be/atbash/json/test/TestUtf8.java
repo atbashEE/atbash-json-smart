@@ -19,7 +19,7 @@ import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtf8 {
     // Sinhalese language
@@ -32,7 +32,7 @@ public class TestUtf8 {
             String s = "{\"key\":\"" + nonLatinText + "\"}";
             JSONObject obj = (JSONObject) JSONValue.parse(s);
             String v = (String) obj.get("key"); // result is incorrect
-            assertEquals(v, nonLatinText);
+            assertThat(v).isEqualTo(nonLatinText);
         }
     }
 

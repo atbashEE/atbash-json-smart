@@ -18,7 +18,7 @@ package be.atbash.json.test.writer;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestWriteFeatures {
 
@@ -27,11 +27,11 @@ public class TestWriteFeatures {
         Beans beans = new Beans();
 
         String s = JSONValue.toJSONString(beans);
-        assertEquals("{}", s);
+        assertThat(s).isEqualTo("{}");
 
         beans.a = "a";
         s = JSONValue.toJSONString(beans);
-        assertEquals("{\"a\":\"a\"}", s);
+        assertThat(s).isEqualTo("{\"a\":\"a\"}");
 
     }
 

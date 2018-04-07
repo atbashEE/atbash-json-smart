@@ -20,34 +20,34 @@ import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import org.junit.Test;
 
-import static junit.framework.TestCase.assertNull;
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestKeyword {
 
     @Test
     public void testBool() {
         String s = "{t:true}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), true);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(true);
 
         s = "{t:false}";
-        o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), false);
+        o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(false);
     }
 
     @Test
     public void testNull() {
         String s = "{t:null}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertNull(o.get("t"));
+        assertThat(o.get("t")).isNull();
     }
 
     @Test
     public void testNaN() {
         String s = "{t:NaN}";
-        JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertEquals(o.get("t"), Float.NaN);
+        JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
+        assertThat(o.get("t")).isEqualTo(Float.NaN);
     }
 
     @Test

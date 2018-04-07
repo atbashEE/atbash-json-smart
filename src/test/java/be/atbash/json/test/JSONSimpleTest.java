@@ -19,25 +19,25 @@ import be.atbash.json.JSONArray;
 import be.atbash.json.parser.JSONParser;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static be.atbash.json.parser.JSONParser.MODE_JSON_SIMPLE;
+import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JSONSimpleTest {
 
     @Test
     public void testLong() {
         String s = "[1]";
-        JSONParser p = new JSONParser(JSONParser.MODE_JSON_SIMPLE);
+        JSONParser p = new JSONParser(MODE_JSON_SIMPLE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(1L, array.get(0));
-        // FIXME, wrong test on the type
+        assertThat(array.get(0)).isEqualTo(1L);
     }
 
     @Test
     public void testDefault() {
         String s = "[1]";
-        JSONParser p = new JSONParser(JSONParser.MODE_PERMISSIVE);
+        JSONParser p = new JSONParser(MODE_PERMISSIVE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertEquals(1, array.get(0));
-        // FIXME, wrong test on the type
+        assertThat(array.get(0)).isEqualTo(1);
     }
 }

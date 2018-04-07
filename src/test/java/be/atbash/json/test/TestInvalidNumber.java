@@ -19,7 +19,7 @@ import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestInvalidNumber {
 
@@ -29,10 +29,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertEquals("{\"a\":\"51e88\"}", comp);
+        assertThat(comp).isEqualTo("{\"a\":\"51e88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertEquals(o.get("a"), test);
+        assertThat(o.get("a")).isEqualTo(test);
     }
 
     @Test
@@ -41,10 +41,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertEquals("{\"a\":\"51e+88\"}", comp);
+        assertThat(comp).isEqualTo("{\"a\":\"51e+88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertEquals(o.get("a"), test);
+        assertThat(test).isEqualTo(o.get("a"));
     }
 
     @Test
@@ -53,10 +53,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertEquals("{\"a\":\"51e-88\"}", comp);
+        assertThat(comp).isEqualTo("{\"a\":\"51e-88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertEquals(o.get("a"), test);
+        assertThat(o.get("a")).isEqualTo(test);
     }
 
     @Test
@@ -65,10 +65,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertEquals("{\"a\":\"51ee88\"}", comp);
+        assertThat(comp).isEqualTo("{\"a\":\"51ee88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertEquals(o.get("a"), test);
+        assertThat(o.get("a")).isEqualTo(test);
     }
 
 }

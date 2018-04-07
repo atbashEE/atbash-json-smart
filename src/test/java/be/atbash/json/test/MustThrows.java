@@ -17,36 +17,37 @@ package be.atbash.json.test;
 
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
-import junit.framework.TestCase;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.fail;
 
 public class MustThrows {
 
-    public static void testStrictInvalidJson(String json, int execptionType) {
-        testStrictInvalidJson(json, execptionType, null);
+    public static void testStrictInvalidJson(String json, int exceptionType) {
+        testStrictInvalidJson(json, exceptionType, null);
     }
 
-    public static void testStrictInvalidJson(String json, int execptionType, Class<?> cls) {
-        testInvalidJson(json, JSONParser.MODE_RFC4627, execptionType, cls);
+    public static void testStrictInvalidJson(String json, int exceptionType, Class<?> cls) {
+        testInvalidJson(json, JSONParser.MODE_RFC4627, exceptionType, cls);
     }
 
-    public static void testInvalidJson(String json, int permissifMode, int execptionType) {
-        testInvalidJson(json, permissifMode, execptionType, null);
+    public static void testInvalidJson(String json, int permissiveMode, int exceptionType) {
+        testInvalidJson(json, permissiveMode, exceptionType, null);
     }
 
-    public static void testInvalidJson(String json, int permissifMode, int execptionType, Class<?> cls) {
-        JSONParser p = new JSONParser(permissifMode);
+    public static void testInvalidJson(String json, int permissiveMode, int exceptionType, Class<?> cls) {
+        JSONParser p = new JSONParser(permissiveMode);
         try {
             if (cls == null) {
                 p.parse(json);
             } else {
                 p.parse(json, cls);
             }
-            TestCase.assertFalse("Exception Should Occur parsing:" + json, true);
+            fail("Exception Should Occur parsing:" + json);
         } catch (ParseException e) {
-            if (execptionType == -1) {
-                execptionType = e.getErrorType();
+            if (exceptionType != -1) {
+                assertThat(e.getErrorType()).isEqualTo(exceptionType);
             }
-            TestCase.assertEquals(execptionType, e.getErrorType());
         }
     }
 

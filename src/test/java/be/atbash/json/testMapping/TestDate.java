@@ -18,7 +18,7 @@ package be.atbash.json.testMapping;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestDate {
 
@@ -27,7 +27,7 @@ public class TestDate {
         String s = "[true,true,false]";
         boolean[] bs = new boolean[]{true, true, false};
         String s2 = JSONValue.toJSONString(bs);
-        assertEquals(s, s2);
+        assertThat(s).isEqualTo(s2);
     }
 
     @Test
@@ -35,7 +35,7 @@ public class TestDate {
         String s = "[1,2,3]";
         int[] bs = new int[]{1, 2, 3};
         String s2 = JSONValue.toJSONString(bs);
-        assertEquals(s, s2);
+        assertThat(s).isEqualTo(s2);
     }
 
 }
