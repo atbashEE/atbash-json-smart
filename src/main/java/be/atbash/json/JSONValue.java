@@ -33,12 +33,12 @@ package be.atbash.json;
 
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
-import be.atbash.json.reader.JSONWriter;
-import be.atbash.json.reader.JsonWriterI;
+import be.atbash.json.parser.reader.FakeJSONEncoder;
+import be.atbash.json.parser.reader.JSONEncoder;
+import be.atbash.json.parser.reader.JSONReader;
 import be.atbash.json.style.JSONStyle;
-import be.atbash.json.writer.FakeJSONEncoder;
-import be.atbash.json.writer.JSONEncoder;
-import be.atbash.json.writer.JSONReader;
+import be.atbash.json.writer.JSONWriter;
+import be.atbash.json.writer.JSONWriterFactory;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,27 +60,25 @@ public class JSONValue {
     /**
      * Serialisation class Data
      */
-    public final static JSONWriter defaultWriter = new JSONWriter();
+    public final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
     /**
      * deserialisation class Data
      */
-    public final static JSONReader defaultReader = new JSONReader();
+    public final static JSONReader JSON_READER = new JSONReader();
 
     /**
      * Parse input json as a mapTo class
      * <p>
      * mapTo can be a bean
-     *
-     * @since 2.0
      */
-    public static <T> T parse(String in, Class<T> mapTo) {
-        JSONParser p = new JSONParser();
-        return p.parse(in, defaultReader.getEncoder(mapTo));
+    public static <T> T parse(String json, Class<T> mapTo) {
+        JSONParser parser = new JSONParser();
+        return parser.parse(json, JSON_READER.getEncoder(mapTo));
     }
 
-    public static Object parse(String in, TypeReference mapTo) {
-        JSONParser p = new JSONParser();
-        return p.parse(in, defaultReader.getEncoder(mapTo.getType()));
+    public static Object parse(String json, TypeReference mapTo) {
+        JSONParser parser = new JSONParser();
+        return parser.parse(json, JSON_READER.getEncoder(mapTo.getType()));
     }
 
     /**
@@ -88,10 +86,9 @@ public class JSONValue {
      *
      * @return Instance of the following: JSONObject, JSONArray, String,
      * java.lang.Number, java.lang.Boolean, null
-     * @see JSONParser#parse(String)
      */
-    public static Object parse(String s) {
-        return new JSONParser().parse(s);
+    public static Object parse(String json) {
+        return new JSONParser().parse(json);
     }
 
     /**
@@ -111,15 +108,15 @@ public class JSONValue {
     /**
      * Register a serializer for a class.
      */
-    public static <T> void registerWriter(Class<?> cls, JsonWriterI<T> writer) {
-        defaultWriter.registerWriter(writer, cls);
+    public static <T> void registerWriter(Class<?> cls, JSONWriter<T> writer) {
+        WRITER_FACTORY.registerWriter(writer, cls);
     }
 
     /**
      * register a deserializer for a class.
      */
-    public static <T> void registerReader(Class<T> type, JSONEncoder<T> JSONEncoder) {
-        defaultReader.registerReader(type, JSONEncoder);
+    public static <T> void registerEncoder(Class<T> type, JSONEncoder<T> JSONEncoder) {
+        JSON_READER.registerReader(type, JSONEncoder);
     }
 
     /**
@@ -139,17 +136,17 @@ public class JSONValue {
         }
         Class<?> clz = value.getClass();
         @SuppressWarnings("rawtypes")
-        JsonWriterI w = defaultWriter.getWriter(clz);
+        JSONWriter w = WRITER_FACTORY.getWriter(clz);
         if (w == null) {
             if (clz.isArray()) {
-                w = JSONWriter.arrayWriter;
+                w = JSONWriterFactory.arrayWriter;
             } else {
-                w = defaultWriter.getWriterByInterface(value.getClass());
+                w = WRITER_FACTORY.getWriterByInterface(value.getClass());
                 if (w == null) {
-                    w = JSONWriter.beansWriter;
+                    w = JSONWriterFactory.beansWriter;
                 }
             }
-            defaultWriter.registerWriter(w, clz);
+            WRITER_FACTORY.registerWriter(w, clz);
         }
         w.writeJSONString(value, out);
     }

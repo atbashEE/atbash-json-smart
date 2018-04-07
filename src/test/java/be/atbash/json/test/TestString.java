@@ -58,7 +58,7 @@ public class TestString {
     }
 
     @Test
-    public void testBadString()  {
+    public void testBadString() {
         String s = "{\"t\":\"Before\u000CAfter\"}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
         assertThat(o.get("t")).isEqualTo("Before\u000CAfter");

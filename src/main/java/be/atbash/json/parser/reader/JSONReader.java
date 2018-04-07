@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -34,7 +34,9 @@ package be.atbash.json.writer;
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONAware;
 import be.atbash.json.JSONObject;
+import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
+import be.atbash.json.writer.CustomBeanJSONEncoder;
 import be.atbash.util.reflection.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -115,21 +117,24 @@ public class JSONReader {
         if (type.isArray()) {
             encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(this, type);
         } else if (List.class.isAssignableFrom(type)) {
-            encoder = new CollectionMapper.ListClass<>(this, type);
+            encoder = new CollectionEncoder.ListClass<>(this, type);
         } else if (Map.class.isAssignableFrom(type)) {
-            encoder = new CollectionMapper.MapClass<>(this, type);
-        } else
-        // use bean class
-        {
+            encoder = new CollectionEncoder.MapClass<>(this, type);
+        } else {
+            // use bean class
 
             MappedBy mappedBy = type.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
-                if (!(mappedBy.decoder().equals(CustomJSONEncoder.NOPCustomJSONEncoder.class))) {
-                    encoder = ClassUtils.newInstance(mappedBy.decoder(), this);
+                if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
+                    if (CustomBeanJSONEncoder.class.isAssignableFrom(mappedBy.encoder())) {
+                        encoder = ClassUtils.newInstance(mappedBy.encoder(), this);
+                    } else {
+                        encoder = ClassUtils.newInstance(mappedBy.encoder());
+                    }
                 }
             }
             if (encoder == null) {
-                encoder = new BeansJSONEncoder.Bean<>(this, type);
+                encoder = new BeansJSONEncoder.BeanEncoder<>(this, type);
             }
         }
         cache.putIfAbsent(type, encoder);
@@ -144,9 +149,9 @@ public class JSONReader {
         }
         Class<T> clz = (Class<T>) type.getRawType();
         if (List.class.isAssignableFrom(clz)) {
-            map = new CollectionMapper.ListType<>(this, type);
+            map = new CollectionEncoder.ListType<>(this, type);
         } else if (Map.class.isAssignableFrom(clz)) {
-            map = new CollectionMapper.MapType<>(this, type);
+            map = new CollectionEncoder.MapType<>(this, type);
         }
         cache.putIfAbsent(type, map);
         return map;

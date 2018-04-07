@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -43,7 +43,7 @@ import java.lang.reflect.Type;
  */
 // Original name was JsonReaderI
 public abstract class JSONEncoder<T> {
-    public final JSONReader base;
+    private final JSONReader base;
 
     /**
      * Encoder is linked to a JsonReader.
@@ -55,6 +55,10 @@ public abstract class JSONEncoder<T> {
     }
 
     private static String ERR_MSG = "Invalid or non Implemented status";
+
+    public JSONReader getBase() {
+        return base;
+    }
 
     /**
      * called when json-smart parser meet an object key
@@ -113,7 +117,7 @@ public abstract class JSONEncoder<T> {
     }
 
     /**
-     * Allow a decoder to converte a temprary structure to the final data format.
+     * Allow a decoder to convert a temporary structure to the final data format.
      * <p>
      * example: convert an List&lt;Integer&gt; to an int[]
      */

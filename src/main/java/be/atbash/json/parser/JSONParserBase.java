@@ -31,8 +31,8 @@ package be.atbash.json.parser;
  * limitations under the License.
  */
 
-import be.atbash.json.writer.JSONReader;
-import be.atbash.json.writer.JSONEncoder;
+import be.atbash.json.parser.reader.JSONEncoder;
+import be.atbash.json.parser.reader.JSONReader;
 
 import java.io.IOException;
 import java.math.BigDecimal;

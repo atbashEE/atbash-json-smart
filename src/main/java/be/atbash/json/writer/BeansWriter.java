@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.reader;
+package be.atbash.json.writer;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONUtil;
@@ -24,7 +24,7 @@ import net.minidev.asm.BeansAccess;
 import java.io.IOException;
 
 // This is the net.minidev.BeansWriterASM
-public class BeansWriter implements JsonWriterI<Object> {
+public class BeansWriter implements JSONWriter<Object> {
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
         Class<?> cls = value.getClass();
         boolean needSep = false;

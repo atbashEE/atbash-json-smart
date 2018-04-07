@@ -31,7 +31,7 @@ package be.atbash.json;
  * limitations under the License.
  */
 
-import be.atbash.json.reader.JSONWriter;
+import be.atbash.json.writer.JSONWriterFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -79,7 +79,7 @@ public class JSONArray extends ArrayList<Object> implements List<Object> {
             out.append("null");
             return;
         }
-        JSONWriter.JSONIterableWriter.writeJSONString(list, out);
+        JSONWriterFactory.JSONIterableWriter.writeJSONString(list, out);
     }
 
     /**

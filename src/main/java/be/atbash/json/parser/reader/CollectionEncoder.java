@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -41,7 +41,7 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class CollectionMapper {
+public class CollectionEncoder {
 
     public static class MapType<T> extends JSONEncoder<T> {
         final ParameterizedType type;
@@ -95,7 +95,7 @@ public class CollectionMapper {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(valueType);
+                subJSONEncoder = getBase().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -103,7 +103,7 @@ public class CollectionMapper {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(valueType);
+                subJSONEncoder = getBase().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -152,12 +152,12 @@ public class CollectionMapper {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return base.DEFAULT; // _ARRAY
+            return getBase().DEFAULT; // _ARRAY
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return base.DEFAULT; // _MAP
+            return getBase().DEFAULT; // _MAP
         }
 
         @SuppressWarnings("unchecked")
@@ -215,7 +215,7 @@ public class CollectionMapper {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = getBase().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -223,7 +223,7 @@ public class CollectionMapper {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = getBase().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -260,12 +260,12 @@ public class CollectionMapper {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return base.DEFAULT;// _ARRAY;
+            return getBase().DEFAULT;// _ARRAY;
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return base.DEFAULT;// _MAP;
+            return getBase().DEFAULT;// _MAP;
         }
 
         @SuppressWarnings("unchecked")

@@ -13,7 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
+
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -31,44 +32,38 @@ package be.atbash.json.writer;
  * limitations under the License.
  */
 
-import be.atbash.json.JSONArray;
-import be.atbash.json.JSONAware;
+public class FakeJSONEncoder extends JSONEncoder<Object> {
+    private FakeJSONEncoder() {
+        super(null);
+    }
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+    public static JSONEncoder<Object> DEFAULT = new FakeJSONEncoder();
 
-public class DefaultJSONEncoderOrdered extends JSONEncoder<JSONAware> {
-    protected DefaultJSONEncoderOrdered(JSONReader base) {
-        super(base);
+    @Override
+    public JSONEncoder<?> startObject(String key) {
+        return this;
     }
 
     @Override
-    public JSONEncoder<JSONAware> startObject(String key) {
-        return base.DEFAULT_ORDERED;
+    public JSONEncoder<?> startArray(String key) {
+        return this;
     }
 
     @Override
-    public JSONEncoder<JSONAware> startArray(String key) {
-        return base.DEFAULT_ORDERED;
-    }
-
-    @SuppressWarnings("unchecked")
     public void setValue(Object current, String key, Object value) {
-        ((Map<String, Object>) current).put(key, value);
-    }
-
-    @Override
-    public Object createObject() {
-        return new LinkedHashMap<String, Object>();
     }
 
     @Override
     public void addValue(Object current, Object value) {
-        ((JSONArray) current).add(value);
+    }
+
+    @Override
+    public Object createObject() {
+        return null;
     }
 
     @Override
     public Object createArray() {
-        return new JSONArray();
+        return null;
     }
 }

@@ -16,17 +16,19 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONUtil;
+import be.atbash.json.parser.CustomJSONEncoder;
+import be.atbash.json.parser.reader.BeansJSONEncoder;
+import be.atbash.json.parser.reader.JSONReader;
 import net.minidev.asm.Accessor;
 import net.minidev.asm.BeansAccess;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 /**
  * Atbash added file
  */
 
-public abstract class CustomBeanJSONEncoder<T> extends CustomJSONEncoder<T> {
+public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEncoder<T> implements CustomJSONEncoder {
 
     private final BeansAccess<T> ba;
     private final HashMap<String, Accessor> index;
@@ -35,10 +37,10 @@ public abstract class CustomBeanJSONEncoder<T> extends CustomJSONEncoder<T> {
      * Reader can be link to the JsonReader Base
      *
      * @param base
-     * @param type
+     * @param clz
      */
-    public CustomBeanJSONEncoder(JSONReader base, Class<T> type) {
-        super(base, type);
+    public CustomBeanJSONEncoder(JSONReader base, Class<T> clz) {
+        super(base, clz);
         this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
         this.index = ba.getMap();
     }
@@ -46,7 +48,7 @@ public abstract class CustomBeanJSONEncoder<T> extends CustomJSONEncoder<T> {
     public abstract void setCustomValue(T current, String key, Object value);
 
     @Override
-    public void setValue(Object current, String key, Object value) throws IOException {
+    public void setValue(Object current, String key, Object value) {
         if (ba.getIndex(key) == -1) {
             setCustomValue((T) current, key, value);
         } else {

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.reader;
+package be.atbash.json.writer;
 
 import be.atbash.json.JSONAware;
 import be.atbash.json.JSONValue;
@@ -27,11 +27,12 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JSONWriter {
-    private ConcurrentHashMap<Class<?>, JsonWriterI<?>> data;
+// Old name JSONWriter
+public class JSONWriterFactory {
+    private ConcurrentHashMap<Class<?>, JSONWriter<?>> data;
     private LinkedList<WriterByInterface> writerInterfaces;
 
-    public JSONWriter() {
+    public JSONWriterFactory() {
         data = new ConcurrentHashMap<>();
         writerInterfaces = new LinkedList<>();
         init();
@@ -39,15 +40,15 @@ public class JSONWriter {
 
     static class WriterByInterface {
         Class<?> _interface;
-        JsonWriterI<?> _writer;
+        JSONWriter<?> _writer;
 
-        WriterByInterface(Class<?> _interface, JsonWriterI<?> _writer) {
+        WriterByInterface(Class<?> _interface, JSONWriter<?> _writer) {
             this._interface = _interface;
             this._writer = _writer;
         }
     }
 
-    private final static JsonWriterI<JSONAware> JSONAwareJSONWriter = new JsonWriterI<JSONAware>() {
+    private final static JSONWriter<JSONAware> JSONAwareJSONWriter = new JSONWriter<JSONAware>() {
         public <E extends JSONAware> void writeJSONString(E value, Appendable out) throws IOException {
             out.append(value.toJSONString());
         }
@@ -60,7 +61,7 @@ public class JSONWriter {
      * @return a Writer or null
      */
     @SuppressWarnings("rawtypes")
-    public JsonWriterI getWriterByInterface(Class<?> clazz) {
+    public JSONWriter getWriterByInterface(Class<?> clazz) {
         for (WriterByInterface w : writerInterfaces) {
             if (w._interface.isAssignableFrom(clazz)) {
                 return w._writer;
@@ -70,11 +71,11 @@ public class JSONWriter {
     }
 
     @SuppressWarnings("rawtypes")
-    public JsonWriterI getWriter(Class cls) {
+    public JSONWriter getWriter(Class cls) {
         return data.get(cls);
     }
 
-    public final static JsonWriterI<Iterable<?>> JSONIterableWriter = new JsonWriterI<Iterable<?>>() {
+    public final static JSONWriter<Iterable<?>> JSONIterableWriter = new JSONWriter<Iterable<?>>() {
         public <E extends Iterable<?>> void writeJSONString(E list, Appendable out) throws IOException {
             boolean first = true;
             JSONStyle.DEFAULT.arrayStart(out);
@@ -96,7 +97,7 @@ public class JSONWriter {
         }
     };
 
-    private final static JsonWriterI<Enum<?>> EnumWriter = new JsonWriterI<Enum<?>>() {
+    private final static JSONWriter<Enum<?>> EnumWriter = new JSONWriter<Enum<?>>() {
         public <E extends Enum<?>> void writeJSONString(E value, Appendable out) throws IOException {
             @SuppressWarnings("rawtypes")
             String s = value.name();
@@ -104,7 +105,7 @@ public class JSONWriter {
         }
     };
 
-    public final static JsonWriterI<Map<String, ?>> JSONMapWriter = new JsonWriterI<Map<String, ?>>() {
+    public final static JSONWriter<Map<String, ?>> JSONMapWriter = new JSONWriter<Map<String, ?>>() {
         public <E extends Map<String, ?>> void writeJSONString(E map, Appendable out) throws IOException {
             boolean first = true;
             JSONStyle.DEFAULT.objectStart(out);
@@ -122,7 +123,7 @@ public class JSONWriter {
                 } else {
                     JSONStyle.DEFAULT.objectNext(out);
                 }
-                JSONWriter.writeJSONKV(entry.getKey().toString(), v, out);
+                JSONWriterFactory.writeJSONKV(entry.getKey().toString(), v, out);
                 // compression.objectElmStop(out);
             }
             JSONStyle.DEFAULT.objectStop(out);
@@ -132,30 +133,30 @@ public class JSONWriter {
     /**
      * Json-Smart V2 Beans serialiser
      */
-    public final static JsonWriterI<Object> beansWriter = new BeansWriter();
+    public final static JSONWriter<Object> beansWriter = new BeansWriter();
 
     /**
      * Json-Smart ArrayWriterClass
      */
-    public final static JsonWriterI<Object> arrayWriter = new ArrayWriter();
+    public final static JSONWriter<Object> arrayWriter = new ArrayWriter();
 
     /**
      * ToString Writer
      */
-    public final static JsonWriterI<Object> toStringWriter = new JsonWriterI<Object>() {
+    public final static JSONWriter<Object> toStringWriter = new JSONWriter<Object>() {
         public void writeJSONString(Object value, Appendable out) throws IOException {
             out.append(value.toString());
         }
     };
 
     private void init() {
-        registerWriter(new JsonWriterI<String>() {
+        registerWriter(new JSONWriter<String>() {
             public void writeJSONString(String value, Appendable out) throws IOException {
                 JSONStyle.DEFAULT.writeString(out, value);
             }
         }, String.class);
 
-        registerWriter(new JsonWriterI<Double>() {
+        registerWriter(new JSONWriter<Double>() {
             public void writeJSONString(Double value, Appendable out) throws IOException {
                 if (value.isInfinite()) {
                     out.append("null");
@@ -165,7 +166,7 @@ public class JSONWriter {
             }
         }, Double.class);
 
-        registerWriter(new JsonWriterI<Date>() {
+        registerWriter(new JSONWriter<Date>() {
             public void writeJSONString(Date value, Appendable out) throws IOException {
                 out.append('"');
                 JSONValue.escape(value.toString(), out);
@@ -173,7 +174,7 @@ public class JSONWriter {
             }
         }, Date.class);
 
-        registerWriter(new JsonWriterI<Float>() {
+        registerWriter(new JSONWriter<Float>() {
             public void writeJSONString(Float value, Appendable out) throws IOException {
                 if (value.isInfinite()) {
                     out.append("null");
@@ -190,7 +191,7 @@ public class JSONWriter {
          * Array
          */
 
-        registerWriter(new JsonWriterI<int[]>() {
+        registerWriter(new JSONWriter<int[]>() {
             public void writeJSONString(int[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -206,7 +207,7 @@ public class JSONWriter {
             }
         }, int[].class);
 
-        registerWriter(new JsonWriterI<short[]>() {
+        registerWriter(new JSONWriter<short[]>() {
             public void writeJSONString(short[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -222,7 +223,7 @@ public class JSONWriter {
             }
         }, short[].class);
 
-        registerWriter(new JsonWriterI<long[]>() {
+        registerWriter(new JSONWriter<long[]>() {
             public void writeJSONString(long[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -238,7 +239,7 @@ public class JSONWriter {
             }
         }, long[].class);
 
-        registerWriter(new JsonWriterI<float[]>() {
+        registerWriter(new JSONWriter<float[]>() {
             public void writeJSONString(float[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -254,7 +255,7 @@ public class JSONWriter {
             }
         }, float[].class);
 
-        registerWriter(new JsonWriterI<double[]>() {
+        registerWriter(new JSONWriter<double[]>() {
             public void writeJSONString(double[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -270,7 +271,7 @@ public class JSONWriter {
             }
         }, double[].class);
 
-        registerWriter(new JsonWriterI<boolean[]>() {
+        registerWriter(new JSONWriter<boolean[]>() {
             public void writeJSONString(boolean[] value, Appendable out) throws IOException {
                 boolean needSep = false;
                 JSONStyle.DEFAULT.arrayStart(out);
@@ -286,11 +287,11 @@ public class JSONWriter {
             }
         }, boolean[].class);
 
-        registerWriterInterface(JSONAware.class, JSONWriter.JSONAwareJSONWriter);
-        registerWriterInterface(Map.class, JSONWriter.JSONMapWriter);
-        registerWriterInterface(Iterable.class, JSONWriter.JSONIterableWriter);
-        registerWriterInterface(Enum.class, JSONWriter.EnumWriter);
-        registerWriterInterface(Number.class, JSONWriter.toStringWriter);
+        registerWriterInterface(JSONAware.class, JSONWriterFactory.JSONAwareJSONWriter);
+        registerWriterInterface(Map.class, JSONWriterFactory.JSONMapWriter);
+        registerWriterInterface(Iterable.class, JSONWriterFactory.JSONIterableWriter);
+        registerWriterInterface(Enum.class, JSONWriterFactory.EnumWriter);
+        registerWriterInterface(Number.class, JSONWriterFactory.toStringWriter);
     }
 
     /**
@@ -300,7 +301,7 @@ public class JSONWriter {
      * @param writer    writer Object
      * @deprecated use registerWriterInterfaceFirst
      */
-    public void addInterfaceWriterFirst(Class<?> interFace, JsonWriterI<?> writer) {
+    public void addInterfaceWriterFirst(Class<?> interFace, JSONWriter<?> writer) {
         registerWriterInterfaceFirst(interFace, writer);
     }
 
@@ -311,7 +312,7 @@ public class JSONWriter {
      * @param writer    writer Object
      * @deprecated use registerWriterInterfaceLast
      */
-    public void addInterfaceWriterLast(Class<?> interFace, JsonWriterI<?> writer) {
+    public void addInterfaceWriterLast(Class<?> interFace, JSONWriter<?> writer) {
         registerWriterInterfaceLast(interFace, writer);
     }
 
@@ -321,7 +322,7 @@ public class JSONWriter {
      * @param interFace interface to map
      * @param writer    writer Object
      */
-    public void registerWriterInterfaceLast(Class<?> interFace, JsonWriterI<?> writer) {
+    public void registerWriterInterfaceLast(Class<?> interFace, JSONWriter<?> writer) {
         writerInterfaces.addLast(new WriterByInterface(interFace, writer));
     }
 
@@ -331,7 +332,7 @@ public class JSONWriter {
      * @param interFace interface to map
      * @param writer    writer Object
      */
-    public void registerWriterInterfaceFirst(Class<?> interFace, JsonWriterI<?> writer) {
+    public void registerWriterInterfaceFirst(Class<?> interFace, JSONWriter<?> writer) {
         writerInterfaces.addFirst(new WriterByInterface(interFace, writer));
     }
 
@@ -341,7 +342,7 @@ public class JSONWriter {
      * @param interFace interface to map
      * @param writer    writer Object
      */
-    public void registerWriterInterface(Class<?> interFace, JsonWriterI<?> writer) {
+    public void registerWriterInterface(Class<?> interFace, JSONWriter<?> writer) {
         registerWriterInterfaceLast(interFace, writer);
     }
 
@@ -351,7 +352,7 @@ public class JSONWriter {
      * @param writer
      * @param cls
      */
-    public <T> void registerWriter(JsonWriterI<T> writer, Class<?>... cls) {
+    public <T> void registerWriter(JSONWriter<T> writer, Class<?>... cls) {
         for (Class<?> c : cls) {
             data.put(c, writer);
         }

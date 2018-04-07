@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.reader;
-
-import be.atbash.json.JSONValue;
-import be.atbash.json.style.JSONStyle;
+package be.atbash.json.writer;
 
 import java.io.IOException;
 
-public class ArrayWriter implements JsonWriterI<Object> {
-    public <E> void writeJSONString(E value, Appendable out) throws IOException {
-        JSONStyle.DEFAULT.arrayStart(out);
-        boolean needSep = false;
-        for (Object o : ((Object[]) value)) {
-            if (needSep) {
-                JSONStyle.DEFAULT.objectNext(out);
-            } else {
-                needSep = true;
-            }
-            JSONValue.writeJSONString(o, out);
+public interface JSONWriter<T> {
+    <E extends T> void writeJSONString(E value, Appendable out) throws IOException;
+
+    class NOPJSONWriter implements JSONWriter {
+
+        @Override
+        public void writeJSONString(Object value, Appendable out) throws IOException {
+
         }
-        JSONStyle.DEFAULT.arrayStop(out);
     }
 }

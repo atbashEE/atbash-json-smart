@@ -31,8 +31,8 @@ package be.atbash.json;
  * limitations under the License.
  */
 
-import be.atbash.json.reader.JSONWriter;
 import be.atbash.json.style.JSONStyle;
+import be.atbash.json.writer.JSONWriterFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -171,7 +171,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
             out.append("null");
             return;
         }
-        JSONWriter.JSONMapWriter.writeJSONString(map, out);
+        JSONWriterFactory.JSONMapWriter.writeJSONString(map, out);
     }
 
     protected static JSONObject merge(JSONObject o1, Object o2) {

@@ -46,7 +46,7 @@ public class TestSerPrimArrays {
     }
 
     @Test
-    public void testDtObj()  {
+    public void testDtObj() {
         String s = "{date:'" + testDateString + "'}";
         ADate dt = JSONValue.parse(s, ADate.class);
         assertThat(dt.date).isEqualTo(this.testDate);

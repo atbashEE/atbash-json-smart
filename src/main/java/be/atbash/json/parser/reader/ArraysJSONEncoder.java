@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -81,7 +81,7 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(componentType);
+                subJSONEncoder = getBase().getEncoder(componentType);
             }
             return subJSONEncoder;
         }
@@ -89,7 +89,7 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = base.getEncoder(componentType);
+                subJSONEncoder = getBase().getEncoder(componentType);
             }
             return subJSONEncoder;
         }

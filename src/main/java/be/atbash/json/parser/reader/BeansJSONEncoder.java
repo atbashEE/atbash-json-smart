@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.writer;
+package be.atbash.json.parser.reader;
 
 /*
  *    Copyright 2011 JSON-SMART authors
@@ -49,12 +49,12 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
 
     public abstract Object getValue(Object current, String key);
 
-    public static class Bean<T> extends JSONEncoder<T> {
+    public static class BeanEncoder<T> extends JSONEncoder<T> {
         final Class<T> clz;
         final BeansAccess<T> ba;
         final HashMap<String, Accessor> index;
 
-        public Bean(JSONReader base, Class<T> clz) {
+        public BeanEncoder(JSONReader base, Class<T> clz) {
             super(base);
             this.clz = clz;
             this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
@@ -93,7 +93,7 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (nfo == null) {
                 throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
             }
-            return base.getEncoder(nfo.getGenericType());
+            return getBase().getEncoder(nfo.getGenericType());
         }
 
         @Override
@@ -102,7 +102,7 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (f == null) {
                 throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
             }
-            return base.getEncoder(f.getGenericType());
+            return getBase().getEncoder(f.getGenericType());
         }
 
         @Override

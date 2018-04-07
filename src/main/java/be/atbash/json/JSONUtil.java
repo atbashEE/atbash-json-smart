@@ -17,6 +17,7 @@ package be.atbash.json;
 
 import be.atbash.json.annotate.JsonIgnore;
 import be.atbash.json.parser.MappedBy;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import net.minidev.asm.FieldFilter;
 
 import java.lang.reflect.Field;
@@ -132,10 +133,11 @@ public class JSONUtil {
             MappedBy mappedBy = dest.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
                 try {
+                    // FIXME Must e also support the CustomBeanJSONEncoder like in JSONReader.getEncoder(java.lang.Class<T>) ?
+                    //
                     return mappedBy.encoder().newInstance().parse(obj);
                 } catch (InstantiationException | IllegalAccessException e) {
-                    e.printStackTrace();
-                    // FIXME
+                    throw new AtbashUnexpectedException(e);
                 }
             }
             throw new RuntimeException("Object: Can not Convert " + obj.getClass().getName() + " to " + dest.getName());

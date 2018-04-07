@@ -22,7 +22,7 @@ public interface CustomJSONEncoder {
 
     Object parse(Object data);
 
-    class NOPJSONEncoderCustom implements CustomJSONEncoder {
+    class NOPJSONEncoder implements CustomJSONEncoder {
 
         @Override
         public Object parse(Object data) {
