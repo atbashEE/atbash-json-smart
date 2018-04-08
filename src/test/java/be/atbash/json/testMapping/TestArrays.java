@@ -13,23 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.test;
+package be.atbash.json.testMapping;
 
-import java.util.Map;
+import be.atbash.json.JSONValue;
+import org.junit.Test;
 
-/**
- *
- */
+import static org.assertj.core.api.Assertions.assertThat;
 
-public class Bean3 {
+public class TestArrays {
 
-    private Map<String, Bean1> bean1Map;
-
-    public Map<String, Bean1> getBean1Map() {
-        return bean1Map;
+    @Test
+    public void testBooleans() {
+        String s = "[true,true,false]";
+        boolean[] bs = new boolean[]{true, true, false};
+        String s2 = JSONValue.toJSONString(bs);
+        assertThat(s).isEqualTo(s2);
     }
 
-    public void setBean1Map(Map<String, Bean1> bean1Map) {
-        this.bean1Map = bean1Map;
+    @Test
+    public void testInts() {
+        String s = "[1,2,3]";
+        int[] bs = new int[]{1, 2, 3};
+        String s2 = JSONValue.toJSONString(bs);
+        assertThat(s).isEqualTo(s2);
     }
+
 }

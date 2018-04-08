@@ -13,9 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.test.writer;
+package be.atbash.json;
 
-import be.atbash.json.JSONValue;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

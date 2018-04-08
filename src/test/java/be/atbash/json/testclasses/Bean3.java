@@ -13,23 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.test;
+package be.atbash.json.testclasses;
 
-import java.util.List;
+import java.util.Map;
 
 /**
  *
  */
 
-public class Bean2 {
+public class Bean3 {
 
-    private List<Bean1> bean1List;
+    private Map<String, Bean1> bean1Map;
 
-    public List<Bean1> getBean1List() {
-        return bean1List;
+    public Map<String, Bean1> getBean1Map() {
+        return bean1Map;
     }
 
-    public void setBean1List(List<Bean1> bean1List) {
-        this.bean1List = bean1List;
+    public void setBean1Map(Map<String, Bean1> bean1Map) {
+        this.bean1Map = bean1Map;
     }
 }
