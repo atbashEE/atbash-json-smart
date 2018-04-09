@@ -31,9 +31,6 @@ package be.atbash.json.parser.reader;
  * limitations under the License.
  */
 
-import be.atbash.json.JSONArray;
-import be.atbash.json.JSONAware;
-import be.atbash.json.JSONObject;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.json.writer.CustomBeanJSONEncoder;
@@ -47,12 +44,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONReader {
-    private final ConcurrentHashMap<Type, JSONEncoder<?>> cache;
+    private static final Object LOCK = new Object();
+    private static JSONReader jsonReader;
 
-    public JSONEncoder<JSONAware> DEFAULT;
-    public JSONEncoder<JSONAware> DEFAULT_ORDERED;
+    private ConcurrentHashMap<Type, JSONEncoder<?>> cache;
 
-    public JSONReader() {
+    private JSONReader() {
+    }
+
+    private ConcurrentHashMap<Type, JSONEncoder<?>> initEncoders() {
         cache = new ConcurrentHashMap<>(100);
 
         cache.put(Date.class, BeansJSONEncoder.JSONEncoderDate);
@@ -81,14 +81,10 @@ public class JSONReader {
         cache.put(boolean[].class, ArraysJSONEncoder.JSONEncoderPrimBool);
         cache.put(Boolean[].class, ArraysJSONEncoder.JSONEncoderBool);
 
-        this.DEFAULT = new DefaultJSONEncoder<>(this);
-        this.DEFAULT_ORDERED = new DefaultJSONEncoderOrdered(this);
-
-        cache.put(JSONAware.class, this.DEFAULT);
-        cache.put(JSONArray.class, this.DEFAULT);
-        cache.put(JSONObject.class, this.DEFAULT);
+        return cache;
     }
 
+    // FIXME Example of programmatic and through Config.
     public <T> void registerReader(Class<T> type, JSONEncoder<T> JSONEncoder) {
         cache.put(type, JSONEncoder);
     }
@@ -160,4 +156,20 @@ public class JSONReader {
         cache.putIfAbsent(type, map);
         return map;
     }
+
+    /**
+     * deserialisation class Data
+     */
+    public static JSONReader getInstance() {
+        if (jsonReader == null) {
+            synchronized (LOCK) {
+                if (jsonReader == null) {
+                    jsonReader = new JSONReader();
+                    jsonReader.initEncoders();
+                }
+            }
+        }
+        return jsonReader;
+    }
+
 }

@@ -43,21 +43,21 @@ import java.lang.reflect.Type;
  */
 // Original name was JsonReaderI
 public abstract class JSONEncoder<T> {
-    private final JSONReader base;
+
+    private static String ERR_MSG = "Invalid or non Implemented status";
+    private final JSONReader jsonReader;
 
     /**
      * Encoder is linked to a JsonReader.
      *
-     * @param base
+     * @param jsonReader
      */
-    public JSONEncoder(JSONReader base) {
-        this.base = base;
+    public JSONEncoder(JSONReader jsonReader) {
+        this.jsonReader = jsonReader;
     }
 
-    private static String ERR_MSG = "Invalid or non Implemented status";
-
-    public JSONReader getBase() {
-        return base;
+    public JSONReader getJSONReader() {
+        return jsonReader;
     }
 
     /**

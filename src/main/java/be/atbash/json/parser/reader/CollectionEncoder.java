@@ -95,7 +95,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(valueType);
+                subJSONEncoder = getJSONReader().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -103,7 +103,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(valueType);
+                subJSONEncoder = getJSONReader().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -152,12 +152,12 @@ public class CollectionEncoder {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return getBase().DEFAULT; // _ARRAY
+            return DefaultJSONEncoder.getInstance(); // _ARRAY
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return getBase().DEFAULT; // _MAP
+            return DefaultJSONEncoder.getInstance(); // _MAP
         }
 
         @SuppressWarnings("unchecked")
@@ -215,7 +215,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = getJSONReader().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -223,7 +223,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = getJSONReader().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -260,12 +260,12 @@ public class CollectionEncoder {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return getBase().DEFAULT;// _ARRAY;
+            return DefaultJSONEncoder.getInstance();// _ARRAY;
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return getBase().DEFAULT;// _MAP;
+            return DefaultJSONEncoder.getInstance();// _MAP;
         }
 
         @SuppressWarnings("unchecked")

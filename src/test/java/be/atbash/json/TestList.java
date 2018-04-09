@@ -15,9 +15,6 @@
  */
 package be.atbash.json;
 
-import be.atbash.json.JSONObject;
-import be.atbash.json.JSONValue;
-import be.atbash.json.TypeReference;
 import be.atbash.json.testclasses.Bean1;
 import be.atbash.json.testclasses.Bean2;
 import org.junit.Test;

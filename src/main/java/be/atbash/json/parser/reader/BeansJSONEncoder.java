@@ -103,7 +103,7 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (nfo == null) {
                 throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
             }
-            return getBase().getEncoder(nfo.getGenericType());
+            return getJSONReader().getEncoder(nfo.getGenericType());
         }
 
         @Override
@@ -112,7 +112,7 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (f == null) {
                 throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
             }
-            return getBase().getEncoder(f.getGenericType());
+            return getJSONReader().getEncoder(f.getGenericType());
         }
 
         @Override

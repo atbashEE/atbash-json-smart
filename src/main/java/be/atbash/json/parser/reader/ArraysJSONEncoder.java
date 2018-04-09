@@ -81,7 +81,7 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(componentType);
+                subJSONEncoder = getJSONReader().getEncoder(componentType);
             }
             return subJSONEncoder;
         }
@@ -89,7 +89,7 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getBase().getEncoder(componentType);
+                subJSONEncoder = getJSONReader().getEncoder(componentType);
             }
             return subJSONEncoder;
         }

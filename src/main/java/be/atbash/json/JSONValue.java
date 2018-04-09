@@ -47,11 +47,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * JSONValue is the helper class In most of case you should use those static
- * methode to use JSON-smart
+ * JSONValue is the helper class In most of the cases you should use those static
+ * method to use JSON-smart.
  * <p>
  * <p>
- * The most commonly use methode are {@link #parse(String)}
+ * The most commonly use method are {@link #parse(String, Class<T>)}
  * {@link #toJSONString(Object)}
  *
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
@@ -63,10 +63,6 @@ public class JSONValue {
      * Serialisation class Data
      */
     public final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
-    /**
-     * deserialisation class Data
-     */
-    public final static JSONReader JSON_READER = new JSONReader();
 
     /**
      * Parse input json as a mapTo class
@@ -75,12 +71,12 @@ public class JSONValue {
      */
     public static <T> T parse(String json, Class<T> mapTo) {
         JSONParser parser = new JSONParser();
-        return parser.parse(json, JSON_READER.getEncoder(mapTo));
+        return parser.parse(json, JSONReader.getInstance().getEncoder(mapTo));
     }
 
     public static Object parse(String json, TypeReference mapTo) {
         JSONParser parser = new JSONParser();
-        return parser.parse(json, JSON_READER.getEncoder(mapTo.getType()));
+        return parser.parse(json, JSONReader.getInstance().getEncoder(mapTo.getType()));
     }
 
     /**
@@ -118,7 +114,7 @@ public class JSONValue {
      * register a deserializer for a class.
      */
     public static <T> void registerEncoder(Class<T> type, JSONEncoder<T> JSONEncoder) {
-        JSON_READER.registerReader(type, JSONEncoder);
+        JSONReader.getInstance().registerReader(type, JSONEncoder);
     }
 
     /**
@@ -151,7 +147,7 @@ public class JSONValue {
                         try {
                             w = mappedBy.writer().newInstance();
                         } catch (InstantiationException | IllegalAccessException e) {
-                           throw new AtbashUnexpectedException(e);
+                            throw new AtbashUnexpectedException(e);
                         }
                     }
                 }

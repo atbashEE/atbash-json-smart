@@ -36,24 +36,27 @@ import be.atbash.json.JSONAware;
 import be.atbash.json.JSONObject;
 
 /**
- * Simple Reader Class for generic Map
+ * Simple Reader Class for generic Map/JSONObject.
  *
  * @param <T>
  * @author uriel
  */
 public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
+
+    private static final JSONEncoder<JSONAware> DEFAULT = new DefaultJSONEncoder<>(JSONReader.getInstance());
+
     protected DefaultJSONEncoder(JSONReader base) {
         super(base);
     }
 
     @Override
     public JSONEncoder<JSONAware> startObject(String key) {
-        return getBase().DEFAULT;
+        return DEFAULT;
     }
 
     @Override
     public JSONEncoder<JSONAware> startArray(String key) {
-        return getBase().DEFAULT;
+        return DEFAULT;
     }
 
     @Override
@@ -76,4 +79,7 @@ public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
         ((JSONArray) current).add(value);
     }
 
+    public static JSONEncoder<JSONAware> getInstance() {
+        return DEFAULT;
+    }
 }

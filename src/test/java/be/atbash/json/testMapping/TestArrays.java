@@ -15,6 +15,7 @@
  */
 package be.atbash.json.testMapping;
 
+import be.atbash.json.JSONArray;
 import be.atbash.json.JSONValue;
 import org.junit.Test;
 
@@ -38,4 +39,22 @@ public class TestArrays {
         assertThat(s).isEqualTo(s2);
     }
 
+    @Test
+    public void testJSONArray_toJSON() {
+        // Test JSONArray to String as it is uses now JSONAware instead of
+        JSONArray array = new JSONArray();
+        array.add(23L);
+        array.add(21L);
+        array.add(-12L);
+
+        String json = JSONValue.toJSONString(array);
+        assertThat(json).isEqualTo("[23,21,-12]");
+    }
+
+    @Test
+    public void testJSONArray_fromJSON() {
+        JSONArray array = (JSONArray) JSONValue.parse("[23,21,-12]");
+        assertThat(array).hasSize(3);
+        assertThat(array).containsOnly(-12, 21, 23);
+    }
 }

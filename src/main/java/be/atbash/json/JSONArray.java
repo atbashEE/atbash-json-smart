@@ -43,7 +43,7 @@ import java.util.List;
  * @author FangYidong &lt;fangyidong@yahoo.com.cn&gt;
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  */
-public class JSONArray extends ArrayList<Object> implements List<Object> {
+public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAware {
 
     /**
      * Convert a list to JSON text. The result is a JSON array. If this list is
@@ -102,7 +102,15 @@ public class JSONArray extends ArrayList<Object> implements List<Object> {
      * Explicitely Serialize Object as JSon String
      */
     public String toJSONString() {
-        return toJSONString(this);
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            JSONWriterFactory.JSONIterableWriter.writeJSONString(this, sb);
+
+        } catch (IOException e) {
+            // Can not append on a string builder
+        }
+        return sb.toString();
     }
 
     /**
