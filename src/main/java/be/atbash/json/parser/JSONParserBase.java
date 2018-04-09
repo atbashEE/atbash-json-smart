@@ -32,7 +32,6 @@ package be.atbash.json.parser;
  */
 
 import be.atbash.json.parser.reader.JSONEncoder;
-import be.atbash.json.parser.reader.JSONReader;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -41,25 +40,21 @@ import java.math.BigInteger;
 import static be.atbash.json.parser.ParseException.*;
 
 /**
- * JSONParserBase is the common code between {@link JSONParserString} and
- * {@link JSONParserReader}
+ * JSONParserBase is the common code for all parsers.
  *
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  * @author Rudy De Busscher
  * @see JSONParserMemory
  */
 abstract class JSONParserBase {
-    protected char c;
-    JSONReader base;
-    public final static byte EOI = 0x1A;
-    protected static final char MAX_STOP = 126; // '}' -> 125
-    private String lastKey;
+    final static byte EOI = 0x1A;
+    static final char MAX_STOP = 126; // '}' -> 125
 
-    protected static boolean[] stopAll = new boolean[MAX_STOP];
-    protected static boolean[] stopArray = new boolean[MAX_STOP];
-    protected static boolean[] stopKey = new boolean[MAX_STOP];
-    protected static boolean[] stopValue = new boolean[MAX_STOP];
-    protected static boolean[] stopX = new boolean[MAX_STOP];
+    static boolean[] stopAll = new boolean[MAX_STOP];
+    static boolean[] stopArray = new boolean[MAX_STOP];
+    static boolean[] stopKey = new boolean[MAX_STOP];
+    static boolean[] stopValue = new boolean[MAX_STOP];
+    static boolean[] stopX = new boolean[MAX_STOP];
 
     static {
         stopKey[':'] = stopKey[EOI] = true;
@@ -75,10 +70,13 @@ abstract class JSONParserBase {
      */
     //
     //
-    protected final MSB sb = new MSB(15);
-    protected Object xo;
-    protected String xs;
-    protected int pos;
+    char c;
+    private String lastKey;
+
+    final MSB sb = new MSB(15);
+    Object xo;
+    String xs;
+    int pos;
 
     /*
      * Parsing flags
@@ -789,7 +787,7 @@ abstract class JSONParserBase {
         char b[];
         int p;
 
-        public MSB(int size) {
+        MSB(int size) {
             b = new char[size];
             p = -1;
         }

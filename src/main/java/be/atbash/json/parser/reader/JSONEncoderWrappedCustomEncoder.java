@@ -25,8 +25,7 @@ public class JSONEncoderWrappedCustomEncoder<T> extends JSONEncoder<T> {
 
     private final CustomJSONEncoder<T> customEncoder;
 
-    public JSONEncoderWrappedCustomEncoder(JSONReader base, CustomJSONEncoder<T> customEncoder) {
-        super(base);
+    public JSONEncoderWrappedCustomEncoder(CustomJSONEncoder<T> customEncoder) {
         this.customEncoder = customEncoder;
     }
 

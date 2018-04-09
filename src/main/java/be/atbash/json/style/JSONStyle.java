@@ -43,7 +43,7 @@ import java.io.IOException;
  */
 public class JSONStyle {
 
-    public final static JSONStyle DEFAULT = new JSONStyle();  // NO-COMPRESS of smart-json
+    private final static JSONStyle DEFAULT = new JSONStyle();  // NO-COMPRESS of smart-json
 
     private boolean _ignore_null = true;  // FIXME Config?
 
@@ -137,5 +137,9 @@ public class JSONStyle {
      * End of an Array element
      */
     public void arrayObjectEnd(Appendable out) {
+    }
+
+    public static JSONStyle getDefault() {
+        return DEFAULT;
     }
 }

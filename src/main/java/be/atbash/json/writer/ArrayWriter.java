@@ -22,16 +22,16 @@ import java.io.IOException;
 
 public class ArrayWriter implements JSONWriter<Object> {
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
-        JSONStyle.DEFAULT.arrayStart(out);
+        JSONStyle.getDefault().arrayStart(out);
         boolean needSep = false;
         for (Object o : ((Object[]) value)) {
             if (needSep) {
-                JSONStyle.DEFAULT.objectNext(out);
+                JSONStyle.getDefault().objectNext(out);
             } else {
                 needSep = true;
             }
             JSONValue.writeJSONString(o, out);
         }
-        JSONStyle.DEFAULT.arrayStop(out);
+        JSONStyle.getDefault().arrayStop(out);
     }
 }

@@ -15,13 +15,7 @@
  */
 package be.atbash.json.writer;
 
-import be.atbash.json.JSONUtil;
 import be.atbash.json.parser.reader.BeansJSONEncoder;
-import be.atbash.json.parser.reader.JSONReader;
-import net.minidev.asm.Accessor;
-import net.minidev.asm.BeansAccess;
-
-import java.util.HashMap;
 
 /**
  * Atbash added file
@@ -29,36 +23,30 @@ import java.util.HashMap;
 
 public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEncoder<T> {
 
-    private final BeansAccess<T> ba;
-    private final HashMap<String, Accessor> index;
-
     /**
      * Reader can be link to the JsonReader Base
      *
-     * @param base
      * @param clz
      */
-    public CustomBeanJSONEncoder(JSONReader base, Class<T> clz) {
-        super(base, clz);
-        this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
-        this.index = ba.getMap();
+    protected CustomBeanJSONEncoder(Class<T> clz) {
+        super(clz);
     }
 
-    public abstract void setCustomValue(T current, String key, Object value);
+    protected abstract void setCustomValue(T current, String key, Object value);
 
     @Override
     public void setValue(Object current, String key, Object value) {
-        if (ba.getIndex(key) == -1) {
+        if (beansAccess.getIndex(key) == -1) {
             setCustomValue((T) current, key, value);
         } else {
-            ba.set((T) current, key, value);
+            beansAccess.set((T) current, key, value);
         }
     }
 
     public static class NOPCustomBeanJSONEncoder extends CustomBeanJSONEncoder {
 
-        public NOPCustomBeanJSONEncoder(JSONReader base) {
-            super(base, Object.class);
+        public NOPCustomBeanJSONEncoder() {
+            super(Object.class);
         }
 
         @Override

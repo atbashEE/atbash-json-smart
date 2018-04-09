@@ -29,30 +29,47 @@ import java.util.concurrent.ConcurrentHashMap;
 
 // Old name JSONWriter
 public class JSONWriterFactory {
+
+    /**
+     * Serialisation class Data
+     */
+    private final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
+
     private ConcurrentHashMap<Class<?>, JSONWriter<?>> data;
     private LinkedList<WriterByInterface> writerInterfaces;
 
-    public JSONWriterFactory() {
+    private JSONWriter<JSONAware> jsonAwareJSONWriter;
+
+    private JSONWriter<Iterable<?>> jsonIterableWriter;
+
+    private JSONWriter<Enum<?>> enumWriter;
+
+    private JSONWriter<Map<String, ?>> jsonMapWriter;
+
+    /**
+     * Json-Smart V2 Beans serialiser
+     */
+    private JSONWriter<Object> beansWriter;
+
+    /**
+     * Json-Smart ArrayWriterClass
+     */
+    private JSONWriter<Object> arrayWriter;
+
+    /**
+     * ToString Writer
+     */
+    private JSONWriter<Object> stringWriter;
+
+    private JSONWriterFactory() {
         data = new ConcurrentHashMap<>();
         writerInterfaces = new LinkedList<>();
         init();
     }
 
-    static class WriterByInterface {
-        Class<?> _interface;
-        JSONWriter<?> _writer;
-
-        WriterByInterface(Class<?> _interface, JSONWriter<?> _writer) {
-            this._interface = _interface;
-            this._writer = _writer;
-        }
+    public static JSONWriterFactory getInstance() {
+        return WRITER_FACTORY;
     }
-
-    private final static JSONWriter<JSONAware> JSONAwareJSONWriter = new JSONWriter<JSONAware>() {
-        public <E extends JSONAware> void writeJSONString(E value, Appendable out) throws IOException {
-            out.append(value.toJSONString());
-        }
-    };
 
     /**
      * try to find a Writer by Checking implemented interface
@@ -75,84 +92,40 @@ public class JSONWriterFactory {
         return data.get(cls);
     }
 
-    public final static JSONWriter<Iterable<?>> JSONIterableWriter = new JSONWriter<Iterable<?>>() {
-        public <E extends Iterable<?>> void writeJSONString(E list, Appendable out) throws IOException {
-            boolean first = true;
-            JSONStyle.DEFAULT.arrayStart(out);
-            for (Object value : list) {
-                if (first) {
-                    first = false;
-                    JSONStyle.DEFAULT.arrayfirstObject(out);
-                } else {
-                    JSONStyle.DEFAULT.arrayNextElm(out);
-                }
-                if (value == null) {
-                    out.append("null");
-                } else {
-                    JSONValue.writeJSONString(value, out);
-                }
-                JSONStyle.DEFAULT.arrayObjectEnd(out);
-            }
-            JSONStyle.DEFAULT.arrayStop(out);
-        }
-    };
+    public JSONWriter<JSONAware> getJsonAwareJSONWriter() {
+        return jsonAwareJSONWriter;
+    }
 
-    private final static JSONWriter<Enum<?>> EnumWriter = new JSONWriter<Enum<?>>() {
-        public <E extends Enum<?>> void writeJSONString(E value, Appendable out) throws IOException {
-            @SuppressWarnings("rawtypes")
-            String s = value.name();
-            JSONStyle.DEFAULT.writeString(out, s);
-        }
-    };
+    public JSONWriter<Iterable<?>> getJsonIterableWriter() {
+        return jsonIterableWriter;
+    }
 
-    public final static JSONWriter<Map<String, ?>> JSONMapWriter = new JSONWriter<Map<String, ?>>() {
-        public <E extends Map<String, ?>> void writeJSONString(E map, Appendable out) throws IOException {
-            boolean first = true;
-            JSONStyle.DEFAULT.objectStart(out);
-            /*
-             * do not use <String, Object> to handle non String key maps
-             */
-            for (Map.Entry<?, ?> entry : map.entrySet()) {
-                Object v = entry.getValue();
-                if (v == null && JSONStyle.DEFAULT.ignoreNull()) {
-                    continue;
-                }
-                if (first) {
-                    JSONStyle.DEFAULT.objectFirstStart(out);
-                    first = false;
-                } else {
-                    JSONStyle.DEFAULT.objectNext(out);
-                }
-                JSONWriterFactory.writeJSONKV(entry.getKey().toString(), v, out);
-                // compression.objectElmStop(out);
-            }
-            JSONStyle.DEFAULT.objectStop(out);
-        }
-    };
+    public JSONWriter<Enum<?>> getEnumWriter() {
+        return enumWriter;
+    }
 
-    /**
-     * Json-Smart V2 Beans serialiser
-     */
-    public final static JSONWriter<Object> beansWriter = new BeansWriter();
+    public JSONWriter<Map<String, ?>> getJsonMapWriter() {
+        return jsonMapWriter;
+    }
 
-    /**
-     * Json-Smart ArrayWriterClass
-     */
-    public final static JSONWriter<Object> arrayWriter = new ArrayWriter();
+    public JSONWriter<Object> getBeansWriter() {
+        return beansWriter;
+    }
 
-    /**
-     * ToString Writer
-     */
-    public final static JSONWriter<Object> toStringWriter = new JSONWriter<Object>() {
-        public void writeJSONString(Object value, Appendable out) throws IOException {
-            out.append(value.toString());
-        }
-    };
+    public JSONWriter<Object> getArrayWriter() {
+        return arrayWriter;
+    }
+
+    public JSONWriter<Object> getStringWriter() {
+        return stringWriter;
+    }
 
     private void init() {
+        createWriters();
+
         registerWriter(new JSONWriter<String>() {
             public void writeJSONString(String value, Appendable out) throws IOException {
-                JSONStyle.DEFAULT.writeString(out, value);
+                JSONStyle.getDefault().writeString(out, value);
             }
         }, String.class);
 
@@ -184,8 +157,8 @@ public class JSONWriterFactory {
             }
         }, Float.class);
 
-        registerWriter(toStringWriter, Integer.class, Long.class, Byte.class, Short.class, BigInteger.class, BigDecimal.class);
-        registerWriter(toStringWriter, Boolean.class);
+        registerWriter(stringWriter, Integer.class, Long.class, Byte.class, Short.class, BigInteger.class, BigDecimal.class);
+        registerWriter(stringWriter, Boolean.class);
 
         /*
          * Array
@@ -194,104 +167,177 @@ public class JSONWriterFactory {
         registerWriter(new JSONWriter<int[]>() {
             public void writeJSONString(int[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (int b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Integer.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, int[].class);
 
         registerWriter(new JSONWriter<short[]>() {
             public void writeJSONString(short[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (short b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Short.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, short[].class);
 
         registerWriter(new JSONWriter<long[]>() {
             public void writeJSONString(long[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (long b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Long.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, long[].class);
 
         registerWriter(new JSONWriter<float[]>() {
             public void writeJSONString(float[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (float b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Float.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, float[].class);
 
         registerWriter(new JSONWriter<double[]>() {
             public void writeJSONString(double[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (double b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Double.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, double[].class);
 
         registerWriter(new JSONWriter<boolean[]>() {
             public void writeJSONString(boolean[] value, Appendable out) throws IOException {
                 boolean needSep = false;
-                JSONStyle.DEFAULT.arrayStart(out);
+                JSONStyle.getDefault().arrayStart(out);
                 for (boolean b : value) {
                     if (needSep) {
-                        JSONStyle.DEFAULT.objectNext(out);
+                        JSONStyle.getDefault().objectNext(out);
                     } else {
                         needSep = true;
                     }
                     out.append(Boolean.toString(b));
                 }
-                JSONStyle.DEFAULT.arrayStop(out);
+                JSONStyle.getDefault().arrayStop(out);
             }
         }, boolean[].class);
 
-        registerWriterInterface(JSONAware.class, JSONWriterFactory.JSONAwareJSONWriter);
-        registerWriterInterface(Map.class, JSONWriterFactory.JSONMapWriter);
-        registerWriterInterface(Iterable.class, JSONWriterFactory.JSONIterableWriter);
-        registerWriterInterface(Enum.class, JSONWriterFactory.EnumWriter);
-        registerWriterInterface(Number.class, JSONWriterFactory.toStringWriter);
+        registerWriterInterface(JSONAware.class, jsonAwareJSONWriter);
+        registerWriterInterface(Map.class, jsonMapWriter);
+        registerWriterInterface(Iterable.class, jsonIterableWriter);
+        registerWriterInterface(Enum.class, enumWriter);
+        registerWriterInterface(Number.class, stringWriter);
+    }
+
+    private void createWriters() {
+        stringWriter = new JSONWriter<Object>() {
+            public void writeJSONString(Object value, Appendable out) throws IOException {
+                out.append(value.toString());
+            }
+        };
+
+        beansWriter = new BeansWriter();
+
+        arrayWriter = new ArrayWriter();
+
+        enumWriter = new JSONWriter<Enum<?>>() {
+            public <E extends Enum<?>> void writeJSONString(E value, Appendable out) throws IOException {
+                @SuppressWarnings("rawtypes")
+                String s = value.name();
+                JSONStyle.getDefault().writeString(out, s);
+            }
+        };
+
+        jsonAwareJSONWriter = new JSONWriter<JSONAware>() {
+            public <E extends JSONAware> void writeJSONString(E value, Appendable out) throws IOException {
+                out.append(value.toJSONString());
+            }
+        };
+
+        jsonMapWriter = new JSONWriter<Map<String, ?>>() {
+            public <E extends Map<String, ?>> void writeJSONString(E map, Appendable out) throws IOException {
+                boolean first = true;
+                JSONStyle.getDefault().objectStart(out);
+                /*
+                 * do not use <String, Object> to handle non String key maps
+                 */
+                for (Map.Entry<?, ?> entry : map.entrySet()) {
+                    Object v = entry.getValue();
+                    if (v == null && JSONStyle.getDefault().ignoreNull()) {
+                        continue;
+                    }
+                    if (first) {
+                        JSONStyle.getDefault().objectFirstStart(out);
+                        first = false;
+                    } else {
+                        JSONStyle.getDefault().objectNext(out);
+                    }
+                    JSONWriterFactory.writeJSONKV(entry.getKey().toString(), v, out);
+                    // compression.objectElmStop(out);
+                }
+                JSONStyle.getDefault().objectStop(out);
+            }
+        };
+
+        jsonIterableWriter = new JSONWriter<Iterable<?>>() {
+            public <E extends Iterable<?>> void writeJSONString(E list, Appendable out) throws IOException {
+                boolean first = true;
+                JSONStyle.getDefault().arrayStart(out);
+                for (Object value : list) {
+                    if (first) {
+                        first = false;
+                        JSONStyle.getDefault().arrayfirstObject(out);
+                    } else {
+                        JSONStyle.getDefault().arrayNextElm(out);
+                    }
+                    if (value == null) {
+                        out.append("null");
+                    } else {
+                        JSONValue.writeJSONString(value, out);
+                    }
+                    JSONStyle.getDefault().arrayObjectEnd(out);
+                }
+                JSONStyle.getDefault().arrayStop(out);
+            }
+        };
     }
 
     /**
@@ -369,12 +415,22 @@ public class JSONWriterFactory {
             JSONValue.escape(key, out);
             out.append('"');
         }
-        JSONStyle.DEFAULT.objectEndOfKey(out);
+        JSONStyle.getDefault().objectEndOfKey(out);
         if (value instanceof String) {
-            JSONStyle.DEFAULT.writeString(out, (String) value);
+            JSONStyle.getDefault().writeString(out, (String) value);
         } else {
             JSONValue.writeJSONString(value, out);
         }
-        JSONStyle.DEFAULT.objectElmStop(out);
+        JSONStyle.getDefault().objectElmStop(out);
+    }
+
+    static class WriterByInterface {
+        Class<?> _interface;
+        JSONWriter<?> _writer;
+
+        WriterByInterface(Class<?> _interface, JSONWriter<?> _writer) {
+            this._interface = _interface;
+            this._writer = _writer;
+        }
     }
 }

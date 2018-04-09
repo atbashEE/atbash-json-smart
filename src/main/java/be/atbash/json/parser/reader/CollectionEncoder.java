@@ -57,8 +57,7 @@ public class CollectionEncoder {
 
         JSONEncoder<?> subJSONEncoder;
 
-        public MapType(JSONReader base, ParameterizedType type) {
-            super(base);
+        public MapType(ParameterizedType type) {
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
             if (rawClass.isInterface()) {
@@ -95,7 +94,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getJSONReader().getEncoder(valueType);
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -103,7 +102,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getJSONReader().getEncoder(valueType);
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(valueType);
             }
             return subJSONEncoder;
         }
@@ -132,10 +131,7 @@ public class CollectionEncoder {
         final Class<?> instance;
         final BeansAccess<?> ba;
 
-        JSONEncoder<?> subJSONEncoder;
-
-        public MapClass(JSONReader base, Class<?> type) {
-            super(base);
+        public MapClass(Class<?> type) {
             this.type = type;
             if (type.isInterface()) {
                 this.instance = JSONObject.class;
@@ -189,8 +185,7 @@ public class CollectionEncoder {
 
         JSONEncoder<?> subJSONEncoder;
 
-        public ListType(JSONReader base, ParameterizedType type) {
-            super(base);
+        public ListType(ParameterizedType type) {
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
             if (rawClass.isInterface()) {
@@ -215,7 +210,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startArray(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getJSONReader().getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -223,7 +218,7 @@ public class CollectionEncoder {
         @Override
         public JSONEncoder<?> startObject(String key) {
             if (subJSONEncoder == null) {
-                subJSONEncoder = getJSONReader().getEncoder(type.getActualTypeArguments()[0]);
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(type.getActualTypeArguments()[0]);
             }
             return subJSONEncoder;
         }
@@ -242,8 +237,7 @@ public class CollectionEncoder {
 
         JSONEncoder<?> subJSONEncoder;
 
-        public ListClass(JSONReader base, Class<?> clazz) {
-            super(base);
+        public ListClass(Class<?> clazz) {
             this.type = clazz;
             if (clazz.isInterface()) {
                 instance = JSONArray.class;

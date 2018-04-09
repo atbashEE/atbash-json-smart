@@ -124,12 +124,10 @@ public interface CustomJSONEncoder<T> {
 
 The data parameter is most of the time an instance of String, but can be any primitive, JSONArray or JSONObject in case the JSON is malformed or has wrong contents (other contents then expected).
 
-An implementation of this interface needs a no argument constructor.
-
 There is a special encoder available, _be.atbash.json.writer.CustomBeanJSONEncoder_, which tries to use the setters if they are available, or call the _setCustomValue()_ method otherwise.
 An example can be seen at the test class _be.atbash.json.testclasses.Token_ and _be.atbash.json.testclasses.TokenJSONEncoder_.
 
-An instance of this class needs a constructor which takes an _be.atbash.json.parser.reader.JSONReader_ parameter.
+An implementation of this interface or the class, needs a no argument constructor.
 
 Both classes needs to be specified by a @MappedBy annotation, _encoder()_ member for the simple CustomJSONEncoder implementation, _beanEncoder()_ member for CustomBeanJSONEncoder class.
 

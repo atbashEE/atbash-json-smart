@@ -36,7 +36,7 @@ import be.atbash.json.parser.MappedBy;
 import be.atbash.json.parser.ParseException;
 import be.atbash.json.parser.reader.FakeJSONEncoder;
 import be.atbash.json.parser.reader.JSONEncoder;
-import be.atbash.json.parser.reader.JSONReader;
+import be.atbash.json.parser.reader.JSONEncoderFactory;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.JSONWriter;
 import be.atbash.json.writer.JSONWriterFactory;
@@ -51,7 +51,7 @@ import java.util.Map;
  * method to use JSON-smart.
  * <p>
  * <p>
- * The most commonly use method are {@link #parse(String, Class<T>)}
+ * The most commonly use method are {@link #T parse(String, Class<T>)}
  * {@link #toJSONString(Object)}
  *
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
@@ -60,23 +60,18 @@ import java.util.Map;
 public class JSONValue {
 
     /**
-     * Serialisation class Data
-     */
-    public final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
-
-    /**
      * Parse input json as a mapTo class
      * <p>
      * mapTo can be a bean
      */
     public static <T> T parse(String json, Class<T> mapTo) {
         JSONParser parser = new JSONParser();
-        return parser.parse(json, JSONReader.getInstance().getEncoder(mapTo));
+        return parser.parse(json, JSONEncoderFactory.getInstance().getEncoder(mapTo));
     }
 
     public static Object parse(String json, TypeReference mapTo) {
         JSONParser parser = new JSONParser();
-        return parser.parse(json, JSONReader.getInstance().getEncoder(mapTo.getType()));
+        return parser.parse(json, JSONEncoderFactory.getInstance().getEncoder(mapTo.getType()));
     }
 
     /**
@@ -105,16 +100,18 @@ public class JSONValue {
 
     /**
      * Register a serializer for a class.
+     * TODO Document
      */
     public static <T> void registerWriter(Class<?> cls, JSONWriter<T> writer) {
-        WRITER_FACTORY.registerWriter(writer, cls);
+        JSONWriterFactory.getInstance().registerWriter(writer, cls);
     }
 
     /**
      * register a deserializer for a class.
+     * TODO Document
      */
-    public static <T> void registerEncoder(Class<T> type, JSONEncoder<T> JSONEncoder) {
-        JSONReader.getInstance().registerReader(type, JSONEncoder);
+    public static <T> void registerEncoder(Class<T> type, JSONEncoder<T> jsonEncoder) {
+        JSONEncoderFactory.getInstance().registerEncoder(type, jsonEncoder);
     }
 
     /**
@@ -134,12 +131,12 @@ public class JSONValue {
         }
         Class<?> clz = value.getClass();
         @SuppressWarnings("rawtypes")
-        JSONWriter w = WRITER_FACTORY.getWriter(clz);
+        JSONWriter w = JSONWriterFactory.getInstance().getWriter(clz);
         if (w == null) {
             if (clz.isArray()) {
-                w = JSONWriterFactory.arrayWriter;
+                w = JSONWriterFactory.getInstance().getArrayWriter();
             } else {
-                w = WRITER_FACTORY.getWriterByInterface(value.getClass());
+                w = JSONWriterFactory.getInstance().getWriterByInterface(value.getClass());
                 // Atbash support for Custom Writer
                 if (w == null) {
                     MappedBy mappedBy = value.getClass().getAnnotation(MappedBy.class);
@@ -152,10 +149,10 @@ public class JSONValue {
                     }
                 }
                 if (w == null) {
-                    w = JSONWriterFactory.beansWriter;
+                    w = JSONWriterFactory.getInstance().getBeansWriter();
                 }
             }
-            WRITER_FACTORY.registerWriter(w, clz);
+            JSONWriterFactory.getInstance().registerWriter(w, clz);
         }
         w.writeJSONString(value, out);
     }
@@ -194,7 +191,7 @@ public class JSONValue {
             return null;
         }
         StringBuilder sb = new StringBuilder();
-        JSONStyle.DEFAULT.escape(s, sb);
+        JSONStyle.getDefault().escape(s, sb);
         return sb.toString();
     }
 
@@ -202,6 +199,6 @@ public class JSONValue {
         if (s == null) {
             return;
         }
-        JSONStyle.DEFAULT.escape(s, ap);
+        JSONStyle.getDefault().escape(s, ap);
     }
 }

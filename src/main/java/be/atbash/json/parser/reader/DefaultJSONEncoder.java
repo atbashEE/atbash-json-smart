@@ -43,10 +43,9 @@ import be.atbash.json.JSONObject;
  */
 public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
 
-    private static final JSONEncoder<JSONAware> DEFAULT = new DefaultJSONEncoder<>(JSONReader.getInstance());
+    private static final JSONEncoder<JSONAware> DEFAULT = new DefaultJSONEncoder<>();
 
-    protected DefaultJSONEncoder(JSONReader base) {
-        super(base);
+    private DefaultJSONEncoder() {
     }
 
     @Override

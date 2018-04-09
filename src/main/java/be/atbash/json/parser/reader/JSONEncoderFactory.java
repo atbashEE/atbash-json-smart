@@ -43,50 +43,48 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JSONReader {
+public class JSONEncoderFactory {
     private static final Object LOCK = new Object();
-    private static JSONReader jsonReader;
+    private static JSONEncoderFactory jsonEncoderFactory;
 
     private ConcurrentHashMap<Type, JSONEncoder<?>> cache;
 
-    private JSONReader() {
+    private JSONEncoderFactory() {
     }
 
-    private ConcurrentHashMap<Type, JSONEncoder<?>> initEncoders() {
+    private void initEncoders() {
         cache = new ConcurrentHashMap<>(100);
 
         cache.put(Date.class, BeansJSONEncoder.JSONEncoderDate);
 
-        cache.put(int[].class, ArraysJSONEncoder.JSONEncoderPrimInt);
-        cache.put(Integer[].class, ArraysJSONEncoder.JSONEncoderInt);
+        cache.put(int[].class, ArraysJSONEncoder.getJSONEncoderPrimInt());
+        cache.put(Integer[].class, ArraysJSONEncoder.getJSONEncoderInt());
 
-        cache.put(short[].class, ArraysJSONEncoder.JSONEncoderPrimInt);
-        cache.put(Short[].class, ArraysJSONEncoder.JSONEncoderInt);
+        cache.put(short[].class, ArraysJSONEncoder.getJSONEncoderPrimShort());
+        cache.put(Short[].class, ArraysJSONEncoder.getJSONEncoderShort());
 
-        cache.put(long[].class, ArraysJSONEncoder.JSONEncoderPrimLong);
-        cache.put(Long[].class, ArraysJSONEncoder.JSONEncoderLong);
+        cache.put(long[].class, ArraysJSONEncoder.getJSONEncoderPrimLong());
+        cache.put(Long[].class, ArraysJSONEncoder.getJSONEncoderLong());
 
-        cache.put(byte[].class, ArraysJSONEncoder.JSONEncoderPrimByte);
-        cache.put(Byte[].class, ArraysJSONEncoder.JSONEncoderByte);
+        cache.put(byte[].class, ArraysJSONEncoder.getJSONEncoderPrimByte());
+        cache.put(Byte[].class, ArraysJSONEncoder.getJSONEncoderByte());
 
-        cache.put(char[].class, ArraysJSONEncoder.JSONEncoderPrimChar);
-        cache.put(Character[].class, ArraysJSONEncoder.JSONEncoderChar);
+        cache.put(char[].class, ArraysJSONEncoder.getJSONEncoderPrimChar());
+        cache.put(Character[].class, ArraysJSONEncoder.getJSONEncoderChar());
 
-        cache.put(float[].class, ArraysJSONEncoder.JSONEncoderPrimFloat);
-        cache.put(Float[].class, ArraysJSONEncoder.JSONEncoderFloat);
+        cache.put(float[].class, ArraysJSONEncoder.getJSONEncoderPrimFloat());
+        cache.put(Float[].class, ArraysJSONEncoder.getJSONEncoderFloat());
 
-        cache.put(double[].class, ArraysJSONEncoder.JSONEncoderPrimDouble);
-        cache.put(Double[].class, ArraysJSONEncoder.JSONEncoderDouble);
+        cache.put(double[].class, ArraysJSONEncoder.getJSONEncoderPrimDouble());
+        cache.put(Double[].class, ArraysJSONEncoder.getJSONEncoderDouble());
 
-        cache.put(boolean[].class, ArraysJSONEncoder.JSONEncoderPrimBool);
-        cache.put(Boolean[].class, ArraysJSONEncoder.JSONEncoderBool);
-
-        return cache;
+        cache.put(boolean[].class, ArraysJSONEncoder.getJSONEncoderPrimBool());
+        cache.put(Boolean[].class, ArraysJSONEncoder.getJSONEncoderBool());
     }
 
     // FIXME Example of programmatic and through Config.
-    public <T> void registerReader(Class<T> type, JSONEncoder<T> JSONEncoder) {
-        cache.put(type, JSONEncoder);
+    public <T> void registerEncoder(Class<T> type, JSONEncoder<T> jsonEncoder) {
+        cache.put(type, jsonEncoder);
     }
 
     @SuppressWarnings("unchecked")
@@ -111,30 +109,29 @@ public class JSONReader {
         }
 
         if (type.isArray()) {
-            encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(this, type);
+            encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(type);
         } else if (List.class.isAssignableFrom(type)) {
-            encoder = new CollectionEncoder.ListClass<>(this, type);
+            encoder = new CollectionEncoder.ListClass<>(type);
         } else if (Map.class.isAssignableFrom(type)) {
-            encoder = new CollectionEncoder.MapClass<>(this, type);
+            encoder = new CollectionEncoder.MapClass<>(type);
         } else {
-            // use bean class
-
+            // Check for the @MappedBy
             MappedBy mappedBy = type.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
                 if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
 
-                    encoder = new JSONEncoderWrappedCustomEncoder(this, (CustomJSONEncoder) ClassUtils.newInstance(mappedBy.encoder()));
+                    encoder = new JSONEncoderWrappedCustomEncoder((CustomJSONEncoder) ClassUtils.newInstance(mappedBy.encoder()));
 
                 } else {
                     if (!(mappedBy.beanEncoder().equals(CustomBeanJSONEncoder.NOPCustomBeanJSONEncoder.class))) {
-                        encoder = ClassUtils.newInstance(mappedBy.beanEncoder(), this);
-
+                        encoder = ClassUtils.newInstance(mappedBy.beanEncoder());
                     }
                 }
-
             }
+
+            // use bean class
             if (encoder == null) {
-                encoder = new BeansJSONEncoder.BeanEncoder<>(this, type);
+                encoder = new BeansJSONEncoder.BeanEncoder<>(type);
             }
         }
         cache.putIfAbsent(type, encoder);
@@ -142,34 +139,34 @@ public class JSONReader {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
+    private <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
         JSONEncoder<T> map = (JSONEncoder<T>) cache.get(type);
         if (map != null) {
             return map;
         }
         Class<T> clz = (Class<T>) type.getRawType();
         if (List.class.isAssignableFrom(clz)) {
-            map = new CollectionEncoder.ListType<>(this, type);
+            map = new CollectionEncoder.ListType<>(type);
         } else if (Map.class.isAssignableFrom(clz)) {
-            map = new CollectionEncoder.MapType<>(this, type);
+            map = new CollectionEncoder.MapType<>(type);
         }
         cache.putIfAbsent(type, map);
         return map;
     }
 
     /**
-     * deserialisation class Data
+     * Returns an instance of the factory, create and initialize if needed.
      */
-    public static JSONReader getInstance() {
-        if (jsonReader == null) {
+    public static JSONEncoderFactory getInstance() {
+        if (jsonEncoderFactory == null) {
             synchronized (LOCK) {
-                if (jsonReader == null) {
-                    jsonReader = new JSONReader();
-                    jsonReader.initEncoders();
+                if (jsonEncoderFactory == null) {
+                    jsonEncoderFactory = new JSONEncoderFactory();
+                    jsonEncoderFactory.initEncoders();
                 }
             }
         }
-        return jsonReader;
+        return jsonEncoderFactory;
     }
 
 }

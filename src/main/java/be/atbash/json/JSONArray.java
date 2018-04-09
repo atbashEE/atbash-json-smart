@@ -73,13 +73,13 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
      * @param out
      * @see JSONValue#writeJSONString(Object, Appendable)
      */
-    public static void writeJSONString(Iterable<?> list, Appendable out)
+    private static void writeJSONString(Iterable<?> list, Appendable out)
             throws IOException {
         if (list == null) {
             out.append("null");
             return;
         }
-        JSONWriterFactory.JSONIterableWriter.writeJSONString(list, out);
+        JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(list, out);
     }
 
     /**
@@ -105,7 +105,7 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
         StringBuilder sb = new StringBuilder();
         try {
 
-            JSONWriterFactory.JSONIterableWriter.writeJSONString(this, sb);
+            JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(this, sb);
 
         } catch (IOException e) {
             // Can not append on a string builder

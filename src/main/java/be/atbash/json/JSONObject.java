@@ -129,6 +129,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
      * @return JSON text, or "null" if map is null.
      * @see JSONValue#toJSONString(Object)
      */
+    // FIXME Required?
     public static String toJSONString(Map<String, ?> map) {
         StringBuilder sb = new StringBuilder();
         try {
@@ -152,7 +153,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         }
         out.append(':');
         if (value instanceof String) {
-            JSONStyle.DEFAULT.writeString(out, (String) value);
+            JSONStyle.getDefault().writeString(out, (String) value);
         } else {
             JSONValue.writeJSONString(value, out);
         }
@@ -165,13 +166,13 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
      *
      * @see JSONValue#writeJSONString(Object, Appendable)
      */
-    public static void writeJSON(Map<String, ?> map, Appendable out)
+    private static void writeJSON(Map<String, ?> map, Appendable out)
             throws IOException {
         if (map == null) {
             out.append("null");
             return;
         }
-        JSONWriterFactory.JSONMapWriter.writeJSONString(map, out);
+        JSONWriterFactory.getInstance().getJsonMapWriter().writeJSONString(map, out);
     }
 
     protected static JSONObject merge(JSONObject o1, Object o2) {

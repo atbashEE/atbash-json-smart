@@ -42,9 +42,9 @@ import static be.atbash.json.parser.ParseException.*;
  * @see JSONParserString
  */
 abstract class JSONParserMemory extends JSONParserBase {
-    protected int len;
+    int len;
 
-    public JSONParserMemory(int permissiveMode) {
+    JSONParserMemory(int permissiveMode) {
         super(permissiveMode);
     }
 
@@ -63,7 +63,7 @@ abstract class JSONParserMemory extends JSONParserBase {
         // Integer digit
         if (c != '.' && c != 'E' && c != 'e') {
             skipSpace();
-            if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
+            if (c < MAX_STOP && !stop[c] && c != EOI) {
                 // convert string
                 skipNQString(stop);
                 extractStringTrim(start, pos);
@@ -83,7 +83,7 @@ abstract class JSONParserMemory extends JSONParserBase {
         }
         if (c != 'E' && c != 'e') {
             skipSpace();
-            if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
+            if (c < MAX_STOP && !stop[c] && c != EOI) {
                 // convert string
                 skipNQString(stop);
                 extractStringTrim(start, pos);
@@ -102,7 +102,7 @@ abstract class JSONParserMemory extends JSONParserBase {
             read(); // skip first char
             skipDigits();
             skipSpace();
-            if (c >= 0 && c < MAX_STOP && !stop[c] && c != EOI) {
+            if (c < MAX_STOP && !stop[c] && c != EOI) {
                 // convert string
                 skipNQString(stop);
                 extractStringTrim(start, pos);

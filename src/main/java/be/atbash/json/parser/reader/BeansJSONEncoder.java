@@ -46,22 +46,17 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
 
-    public BeansJSONEncoder(JSONReader base) {
-        super(base);
-    }
-
     public abstract Object getValue(Object current, String key);
 
     public static class BeanEncoder<T> extends JSONEncoder<T> {
-        final Class<T> clz;
-        final BeansAccess<T> ba;
-        final HashMap<String, Accessor> index;
+        private final Class<T> clz;
+        protected final BeansAccess<T> beansAccess;
+        private final HashMap<String, Accessor> index;
 
-        public BeanEncoder(JSONReader base, Class<T> clz) {
-            super(base);
+        public BeanEncoder(Class<T> clz) {
             this.clz = clz;
-            this.ba = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
-            this.index = ba.getMap();
+            this.beansAccess = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
+            this.index = beansAccess.getMap();
         }
 
         @Override
@@ -79,16 +74,16 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
                 }
 
             }
-            ba.set((T) current, key, value);
+            beansAccess.set((T) current, key, value);
         }
 
         public Object getValue(Object current, String key) {
-            return ba.get((T) current, key);
+            return beansAccess.get((T) current, key);
             // Accessor nfo = index.get(key);
             // if (nfo == null)
             // throw new RuntimeException("Can not set " + key + " field in " +
             // clz);
-            // return ba.get((T) current, nfo.getIndex());
+            // return beansAccess.get((T) current, nfo.getIndex());
         }
 
         @Override
@@ -103,7 +98,7 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (nfo == null) {
                 throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
             }
-            return getJSONReader().getEncoder(nfo.getGenericType());
+            return JSONEncoderFactory.getInstance().getEncoder(nfo.getGenericType());
         }
 
         @Override
@@ -112,16 +107,16 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
             if (f == null) {
                 throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
             }
-            return getJSONReader().getEncoder(f.getGenericType());
+            return JSONEncoderFactory.getInstance().getEncoder(f.getGenericType());
         }
 
         @Override
         public Object createObject() {
-            return ba.newInstance();
+            return beansAccess.newInstance();
         }
     }
 
-    public static JSONEncoder<Date> JSONEncoderDate = new ArraysJSONEncoder<Date>(null) {
+    public static JSONEncoder<Date> JSONEncoderDate = new ArraysJSONEncoder<Date>() {
         @Override
         public Date convert(Object current) {
             return ConvertDate.convertToDate(current);

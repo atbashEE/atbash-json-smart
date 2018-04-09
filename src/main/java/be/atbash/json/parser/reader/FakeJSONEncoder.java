@@ -34,7 +34,6 @@ package be.atbash.json.parser.reader;
 
 public class FakeJSONEncoder extends JSONEncoder<Object> {
     private FakeJSONEncoder() {
-        super(null);
     }
 
     public static JSONEncoder<Object> DEFAULT = new FakeJSONEncoder();

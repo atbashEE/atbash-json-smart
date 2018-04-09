@@ -34,7 +34,7 @@ public class BeansWriter implements JSONWriter<Object> {
         for (Accessor field : fields.getAccessors()) {
             @SuppressWarnings("unchecked")
             Object v = fields.get(value, field.getIndex());
-            if (v == null && JSONStyle.DEFAULT.ignoreNull()) {
+            if (v == null && JSONStyle.getDefault().ignoreNull()) {
                 continue;
             }
             if (needSep) {

@@ -45,20 +45,6 @@ import java.lang.reflect.Type;
 public abstract class JSONEncoder<T> {
 
     private static String ERR_MSG = "Invalid or non Implemented status";
-    private final JSONReader jsonReader;
-
-    /**
-     * Encoder is linked to a JsonReader.
-     *
-     * @param jsonReader
-     */
-    public JSONEncoder(JSONReader jsonReader) {
-        this.jsonReader = jsonReader;
-    }
-
-    public JSONReader getJSONReader() {
-        return jsonReader;
-    }
 
     /**
      * called when json-smart parser meet an object key

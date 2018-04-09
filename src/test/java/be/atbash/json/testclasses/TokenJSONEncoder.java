@@ -15,22 +15,15 @@
  */
 package be.atbash.json.testclasses;
 
-import be.atbash.json.parser.reader.JSONReader;
 import be.atbash.json.writer.CustomBeanJSONEncoder;
 
 /**
  *
  */
-
 public class TokenJSONEncoder extends CustomBeanJSONEncoder<Token> {
 
-    /**
-     * Reader can be link to the JsonReader Base
-     *
-     * @param base
-     */
-    public TokenJSONEncoder(JSONReader base) {
-        super(base, Token.class);
+    public TokenJSONEncoder() {
+        super(Token.class);
     }
 
     @Override
