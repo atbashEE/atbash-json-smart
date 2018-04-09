@@ -32,6 +32,7 @@ package be.atbash.json;
  */
 
 import be.atbash.json.parser.JSONParser;
+import be.atbash.json.parser.MappedBy;
 import be.atbash.json.parser.ParseException;
 import be.atbash.json.parser.reader.FakeJSONEncoder;
 import be.atbash.json.parser.reader.JSONEncoder;
@@ -39,6 +40,7 @@ import be.atbash.json.parser.reader.JSONReader;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.JSONWriter;
 import be.atbash.json.writer.JSONWriterFactory;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.io.IOException;
 import java.util.List;
@@ -142,6 +144,17 @@ public class JSONValue {
                 w = JSONWriterFactory.arrayWriter;
             } else {
                 w = WRITER_FACTORY.getWriterByInterface(value.getClass());
+                // Atbash support for Custom Writer
+                if (w == null) {
+                    MappedBy mappedBy = value.getClass().getAnnotation(MappedBy.class);
+                    if (mappedBy != null && !mappedBy.writer().equals(JSONWriter.NOPJSONWriter.class)) {
+                        try {
+                            w = mappedBy.writer().newInstance();
+                        } catch (InstantiationException | IllegalAccessException e) {
+                           throw new AtbashUnexpectedException(e);
+                        }
+                    }
+                }
                 if (w == null) {
                     w = JSONWriterFactory.beansWriter;
                 }

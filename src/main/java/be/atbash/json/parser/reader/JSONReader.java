@@ -126,12 +126,16 @@ public class JSONReader {
             MappedBy mappedBy = type.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
                 if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
-                    if (CustomBeanJSONEncoder.class.isAssignableFrom(mappedBy.encoder())) {
-                        encoder = ClassUtils.newInstance(mappedBy.encoder(), this);
-                    } else {
-                        encoder = ClassUtils.newInstance(mappedBy.encoder());
+
+                    encoder = new JSONEncoderWrappedCustomEncoder(this, (CustomJSONEncoder) ClassUtils.newInstance(mappedBy.encoder()));
+
+                } else {
+                    if (!(mappedBy.beanEncoder().equals(CustomBeanJSONEncoder.NOPCustomBeanJSONEncoder.class))) {
+                        encoder = ClassUtils.newInstance(mappedBy.beanEncoder(), this);
+
                     }
                 }
+
             }
             if (encoder == null) {
                 encoder = new BeansJSONEncoder.BeanEncoder<>(this, type);

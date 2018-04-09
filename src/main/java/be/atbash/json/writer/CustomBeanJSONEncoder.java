@@ -16,7 +16,6 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONUtil;
-import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.reader.BeansJSONEncoder;
 import be.atbash.json.parser.reader.JSONReader;
 import net.minidev.asm.Accessor;
@@ -28,7 +27,7 @@ import java.util.HashMap;
  * Atbash added file
  */
 
-public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEncoder<T> implements CustomJSONEncoder {
+public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEncoder<T> {
 
     private final BeansAccess<T> ba;
     private final HashMap<String, Accessor> index;
@@ -53,6 +52,17 @@ public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEnco
             setCustomValue((T) current, key, value);
         } else {
             ba.set((T) current, key, value);
+        }
+    }
+
+    public static class NOPCustomBeanJSONEncoder extends CustomBeanJSONEncoder {
+
+        public NOPCustomBeanJSONEncoder(JSONReader base) {
+            super(base, Object.class);
+        }
+
+        @Override
+        public void setCustomValue(Object current, String key, Object value) {
         }
     }
 }

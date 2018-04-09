@@ -32,6 +32,9 @@ package be.atbash.json.parser.reader;
  */
 
 import be.atbash.json.JSONUtil;
+import be.atbash.json.parser.CustomJSONEncoder;
+import be.atbash.json.parser.MappedBy;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import net.minidev.asm.Accessor;
 import net.minidev.asm.BeansAccess;
 import net.minidev.asm.ConvertDate;
@@ -63,13 +66,20 @@ public abstract class BeansJSONEncoder<T> extends JSONEncoder<T> {
 
         @Override
         public void setValue(Object current, String key, Object value) {
+            // Atbash support for MappedBy
+            MappedBy mappedBy = index.get(key).getType().getAnnotation(MappedBy.class);
+            if (mappedBy != null) {
+                if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
+
+                    try {
+                        value = mappedBy.encoder().newInstance().parse(value);
+                    } catch (InstantiationException | IllegalAccessException e) {
+                        throw new AtbashUnexpectedException(e);
+                    }
+                }
+
+            }
             ba.set((T) current, key, value);
-            // Accessor nfo = index.get(key);
-            // if (nfo == null)
-            // throw new RuntimeException("Can not set " + key + " field in " +
-            // clz);
-            // value = JSONUtil.convertTo(value, nfo.getType());
-            // ba.set((T) current, nfo.getIndex(), value);
         }
 
         public Object getValue(Object current, String key) {

@@ -13,20 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.parser;
+package be.atbash.json.testclasses;
+
+import be.atbash.json.JSONAware;
 
 /**
- * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
+ *
  */
-public interface CustomJSONEncoder<T> {
 
-    T parse(Object data);
+public enum Currency implements JSONAware {
 
-    class NOPJSONEncoder implements CustomJSONEncoder<Object> {
+    EURO("€"), USD("USD");
 
-        @Override
-        public Object parse(Object data) {
-            return null;
-        }
+    private String code;
+
+    Currency(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    @Override
+    public String toJSONString() {
+        return code;
     }
 }

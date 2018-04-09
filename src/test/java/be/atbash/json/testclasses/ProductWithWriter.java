@@ -13,20 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.parser;
+package be.atbash.json.testclasses;
 
 /**
- * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
+ *
  */
-public interface CustomJSONEncoder<T> {
 
-    T parse(Object data);
+public class ProductWithWriter {
+    private String name;
+    private PriceWithWriter price;
 
-    class NOPJSONEncoder implements CustomJSONEncoder<Object> {
+    public ProductWithWriter() {
+    }
 
-        @Override
-        public Object parse(Object data) {
-            return null;
-        }
+    public ProductWithWriter(String name, PriceWithWriter price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public PriceWithWriter getPrice() {
+        return price;
+    }
+
+    public void setPrice(PriceWithWriter price) {
+        this.price = price;
     }
 }

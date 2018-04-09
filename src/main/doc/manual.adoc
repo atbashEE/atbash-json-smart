@@ -54,8 +54,86 @@ Converts the POJO to a JSON String
 
 == Customizations
 
-@JsonIgnore
+=== Custom JSON creation
 
-JSONAware
+The creation of the JSON can be customized in 2 ways. You can implement the interface _be.atbash.json.JSONAware_ or define a custom _Writer_ with the _@MappedBy_ annotation.
 
-@MappedBy
+----
+public interface JSONAware {
+
+    /**
+     * @return JSON text
+     */
+    String toJSONString();
+
+}
+----
+
+The result of the _toJSONString()_ method will be added to the JSON output. One can make use of the _JSONObject_ class to help in the creation of JSON like,
+
+----
+    public String toJSONString() {
+        JSONObject result = new JSONObject();
+        result.put("key1", key1);
+        result.put("key2", key2);
+        result.put("key3", key3);
+        for (Map.Entry<String, String> entry : additional.entrySet()) {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        return result.toJSONString();
+    }
+----
+
+You need to make sure that you serialize the complete object tree to JSON.
+
+Another option, but very similar, is to use an annotation to indicate the code which needs to be called when the Object needs to be Serialized to JSON. This way, the code to create the JSON can be kept out of the class itself.
+
+Annotate the Object with _be.atbash.json.parser.MappedBy_ and specify the Writer within the _writer()_ member.
+
+----
+@MappedBy(writer = PriceJSONWriter.class)
+----
+
+and
+
+----
+public class PriceJSONWriter implements JSONWriter<PriceWithWriter> {
+
+    @Override
+    public <E extends PriceWithWriter> void writeJSONString(E value, Appendable out) throws IOException {
+        out.append(String.format("\"%s%s\"", value.getValue(), value.getCurrency().toJSONString()));
+    }
+}
+----
+
+In this example, the Currency object implements the _JSONAware_ interface.
+
+=== Custom reading of JSON
+
+The conversion from JSON to an object instance can be customized by encoders which can be defined with _@MappedBy_.
+
+The most generic way is to use an implementation of _be.atbash.json.parser.CustomJSONEncoder_
+
+----
+public interface CustomJSONEncoder<T> {
+
+    T parse(Object data);
+
+}
+----
+
+The data parameter is most of the time an instance of String, but can be any primitive, JSONArray or JSONObject in case the JSON is malformed or has wrong contents (other contents then expected).
+
+An implementation of this interface needs a no argument constructor.
+
+There is a special encoder available, _be.atbash.json.writer.CustomBeanJSONEncoder_, which tries to use the setters if they are available, or call the _setCustomValue()_ method otherwise.
+An example can be seen at the test class _be.atbash.json.testclasses.Token_ and _be.atbash.json.testclasses.TokenJSONEncoder_.
+
+An instance of this class needs a constructor which takes an _be.atbash.json.parser.reader.JSONReader_ parameter.
+
+Both classes needs to be specified by a @MappedBy annotation, _encoder()_ member for the simple CustomJSONEncoder implementation, _beanEncoder()_ member for CustomBeanJSONEncoder class.
+
+
+== @JsonIgnore
+
+TODO

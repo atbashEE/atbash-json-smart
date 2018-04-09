@@ -15,6 +15,7 @@
  */
 package be.atbash.json.parser;
 
+import be.atbash.json.writer.CustomBeanJSONEncoder;
 import be.atbash.json.writer.JSONWriter;
 
 import java.lang.annotation.*;
@@ -29,6 +30,7 @@ public @interface MappedBy {
 
     Class<? extends CustomJSONEncoder> encoder() default CustomJSONEncoder.NOPJSONEncoder.class;
 
-    // FIXME Implement this as an alternative for JSONAware
+    Class<? extends CustomBeanJSONEncoder> beanEncoder() default CustomBeanJSONEncoder.NOPCustomBeanJSONEncoder.class;
+
     Class<? extends JSONWriter> writer() default JSONWriter.NOPJSONWriter.class;
 }

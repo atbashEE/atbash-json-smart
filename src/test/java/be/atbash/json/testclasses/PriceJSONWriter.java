@@ -13,20 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.parser;
+package be.atbash.json.testclasses;
+
+import be.atbash.json.writer.JSONWriter;
+
+import java.io.IOException;
 
 /**
- * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
+ *
  */
-public interface CustomJSONEncoder<T> {
 
-    T parse(Object data);
+public class PriceJSONWriter implements JSONWriter<PriceWithWriter> {
 
-    class NOPJSONEncoder implements CustomJSONEncoder<Object> {
-
-        @Override
-        public Object parse(Object data) {
-            return null;
-        }
+    @Override
+    public <E extends PriceWithWriter> void writeJSONString(E value, Appendable out) throws IOException {
+        out.append(String.format("\"%s%s\"", value.getValue(), value.getCurrency().toJSONString()));
     }
 }

@@ -13,20 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.parser;
+package be.atbash.json.testclasses;
+
+import be.atbash.json.parser.reader.JSONReader;
+import be.atbash.json.writer.CustomBeanJSONEncoder;
 
 /**
- * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
+ *
  */
-public interface CustomJSONEncoder<T> {
 
-    T parse(Object data);
+public class TokenJSONEncoder extends CustomBeanJSONEncoder<Token> {
 
-    class NOPJSONEncoder implements CustomJSONEncoder<Object> {
+    /**
+     * Reader can be link to the JsonReader Base
+     *
+     * @param base
+     */
+    public TokenJSONEncoder(JSONReader base) {
+        super(base, Token.class);
+    }
 
-        @Override
-        public Object parse(Object data) {
-            return null;
-        }
+    @Override
+    public void setCustomValue(Token current, String key, Object value) {
+        current.addAdditional(key, value.toString());
     }
 }
