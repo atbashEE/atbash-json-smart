@@ -31,7 +31,6 @@ package be.atbash.json;
  * limitations under the License.
  */
 
-import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.JSONWriterFactory;
 
 import java.io.IOException;
@@ -108,8 +107,8 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         writeJSON(this, out);
     }
 
-    public void merge(Object o2) {
-        merge(this, o2);
+    public void merge(Object object) {
+        merge(this, object);
     }
 
     public String toJSONString() {
@@ -141,25 +140,6 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
     }
 
     /**
-     * Write a Key : value entry to a stream
-     */
-    public static void writeJSONKV(String key, Object value, Appendable out) throws IOException {
-        if (key == null) {
-            out.append("null");
-        } else {
-            out.append('"');
-            JSONValue.escape(key, out);
-            out.append('"');
-        }
-        out.append(':');
-        if (value instanceof String) {
-            JSONStyle.getDefault().writeString(out, (String) value);
-        } else {
-            JSONValue.writeJSONString(value, out);
-        }
-    }
-
-    /**
      * Encode a map into JSON text and write it to out. If this map is also a
      * JSONAware or JSONStreamAware, JSONAware or JSONStreamAware specific
      * behaviours will be ignored at this top level.
@@ -175,65 +155,53 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         JSONWriterFactory.getInstance().getJsonMapWriter().writeJSONString(map, out);
     }
 
-    protected static JSONObject merge(JSONObject o1, Object o2) {
-        if (o2 == null) {
-            return o1;
+    // FIXME Testing of this and the other methods
+    public static JSONObject merge(JSONObject object1, Object object2) {
+        if (object2 == null) {
+            return object1;
         }
-        if (o2 instanceof JSONObject) {
-            return merge(o1, (JSONObject) o2);
+        if (object2 instanceof JSONObject) {
+            return merge(object1, (JSONObject) object2);
         }
-        throw new RuntimeException("JSON megre can not merge JSONObject with " + o2.getClass());
+        // FIXME Custom error message
+        throw new RuntimeException("JSON merge : Cannot merge JSONObject with " + object2.getClass());
     }
 
-    private static JSONObject merge(JSONObject o1, JSONObject o2) {
-        if (o2 == null) {
-            return o1;
+    public static JSONObject merge(JSONObject object1, JSONObject object2) {
+        if (object2 == null) {
+            return object1;
         }
-        for (String key : o1.keySet()) {
-            Object value1 = o1.get(key);
-            Object value2 = o2.get(key);
+        for (String key : object1.keySet()) {
+            Object value1 = object1.get(key);
+            Object value2 = object2.get(key);
             if (value2 == null) {
                 continue;
             }
             if (value1 instanceof JSONArray) {
-                o1.put(key, merge((JSONArray) value1, value2));
+                object1.put(key, JSONArray.merge((JSONArray) value1, value2));
                 continue;
             }
             if (value1 instanceof JSONObject) {
-                o1.put(key, merge((JSONObject) value1, value2));
+                object1.put(key, merge((JSONObject) value1, value2));
                 continue;
             }
             if (value1.equals(value2)) {
                 continue;
             }
             if (value1.getClass().equals(value2.getClass())) {
+                // FIXME Custom error message
                 throw new RuntimeException("JSON merge can not merge two " + value1.getClass().getName() + " Object together");
             }
+            // FIXME Custom error message
             throw new RuntimeException("JSON merge can not merge " + value1.getClass().getName() + " with " + value2.getClass().getName());
         }
-        for (String key : o2.keySet()) {
-            if (o1.containsKey(key)) {
+        for (String key : object2.keySet()) {
+            if (object1.containsKey(key)) {
                 continue;
             }
-            o1.put(key, o2.get(key));
+            object1.put(key, object2.get(key));
         }
-        return o1;
-    }
-
-    protected static JSONArray merge(JSONArray o1, Object o2) {
-        if (o2 == null) {
-            return o1;
-        }
-        if (o1 instanceof JSONArray) {
-            return merge(o1, (JSONArray) o2);
-        }
-        o1.add(o2);
-        return o1;
-    }
-
-    private static JSONArray merge(JSONArray o1, JSONArray o2) {
-        o1.addAll(o2);
-        return o1;
+        return object1;
     }
 
 }

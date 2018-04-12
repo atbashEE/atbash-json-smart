@@ -15,13 +15,13 @@
  */
 package be.atbash.json.writer;
 
-import be.atbash.json.parser.reader.BeansJSONEncoder;
+import be.atbash.json.parser.reader.BeanEncoder;
 
 /**
  * Atbash added file
  */
 
-public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEncoder<T> {
+public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
 
     /**
      * Reader can be link to the JsonReader Base
@@ -35,11 +35,12 @@ public abstract class CustomBeanJSONEncoder<T> extends BeansJSONEncoder.BeanEnco
     protected abstract void setCustomValue(T current, String key, Object value);
 
     @Override
-    public void setValue(Object current, String key, Object value) {
+    public void setValue(T current, String key, Object value) {
         if (beansAccess.getIndex(key) == -1) {
-            setCustomValue((T) current, key, value);
+            // No field found, so ask for custom handling
+            setCustomValue(current, key, value);
         } else {
-            beansAccess.set((T) current, key, value);
+            beansAccess.set(current, key, value);
         }
     }
 

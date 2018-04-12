@@ -13,21 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.annotate;
+package be.atbash.json.test;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import be.atbash.json.JSONValue;
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Jackson Annotation like
  *
- * @author uriel
  */
 
-@Target({ElementType.ANNOTATION_TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-public @interface JsonSmartAnnotation {
+public class TestIsValid {
 
+    @Test
+    public void isValid_True() {
+        boolean validJson = JSONValue.isValidJson("{t:" + Integer.MAX_VALUE + "}");
+        assertThat(validJson).isTrue();
+
+    }
+
+    @Test
+    public void isValid_False() {
+        boolean validJson = JSONValue.isValidJson("{\"1\":\"one\"\n\"2\":\"two\"}");
+        assertThat(validJson).isFalse();
+
+    }
 }

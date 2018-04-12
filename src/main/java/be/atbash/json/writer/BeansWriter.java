@@ -15,7 +15,6 @@
  */
 package be.atbash.json.writer;
 
-import be.atbash.json.JSONObject;
 import be.atbash.json.JSONUtil;
 import be.atbash.json.style.JSONStyle;
 import net.minidev.asm.Accessor;
@@ -30,7 +29,7 @@ public class BeansWriter implements JSONWriter<Object> {
         boolean needSep = false;
         @SuppressWarnings("rawtypes")
         BeansAccess fields = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
-        out.append('{');
+        JSONStyle.getDefault().objectStart(out);
         for (Accessor field : fields.getAccessors()) {
             @SuppressWarnings("unchecked")
             Object v = fields.get(value, field.getIndex());
@@ -38,13 +37,15 @@ public class BeansWriter implements JSONWriter<Object> {
                 continue;
             }
             if (needSep) {
-                out.append(',');
+                JSONStyle.getDefault().objectNext(out);
             } else {
                 needSep = true;
             }
             String key = field.getName();
-            JSONObject.writeJSONKV(key, v, out);
+            JSONUtil.writeJSONKV(key, v, out);
         }
-        out.append('}');
+        JSONStyle.getDefault().objectStop(out);
+
     }
+
 }

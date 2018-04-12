@@ -34,6 +34,7 @@ package be.atbash.json.parser.reader;
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONUtil;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import net.minidev.asm.BeansAccess;
 
 import java.lang.reflect.ParameterizedType;
@@ -41,23 +42,25 @@ import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
-public class CollectionEncoder {
+public final class CollectionEncoder {
+    // CollectionEncoder is just holder of the 4 collection encoders
+    private CollectionEncoder() {
+    }
 
     public static class MapType<T> extends JSONEncoder<T> {
-        final ParameterizedType type;
-        final Class<?> rawClass;
-        final Class<?> instance;
-        final BeansAccess<?> ba;
+        private final ParameterizedType type;
+        private final Class<?> rawClass;
+        private final Class<?> instance;
 
-        final Type keyType;
-        final Type valueType;
+        private final Type keyType;
+        private final Type valueType;
 
-        final Class<?> keyClass;
-        final Class<?> valueClass;
+        private final Class<?> keyClass;
+        private final Class<?> valueClass;
 
-        JSONEncoder<?> subJSONEncoder;
+        private JSONEncoder<?> subJSONEncoder;
 
-        public MapType(ParameterizedType type) {
+        MapType(ParameterizedType type) {
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
             if (rawClass.isInterface()) {
@@ -65,7 +68,6 @@ public class CollectionEncoder {
             } else {
                 instance = rawClass;
             }
-            ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
 
             keyType = type.getActualTypeArguments()[0];
             valueType = type.getActualTypeArguments()[1];
@@ -82,13 +84,12 @@ public class CollectionEncoder {
         }
 
         @Override
-        public Object createObject() {
+        public T createObject() {
             try {
-                return instance.newInstance();
+                return (T) instance.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                throw new AtbashUnexpectedException(e);
             }
-            return null;
         }
 
         @Override
@@ -127,23 +128,23 @@ public class CollectionEncoder {
     }
 
     public static class MapClass<T> extends JSONEncoder<T> {
-        final Class<?> type;
-        final Class<?> instance;
-        final BeansAccess<?> ba;
+        private final Class<?> type;
+        private final Class<?> instance;
+        private final BeansAccess<?> beansAccess;
 
-        public MapClass(Class<?> type) {
+        MapClass(Class<?> type) {
             this.type = type;
             if (type.isInterface()) {
-                this.instance = JSONObject.class;
+                instance = JSONObject.class;
             } else {
-                this.instance = type;
+                instance = type;
             }
-            this.ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
+            beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
         }
 
         @Override
-        public Object createObject() {
-            return ba.newInstance();
+        public T createObject() {
+            return (T) beansAccess.newInstance();
         }
 
         @Override
@@ -175,17 +176,17 @@ public class CollectionEncoder {
     }
 
     public static class ListType<T> extends JSONEncoder<T> {
-        final ParameterizedType type;
-        final Class<?> rawClass;
-        final Class<?> instance;
-        final BeansAccess<?> ba;
+        private final ParameterizedType type;
+        private final Class<?> rawClass;
+        private final Class<?> instance;
+        private final BeansAccess<?> beansAccess;
 
-        final Type valueType;
-        final Class<?> valueClass;
+        private final Type valueType;
+        private final Class<?> valueClass;
 
-        JSONEncoder<?> subJSONEncoder;
+        private JSONEncoder<?> subJSONEncoder;
 
-        public ListType(ParameterizedType type) {
+        ListType(ParameterizedType type) {
             this.type = type;
             this.rawClass = (Class<?>) type.getRawType();
             if (rawClass.isInterface()) {
@@ -193,7 +194,7 @@ public class CollectionEncoder {
             } else {
                 instance = rawClass;
             }
-            ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
+            beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
             valueType = type.getActualTypeArguments()[0];
             if (valueType instanceof Class) {
                 valueClass = (Class<?>) valueType;
@@ -204,7 +205,7 @@ public class CollectionEncoder {
 
         @Override
         public Object createArray() {
-            return ba.newInstance();
+            return beansAccess.newInstance();
         }
 
         @Override
@@ -233,23 +234,21 @@ public class CollectionEncoder {
     public static class ListClass<T> extends JSONEncoder<T> {
         final Class<?> type;
         final Class<?> instance;
-        final BeansAccess<?> ba;
+        final BeansAccess<?> beansAccess;
 
-        JSONEncoder<?> subJSONEncoder;
-
-        public ListClass(Class<?> clazz) {
+        ListClass(Class<?> clazz) {
             this.type = clazz;
             if (clazz.isInterface()) {
                 instance = JSONArray.class;
             } else {
                 instance = clazz;
             }
-            ba = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
+            beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
         }
 
         @Override
         public Object createArray() {
-            return ba.newInstance();
+            return beansAccess.newInstance();
         }
 
         @Override

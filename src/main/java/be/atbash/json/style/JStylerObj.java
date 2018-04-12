@@ -31,6 +31,8 @@ package be.atbash.json.style;
  * limitations under the License.
  */
 
+import be.atbash.util.exception.AtbashUnexpectedException;
+
 import java.io.IOException;
 
 /**
@@ -47,6 +49,7 @@ class JStylerObj {
     }
 
     private static class Escape4Web implements StringProtector {
+        // FIXME Good candidate for Atbash StringUtils
 
         /**
          * Escape special chars form String including /
@@ -87,7 +90,7 @@ class JStylerObj {
                         default:
                             // Reference:
                             // http://www.unicode.org/versions/Unicode5.1.0/
-                            if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
+                            if ((ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
                                     || (ch >= '\u2000' && ch <= '\u20FF')) {
                                 sb.append("\\u");
                                 String hex = "0123456789ABCDEF";
@@ -101,7 +104,7 @@ class JStylerObj {
                     }
                 }
             } catch (IOException e) {
-                throw new RuntimeException("Impossible Error");
+                throw new AtbashUnexpectedException(e);
             }
         }
     }

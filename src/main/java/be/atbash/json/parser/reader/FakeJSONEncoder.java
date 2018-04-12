@@ -33,10 +33,10 @@ package be.atbash.json.parser.reader;
  */
 
 public class FakeJSONEncoder extends JSONEncoder<Object> {
+    private static JSONEncoder<Object> INSTANCE = new FakeJSONEncoder();
+
     private FakeJSONEncoder() {
     }
-
-    public static JSONEncoder<Object> DEFAULT = new FakeJSONEncoder();
 
     @Override
     public JSONEncoder<?> startObject(String key) {
@@ -64,5 +64,9 @@ public class FakeJSONEncoder extends JSONEncoder<Object> {
     @Override
     public Object createArray() {
         return null;
+    }
+
+    public static JSONEncoder<Object> getInstance() {
+        return INSTANCE;
     }
 }

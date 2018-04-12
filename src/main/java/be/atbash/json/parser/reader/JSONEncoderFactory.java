@@ -34,6 +34,7 @@ package be.atbash.json.parser.reader;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.json.writer.CustomBeanJSONEncoder;
+import be.atbash.util.exception.AtbashException;
 import be.atbash.util.reflection.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -45,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONEncoderFactory {
     private static final Object LOCK = new Object();
-    private static JSONEncoderFactory jsonEncoderFactory;
+    private static JSONEncoderFactory INSTANCE;
 
     private ConcurrentHashMap<Type, JSONEncoder<?>> cache;
 
@@ -53,9 +54,9 @@ public class JSONEncoderFactory {
     }
 
     private void initEncoders() {
-        cache = new ConcurrentHashMap<>(100);
+        cache = new ConcurrentHashMap<>(20);
 
-        cache.put(Date.class, BeansJSONEncoder.JSONEncoderDate);
+        cache.put(Date.class, BeanEncoder.getJsonEncoderDate());
 
         cache.put(int[].class, ArraysJSONEncoder.getJSONEncoderPrimInt());
         cache.put(Integer[].class, ArraysJSONEncoder.getJSONEncoderInt());
@@ -131,7 +132,7 @@ public class JSONEncoderFactory {
 
             // use bean class
             if (encoder == null) {
-                encoder = new BeansJSONEncoder.BeanEncoder<>(type);
+                encoder = new BeanEncoder<>(type);
             }
         }
         cache.putIfAbsent(type, encoder);
@@ -140,33 +141,37 @@ public class JSONEncoderFactory {
 
     @SuppressWarnings("unchecked")
     private <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
-        JSONEncoder<T> map = (JSONEncoder<T>) cache.get(type);
-        if (map != null) {
-            return map;
+        JSONEncoder<T> encoder = (JSONEncoder<T>) cache.get(type);
+        if (encoder != null) {
+            return encoder;
         }
         Class<T> clz = (Class<T>) type.getRawType();
         if (List.class.isAssignableFrom(clz)) {
-            map = new CollectionEncoder.ListType<>(type);
+            encoder = new CollectionEncoder.ListType<>(type);
         } else if (Map.class.isAssignableFrom(clz)) {
-            map = new CollectionEncoder.MapType<>(type);
+            encoder = new CollectionEncoder.MapType<>(type);
         }
-        cache.putIfAbsent(type, map);
-        return map;
+        if (encoder == null) {
+            // TODO Custom exception
+            throw new AtbashException("Only parameterized types of List and Map or custom registered encoders are supported");
+        }
+        cache.putIfAbsent(type, encoder);
+        return encoder;
     }
 
     /**
      * Returns an instance of the factory, create and initialize if needed.
      */
     public static JSONEncoderFactory getInstance() {
-        if (jsonEncoderFactory == null) {
+        if (INSTANCE == null) {
             synchronized (LOCK) {
-                if (jsonEncoderFactory == null) {
-                    jsonEncoderFactory = new JSONEncoderFactory();
-                    jsonEncoderFactory.initEncoders();
+                if (INSTANCE == null) {
+                    INSTANCE = new JSONEncoderFactory();
+                    INSTANCE.initEncoders();
                 }
             }
         }
-        return jsonEncoderFactory;
+        return INSTANCE;
     }
 
 }

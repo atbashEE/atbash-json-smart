@@ -54,6 +54,13 @@ public class TestMapBeans {
     }
 
     @Test
+    public void testUnknownField() {
+        String s = "{\"data\":\"Atbash\", \"notExisting\":\"blablabla\"}";
+        T6 r = JSONValue.parse(s, T6.class);
+        assertThat(r.data).isEqualTo("Atbash");
+    }
+
+    @Test
     public void testObjBool2() {
         String s = "{\"data\":true}";
         T5 r = JSONValue.parse(s, T5.class);
@@ -126,6 +133,18 @@ public class TestMapBeans {
         }
 
         public void setData(boolean data) {
+            this.data = data;
+        }
+    }
+
+    public static class T6 {
+        private String data;
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
             this.data = data;
         }
     }

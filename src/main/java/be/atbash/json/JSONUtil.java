@@ -17,9 +17,11 @@ package be.atbash.json;
 
 import be.atbash.json.annotate.JsonIgnore;
 import be.atbash.json.parser.MappedBy;
+import be.atbash.json.style.JSONStyle;
 import be.atbash.util.exception.AtbashUnexpectedException;
 import net.minidev.asm.FieldFilter;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
@@ -38,9 +40,12 @@ import java.lang.reflect.Method;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class JSONUtil {
+public final class JSONUtil {
 
     public final static JsonSmartFieldFilter JSON_SMART_FIELD_FILTER = new JsonSmartFieldFilter();
+
+    private JSONUtil() {
+    }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Object convertToX(Object obj, Class<?> dest) {
@@ -74,8 +79,7 @@ public class JSONUtil {
             } else if (dest == boolean.class) {
                 return obj;
             }
-            throw new RuntimeException("Primitive: Can not convert " + obj.getClass().getName() + " to "
-                    + dest.getName());
+            throw new AtbashUnexpectedException(String.format("Primitive: Can not convert %s to %s", obj.getClass().getName(), dest.getName()));
         } else {
             if (dest.isEnum()) {
                 return Enum.valueOf((Class<Enum>) dest, obj.toString());
@@ -133,15 +137,35 @@ public class JSONUtil {
             MappedBy mappedBy = dest.getAnnotation(MappedBy.class);
             if (mappedBy != null) {
                 try {
-                    // FIXME Must e also support the CustomBeanJSONEncoder like in JSONReader.getEncoder(java.lang.Class<T>) ?
+                    // FIXME Must we also support the CustomBeanJSONEncoder like in JSONReader.getEncoder(java.lang.Class<T>) ?
                     //
                     return mappedBy.encoder().newInstance().parse(obj);
                 } catch (InstantiationException | IllegalAccessException e) {
                     throw new AtbashUnexpectedException(e);
                 }
             }
-            throw new RuntimeException("Object: Can not Convert " + obj.getClass().getName() + " to " + dest.getName());
+            throw new AtbashUnexpectedException(String.format("Object: Can not Convert %s to %s", obj.getClass().getName(), dest.getName()));
         }
+    }
+
+    /**
+     * Write a Key : value entry to a stream
+     */
+    public static void writeJSONKV(String key, Object value, Appendable out) throws IOException {
+        if (key == null) {
+            out.append("null");
+        } else {
+            out.append('"');
+            JSONStyle.getDefault().escape(key, out);
+            out.append('"');
+        }
+        JSONStyle.getDefault().objectEndOfKey(out);
+        if (value instanceof String) {
+            JSONStyle.getDefault().writeString(out, (String) value);
+        } else {
+            JSONValue.writeJSONString(value, out);
+        }
+        JSONStyle.getDefault().objectElmStop(out);
     }
 
     public static class JsonSmartFieldFilter implements FieldFilter {
@@ -154,6 +178,10 @@ public class JSONUtil {
 
         @Override
         public boolean canUse(Field field, Method method) {
+            boolean result = canUse(field);
+            if (!result) {
+                return false;
+            }
             JsonIgnore ignore = method.getAnnotation(JsonIgnore.class);
             return ignore == null || !ignore.value();
         }

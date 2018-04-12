@@ -38,7 +38,6 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.METHOD, ElementType.CONSTRUCTOR, ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@JsonSmartAnnotation
 public @interface JsonIgnore {
     boolean value() default true;
 }

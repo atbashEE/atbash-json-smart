@@ -59,8 +59,8 @@ public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
     }
 
     @Override
-    public Object createObject() {
-        return new JSONObject();
+    public T createObject() {
+        return (T) new JSONObject();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class DefaultJSONEncoder<T> extends JSONEncoder<T> {
     }
 
     @Override
-    public void setValue(Object current, String key, Object value) {
+    public void setValue(T current, String key, Object value) {
         ((JSONObject) current).put(key, value);
     }
 

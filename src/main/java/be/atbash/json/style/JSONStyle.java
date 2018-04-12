@@ -31,12 +31,10 @@ package be.atbash.json.style;
  * limitations under the License.
  */
 
-import be.atbash.json.JSONValue;
-
 import java.io.IOException;
 
 /**
- * JSONStyle object configure JSonSerializer reducing output size
+ * JSONStyle object configure JSonSerializer reducing output size.
  *
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  * @author Rudy De Busscher
@@ -58,11 +56,14 @@ public class JSONStyle {
 
     public void writeString(Appendable out, String value) throws IOException {
         out.append('"');
-        JSONValue.escape(value, out);
+        escape(value, out);
         out.append('"');
     }
 
     public void escape(String s, Appendable out) {
+        if (s == null) {
+            return;
+        }
         esc.escape(s, out);
     }
 
@@ -123,13 +124,13 @@ public class JSONStyle {
     /**
      * Start the first Array element
      */
-    public void arrayfirstObject(Appendable out) {
+    public void arrayFirstObject(Appendable out) {
     }
 
     /**
      * Start a new Array element
      */
-    public void arrayNextElm(Appendable out) throws IOException {
+    public void arrayNextElement(Appendable out) throws IOException {
         out.append(',');
     }
 

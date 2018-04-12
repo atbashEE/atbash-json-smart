@@ -16,6 +16,7 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONAware;
+import be.atbash.json.JSONUtil;
 import be.atbash.json.JSONValue;
 import be.atbash.json.style.JSONStyle;
 
@@ -35,7 +36,7 @@ public class JSONWriterFactory {
      */
     private final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
 
-    private ConcurrentHashMap<Class<?>, JSONWriter<?>> data;
+    private ConcurrentHashMap<Class<?>, JSONWriter<?>> writerCache;
     private LinkedList<WriterByInterface> writerInterfaces;
 
     private JSONWriter<JSONAware> jsonAwareJSONWriter;
@@ -47,12 +48,12 @@ public class JSONWriterFactory {
     private JSONWriter<Map<String, ?>> jsonMapWriter;
 
     /**
-     * Json-Smart V2 Beans serialiser
+     * Json-Smart V2 Beans serializer.
      */
     private JSONWriter<Object> beansWriter;
 
     /**
-     * Json-Smart ArrayWriterClass
+     * Json-Smart ArrayWriterClass.
      */
     private JSONWriter<Object> arrayWriter;
 
@@ -62,7 +63,7 @@ public class JSONWriterFactory {
     private JSONWriter<Object> stringWriter;
 
     private JSONWriterFactory() {
-        data = new ConcurrentHashMap<>();
+        writerCache = new ConcurrentHashMap<>();
         writerInterfaces = new LinkedList<>();
         init();
     }
@@ -89,19 +90,11 @@ public class JSONWriterFactory {
 
     @SuppressWarnings("rawtypes")
     public JSONWriter getWriter(Class cls) {
-        return data.get(cls);
-    }
-
-    public JSONWriter<JSONAware> getJsonAwareJSONWriter() {
-        return jsonAwareJSONWriter;
+        return writerCache.get(cls);
     }
 
     public JSONWriter<Iterable<?>> getJsonIterableWriter() {
         return jsonIterableWriter;
-    }
-
-    public JSONWriter<Enum<?>> getEnumWriter() {
-        return enumWriter;
     }
 
     public JSONWriter<Map<String, ?>> getJsonMapWriter() {
@@ -114,10 +107,6 @@ public class JSONWriterFactory {
 
     public JSONWriter<Object> getArrayWriter() {
         return arrayWriter;
-    }
-
-    public JSONWriter<Object> getStringWriter() {
-        return stringWriter;
     }
 
     private void init() {
@@ -142,7 +131,7 @@ public class JSONWriterFactory {
         registerWriter(new JSONWriter<Date>() {
             public void writeJSONString(Date value, Appendable out) throws IOException {
                 out.append('"');
-                JSONValue.escape(value.toString(), out);
+                JSONStyle.getDefault().escape(value.toString(), out);
                 out.append('"');
             }
         }, Date.class);
@@ -310,7 +299,7 @@ public class JSONWriterFactory {
                     } else {
                         JSONStyle.getDefault().objectNext(out);
                     }
-                    JSONWriterFactory.writeJSONKV(entry.getKey().toString(), v, out);
+                    JSONUtil.writeJSONKV(entry.getKey().toString(), v, out);
                     // compression.objectElmStop(out);
                 }
                 JSONStyle.getDefault().objectStop(out);
@@ -324,9 +313,9 @@ public class JSONWriterFactory {
                 for (Object value : list) {
                     if (first) {
                         first = false;
-                        JSONStyle.getDefault().arrayfirstObject(out);
+                        JSONStyle.getDefault().arrayFirstObject(out);
                     } else {
-                        JSONStyle.getDefault().arrayNextElm(out);
+                        JSONStyle.getDefault().arrayNextElement(out);
                     }
                     if (value == null) {
                         out.append("null");
@@ -398,35 +387,16 @@ public class JSONWriterFactory {
      * @param writer
      * @param cls
      */
+    // TODO Document usage
     public <T> void registerWriter(JSONWriter<T> writer, Class<?>... cls) {
         for (Class<?> c : cls) {
-            data.put(c, writer);
+            writerCache.put(c, writer);
         }
-    }
-
-    /**
-     * Write a Key : value entry to a stream
-     */
-    public static void writeJSONKV(String key, Object value, Appendable out) throws IOException {
-        if (key == null) {
-            out.append("null");
-        } else {
-            out.append('"');
-            JSONValue.escape(key, out);
-            out.append('"');
-        }
-        JSONStyle.getDefault().objectEndOfKey(out);
-        if (value instanceof String) {
-            JSONStyle.getDefault().writeString(out, (String) value);
-        } else {
-            JSONValue.writeJSONString(value, out);
-        }
-        JSONStyle.getDefault().objectElmStop(out);
     }
 
     static class WriterByInterface {
-        Class<?> _interface;
-        JSONWriter<?> _writer;
+        private Class<?> _interface;
+        private JSONWriter<?> _writer;
 
         WriterByInterface(Class<?> _interface, JSONWriter<?> _writer) {
             this._interface = _interface;

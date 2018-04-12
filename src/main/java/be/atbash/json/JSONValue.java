@@ -91,10 +91,11 @@ public class JSONValue {
      */
     public static boolean isValidJson(String s) {
         try {
-            new JSONParser().parse(s, FakeJSONEncoder.DEFAULT);
+            new JSONParser().parse(s, FakeJSONEncoder.getInstance());
             return true;
         } catch (ParseException e) {
             return false;
+            // TODO Next version a method where we return the exception (and thus where the problem is)?
         }
     }
 
@@ -177,7 +178,7 @@ public class JSONValue {
         try {
             writeJSONString(value, sb);
         } catch (IOException e) {
-            // can not append on a StringBuilder
+            throw new AtbashUnexpectedException(e); //Should never happen with SingBuilder
         }
         return sb.toString();
     }
@@ -186,6 +187,7 @@ public class JSONValue {
      * Escape quotes, \, /, \r, \n, \b, \f, \t and other control characters
      * (U+0000 through U+001F).
      */
+    // TODO Convenient method for other usecases (not used within json-smart) Move also to StringUtils.
     public static String escape(String s) {
         if (s == null) {
             return null;
@@ -195,10 +197,4 @@ public class JSONValue {
         return sb.toString();
     }
 
-    public static void escape(String s, Appendable ap) {
-        if (s == null) {
-            return;
-        }
-        JSONStyle.getDefault().escape(s, ap);
-    }
 }

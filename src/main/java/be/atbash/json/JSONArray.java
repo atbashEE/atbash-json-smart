@@ -32,6 +32,7 @@ package be.atbash.json;
  */
 
 import be.atbash.json.writer.JSONWriterFactory;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ import java.util.List;
  * @author FangYidong &lt;fangyidong@yahoo.com.cn&gt;
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  */
-public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAware {
+public class JSONArray extends ArrayList<Object> implements JSONAware {
 
     /**
      * Convert a list to JSON text. The result is a JSON array. If this list is
@@ -59,7 +60,7 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
         try {
             writeJSONString(list, sb);
         } catch (IOException e) {
-            // Can not append on a string builder
+            throw new AtbashUnexpectedException(e);
         }
         return sb.toString();
     }
@@ -94,8 +95,8 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
         return this;
     }
 
-    public void merge(Object o2) {
-        JSONObject.merge(this, o2);
+    public void merge(Object object) {
+        merge(this, object);
     }
 
     /**
@@ -108,16 +109,33 @@ public class JSONArray extends ArrayList<Object> implements List<Object>, JSONAw
             JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(this, sb);
 
         } catch (IOException e) {
-            // Can not append on a string builder
+            throw new AtbashUnexpectedException(e);
         }
         return sb.toString();
     }
 
     /**
-     * Override natif toStirng()
+     * Override toString().
      */
     public String toString() {
         return toJSONString();
+    }
+
+    // FIXME Testing of this and the other methods
+    public static JSONArray merge(JSONArray array1, Object array2) {
+        if (array2 == null) {
+            return array1;
+        }
+        if (array2 instanceof JSONArray) {
+            return merge(array1, (JSONArray) array2);
+        }
+        array1.add(array2);
+        return array1;
+    }
+
+    public static JSONArray merge(JSONArray array1, JSONArray array2) {
+        array1.addAll(array2);
+        return array1;
     }
 
 }

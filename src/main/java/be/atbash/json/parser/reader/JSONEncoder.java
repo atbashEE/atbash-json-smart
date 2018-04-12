@@ -31,7 +31,6 @@ package be.atbash.json.parser.reader;
  * limitations under the License.
  */
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 
 /**
@@ -49,7 +48,7 @@ public abstract class JSONEncoder<T> {
     /**
      * called when json-smart parser meet an object key
      */
-    public JSONEncoder<?> startObject(String key) throws IOException {
+    public JSONEncoder<?> startObject(String key) {
         throw new RuntimeException(ERR_MSG + " startObject(String key) in " + this.getClass() + " key=" + key);
     }
 
@@ -58,21 +57,21 @@ public abstract class JSONEncoder<T> {
      *
      * @param key the destination key name, or null.
      */
-    public JSONEncoder<?> startArray(String key) throws IOException {
+    public JSONEncoder<?> startArray(String key) {
         throw new RuntimeException(ERR_MSG + " startArray in " + this.getClass() + " key=" + key);
     }
 
     /**
      * called when json-smart done parsing a value
      */
-    public void setValue(Object current, String key, Object value) throws IOException {
+    public void setValue(T current, String key, Object value) {
         throw new RuntimeException(ERR_MSG + " setValue in " + this.getClass() + " key=" + key);
     }
 
     /**
      * -------------
      */
-    public Object getValue(Object current, String key) {
+    public Object getValue(T current, String key) {
         throw new RuntimeException(ERR_MSG + " getValue(Object current, String key) in " + this.getClass() + " key=" + key);
     }
 
@@ -91,7 +90,7 @@ public abstract class JSONEncoder<T> {
     /**
      * use to instantiate a new object that will be used as an object
      */
-    public Object createObject() {
+    public T createObject() {
         throw new RuntimeException(ERR_MSG + " createObject() in " + this.getClass());
     }
 
