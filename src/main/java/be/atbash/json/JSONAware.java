@@ -20,13 +20,15 @@ package be.atbash.json;
  *
  */
 
+import be.atbash.util.PublicAPI;
+
 /**
  * Beans that support customized output of JSON text shall implement this
  * interface.
  *
  * @author FangYidong &lt;fangyidong@yahoo.com.cn&gt;
  */
-
+@PublicAPI
 public interface JSONAware {
 
     /**

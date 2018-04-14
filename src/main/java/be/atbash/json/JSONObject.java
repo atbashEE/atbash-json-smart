@@ -32,6 +32,7 @@ package be.atbash.json;
  */
 
 import be.atbash.json.writer.JSONWriterFactory;
+import be.atbash.util.PublicAPI;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -44,6 +45,7 @@ import java.util.Map;
  * @author FangYidong &lt;fangyidong@yahoo.com.cn&gt;
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  */
+@PublicAPI
 public class JSONObject extends HashMap<String, Object> implements JSONAware {
 
     public JSONObject() {

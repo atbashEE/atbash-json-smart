@@ -40,6 +40,7 @@ import be.atbash.json.parser.reader.JSONEncoderFactory;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.json.writer.JSONWriter;
 import be.atbash.json.writer.JSONWriterFactory;
+import be.atbash.util.PublicAPI;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.io.IOException;
@@ -57,6 +58,7 @@ import java.util.Map;
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  * @author Rudy De Busscher
  */
+@PublicAPI
 public class JSONValue {
 
     /**

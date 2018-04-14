@@ -17,6 +17,7 @@ package be.atbash.json.parser;
 
 import be.atbash.json.writer.CustomBeanJSONEncoder;
 import be.atbash.json.writer.JSONWriter;
+import be.atbash.util.PublicAPI;
 
 import java.lang.annotation.*;
 
@@ -26,6 +27,7 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@PublicAPI
 public @interface MappedBy {
 
     Class<? extends CustomJSONEncoder> encoder() default CustomJSONEncoder.NOPJSONEncoder.class;

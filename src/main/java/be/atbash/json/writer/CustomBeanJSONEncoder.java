@@ -16,11 +16,12 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.parser.reader.BeanEncoder;
+import be.atbash.util.PublicAPI;
 
 /**
  * Atbash added file
  */
-
+@PublicAPI
 public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
 
     /**

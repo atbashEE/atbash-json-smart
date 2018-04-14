@@ -15,9 +15,12 @@
  */
 package be.atbash.json.parser;
 
+import be.atbash.util.PublicAPI;
+
 /**
  * Encoder responsible for converting the JSON representation to an instance. Use with @MappedBy on the class.
  */
+@PublicAPI
 public interface CustomJSONEncoder<T> {
 
     T parse(Object data);
