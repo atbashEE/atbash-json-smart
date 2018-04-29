@@ -30,15 +30,15 @@ import java.lang.reflect.Type;
  * (any such generic interface would do, as long as it forces a method
  * with generic type to be implemented).
  * to ensure that a Type argument is indeed given.
- *<p>
+ * <p>
  * Usage is by sub-classing: here is one way to instantiate reference
  * to generic type <code>List&lt;Integer&gt;</code>:
- *<pre>
+ * <pre>
  *  TypeReference ref = new TypeReference&lt;List&lt;Integer&gt;&gt;() { };
- *</pre>
+ * </pre>
  * which can be passed to methods that accept TypeReference, or resolved
  * using <code>TypeFactory</code> to obtain {@link ResolvedType}.
- *
+ * <p>
  * Copied from Jackson (https://github.com/FasterXML/jackson-core) as a workaround to specify Parameterized Types.
  */
 
@@ -76,5 +76,24 @@ public abstract class TypeReference<T> implements Comparable<TypeReference<T>> {
     public int compareTo(TypeReference<T> o) {
         // just need an implementation, not a good one... hence:
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof TypeReference)) {
+            return false;
+        }
+
+        TypeReference<?> that = (TypeReference<?>) o;
+
+        return _type.equals(that._type);
+    }
+
+    @Override
+    public int hashCode() {
+        return _type.hashCode();
     }
 }

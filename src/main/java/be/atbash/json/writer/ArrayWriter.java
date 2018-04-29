@@ -24,7 +24,7 @@ public class ArrayWriter implements JSONWriter<Object> {
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
         JSONStyle.getDefault().arrayStart(out);
         boolean needSep = false;
-        for (Object o : ((Object[]) value)) {
+        for (Object o : (Object[]) value) {
             if (needSep) {
                 JSONStyle.getDefault().objectNext(out);
             } else {

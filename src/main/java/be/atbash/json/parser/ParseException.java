@@ -45,9 +45,9 @@ public class ParseException extends RuntimeException {
     public static final int ERROR_UNEXPECTED_DUPLICATE_KEY = 5;
     public static final int ERROR_UNEXPECTED_LEADING_0 = 6;
 
-    private int errorType;
-    private Object unexpectedObject;
-    private int position;
+    private final int errorType;
+    private final Object unexpectedObject;
+    private final int position;
 
     public ParseException(int position, int errorType, Object unexpectedObject) {
         super(toMessage(position, errorType, unexpectedObject));

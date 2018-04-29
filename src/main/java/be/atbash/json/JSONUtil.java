@@ -42,7 +42,7 @@ import java.lang.reflect.Method;
  */
 public final class JSONUtil {
 
-    public final static JsonSmartFieldFilter JSON_SMART_FIELD_FILTER = new JsonSmartFieldFilter();
+    public static final JsonSmartFieldFilter JSON_SMART_FIELD_FILTER = new JsonSmartFieldFilter();
 
     private JSONUtil() {
     }

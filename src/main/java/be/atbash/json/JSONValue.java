@@ -61,6 +61,9 @@ import java.util.Map;
 @PublicAPI
 public class JSONValue {
 
+    private JSONValue() {
+    }
+
     /**
      * Parse input json as a mapTo class
      * <p>

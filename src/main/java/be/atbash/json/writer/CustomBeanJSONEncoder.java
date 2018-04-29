@@ -53,6 +53,7 @@ public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
 
         @Override
         public void setCustomValue(Object current, String key, Object value) {
+            throw new UnsupportedOperationException("This implementation is just a marker, not a real implementation");
         }
     }
 }

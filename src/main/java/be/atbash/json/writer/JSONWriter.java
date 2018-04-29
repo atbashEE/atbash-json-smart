@@ -24,7 +24,7 @@ public interface JSONWriter<T> {
 
         @Override
         public void writeJSONString(Object value, Appendable out) throws IOException {
-
+            throw new UnsupportedOperationException("This implementation is just a marker, not a real implementation");
         }
     }
 }

@@ -41,7 +41,7 @@ import java.io.IOException;
  */
 public class JSONStyle {
 
-    private final static JSONStyle DEFAULT = new JSONStyle();  // NO-COMPRESS of smart-json
+    private static final JSONStyle DEFAULT = new JSONStyle();  // NO-COMPRESS of smart-json
 
     private boolean _ignore_null = true;  // FIXME Config?
 

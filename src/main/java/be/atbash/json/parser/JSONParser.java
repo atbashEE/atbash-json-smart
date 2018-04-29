@@ -44,31 +44,31 @@ public class JSONParser {
     /**
      * allow simple quote as String quoting char
      */
-    public final static int ACCEPT_SIMPLE_QUOTE = 1;
+    public static final int ACCEPT_SIMPLE_QUOTE = 1;
     /**
      * allow non quoted test
      */
-    public final static int ACCEPT_NON_QUOTE = 2;
+    public static final int ACCEPT_NON_QUOTE = 2;
     /**
      * Parse NaN as Float.NaN
      */
-    public final static int ACCEPT_NAN = 4;
+    public static final int ACCEPT_NAN = 4;
     /**
      * Ignore control char in input text.
      */
-    public final static int IGNORE_CONTROL_CHAR = 8;
+    public static final int IGNORE_CONTROL_CHAR = 8;
     /**
      * Use int datatype to store number when it's possible.
      */
-    public final static int USE_INTEGER_STORAGE = 16;
+    public static final int USE_INTEGER_STORAGE = 16;
     /**
      * Throws exception on excessive 0 leading in digits
      */
-    public final static int ACCEPT_LEADING_ZERO = 32;
+    public static final int ACCEPT_LEADING_ZERO = 32;
     /**
      * Throws exception on useless comma in object and array
      */
-    public final static int ACCEPT_USELESS_COMMA = 64;
+    public static final int ACCEPT_USELESS_COMMA = 64;
     /**
      * Allow Json-smart to use Double or BigDecimal to store floating point
      * value
@@ -76,46 +76,46 @@ public class JSONParser {
      * You may need to disable HI_PRECISION_FLOAT feature on 32bit to improve
      * parsing performances.
      */
-    public final static int USE_HI_PRECISION_FLOAT = 128;
+    public static final int USE_HI_PRECISION_FLOAT = 128;
     /**
      * If enabled json-smart will throws exception if datas are present after
      * the end of the Json data.
      */
-    public final static int ACCEPT_TAILLING_DATA = 256;
+    public static final int ACCEPT_TAILLING_DATA = 256;
     /**
      * smart mode, fastest parsing mode. accept lots of non standard json syntax
      */
-    public final static int ACCEPT_TAILLING_SPACE = 512;
+    public static final int ACCEPT_TAILLING_SPACE = 512;
     /**
      * smart mode, fastest parsing mode. accept lots of non standard json syntax
      */
-    public final static int REJECT_127_CHAR = 1024;
+    public static final int REJECT_127_CHAR = 1024;
 
     /**
      * smart mode, fastest parsing mode. accept lots of non standard json syntax
      */
-    public final static int MODE_PERMISSIVE = -1;
+    public static final int MODE_PERMISSIVE = -1;
     /**
      * strict RFC4627 mode.
      * <p>
      * slower than PERMISIF MODE.
      */
-    public final static int MODE_RFC4627 = USE_INTEGER_STORAGE | USE_HI_PRECISION_FLOAT | ACCEPT_TAILLING_SPACE;
+    public static final int MODE_RFC4627 = USE_INTEGER_STORAGE | USE_HI_PRECISION_FLOAT | ACCEPT_TAILLING_SPACE;
     /**
      * Parse Object like json-simple
      * <p>
      * Best for an iso-bug json-simple API port.
      */
-    public final static int MODE_JSON_SIMPLE = ACCEPT_USELESS_COMMA | USE_HI_PRECISION_FLOAT | ACCEPT_TAILLING_DATA | ACCEPT_TAILLING_SPACE | REJECT_127_CHAR;
+    public static final int MODE_JSON_SIMPLE = ACCEPT_USELESS_COMMA | USE_HI_PRECISION_FLOAT | ACCEPT_TAILLING_DATA | ACCEPT_TAILLING_SPACE | REJECT_127_CHAR;
     /**
      * Strictest parsing mode
      */
-    public final static int MODE_STRICTEST = USE_INTEGER_STORAGE | USE_HI_PRECISION_FLOAT | REJECT_127_CHAR;
+    public static final int MODE_STRICTEST = USE_INTEGER_STORAGE | USE_HI_PRECISION_FLOAT | REJECT_127_CHAR;
     /**
      * Default json-smart processing mode
      */
     // FIXME Use config
-    public static int DEFAULT_PERMISSIVE_MODE = (System.getProperty("JSON_SMART_SIMPLE") != null) ? MODE_JSON_SIMPLE
+    public static final int DEFAULT_PERMISSIVE_MODE = (System.getProperty("JSON_SMART_SIMPLE") != null) ? MODE_JSON_SIMPLE
             : MODE_PERMISSIVE;
 
     /*
@@ -124,6 +124,17 @@ public class JSONParser {
     private int mode;
 
     private JSONParserString stringParser;
+
+    /**
+     * mode = DEFAULT_PERMISSIVE_MODE
+     */
+    public JSONParser() {
+        this(DEFAULT_PERMISSIVE_MODE);
+    }
+
+    public JSONParser(int permissifMode) {
+        this.mode = permissifMode;
+    }
 
     /**
      * cached constructor
@@ -135,17 +146,6 @@ public class JSONParser {
             stringParser = new JSONParserString(mode);
         }
         return stringParser;
-    }
-
-    /**
-     * mode = DEFAULT_PERMISSIVE_MODE
-     */
-    public JSONParser() {
-        this.mode = DEFAULT_PERMISSIVE_MODE;
-    }
-
-    public JSONParser(int permissifMode) {
-        this.mode = permissifMode;
     }
 
     /**

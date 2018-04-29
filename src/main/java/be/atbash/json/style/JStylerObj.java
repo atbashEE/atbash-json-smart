@@ -42,7 +42,7 @@ import java.io.IOException;
  */
 class JStylerObj {
 
-    final static Escape4Web ESCAPE4Web = new Escape4Web();
+    static final Escape4Web ESCAPE4Web = new Escape4Web();
 
     public interface StringProtector {
         void escape(String s, Appendable out);

@@ -34,7 +34,7 @@ public class JSONWriterFactory {
     /**
      * Serialisation class Data
      */
-    private final static JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
+    private static final JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
 
     private ConcurrentHashMap<Class<?>, JSONWriter<?>> writerCache;
     private LinkedList<WriterByInterface> writerInterfaces;
@@ -327,28 +327,6 @@ public class JSONWriterFactory {
                 JSONStyle.getDefault().arrayStop(out);
             }
         };
-    }
-
-    /**
-     * associate an Writer to a interface With Hi priority
-     *
-     * @param interFace interface to map
-     * @param writer    writer Object
-     * @deprecated use registerWriterInterfaceFirst
-     */
-    public void addInterfaceWriterFirst(Class<?> interFace, JSONWriter<?> writer) {
-        registerWriterInterfaceFirst(interFace, writer);
-    }
-
-    /**
-     * associate an Writer to a interface With Low priority
-     *
-     * @param interFace interface to map
-     * @param writer    writer Object
-     * @deprecated use registerWriterInterfaceLast
-     */
-    public void addInterfaceWriterLast(Class<?> interFace, JSONWriter<?> writer) {
-        registerWriterInterfaceLast(interFace, writer);
     }
 
     /**

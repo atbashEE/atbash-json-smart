@@ -46,9 +46,20 @@ import java.util.HashMap;
 @SuppressWarnings("unchecked")
 public class BeanEncoder<T> extends JSONEncoder<T> {
 
+    private static JSONEncoder<Date> jsonEncoderDate;
+
     private final Class<T> clz;
     protected final BeansAccess<T> beansAccess;
     private final HashMap<String, Accessor> index;
+
+    static {
+        jsonEncoderDate = new ArraysJSONEncoder<Date>() {
+            @Override
+            public Date convert(Object current) {
+                return ConvertDate.convertToDate(current);
+            }
+        };
+    }
 
     public BeanEncoder(Class<T> clz) {
         this.clz = clz;
@@ -110,17 +121,6 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
     @Override
     public T createObject() {
         return beansAccess.newInstance();
-    }
-
-    private static JSONEncoder<Date> jsonEncoderDate;
-
-    static {
-        jsonEncoderDate = new ArraysJSONEncoder<Date>() {
-            @Override
-            public Date convert(Object current) {
-                return ConvertDate.convertToDate(current);
-            }
-        };
     }
 
     static JSONEncoder<Date> getJsonEncoderDate() {

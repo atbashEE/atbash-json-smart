@@ -33,6 +33,7 @@ package be.atbash.json;
 
 import be.atbash.json.writer.JSONWriterFactory;
 import be.atbash.util.PublicAPI;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -130,13 +131,13 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
      * @return JSON text, or "null" if map is null.
      * @see JSONValue#toJSONString(Object)
      */
-    // FIXME Required?
-    public static String toJSONString(Map<String, ?> map) {
+    private String toJSONString(Map<String, ?> map) {
         StringBuilder sb = new StringBuilder();
         try {
             writeJSON(map, sb);
         } catch (IOException e) {
             // can not append on a StringBuilder
+            throw new AtbashUnexpectedException(e);
         }
         return sb.toString();
     }
@@ -173,18 +174,19 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         if (object2 == null) {
             return object1;
         }
-        for (String key : object1.keySet()) {
-            Object value1 = object1.get(key);
-            Object value2 = object2.get(key);
+        for (Map.Entry<String, Object> entry : object1.entrySet()) {
+
+            Object value1 = entry.getValue();
+            Object value2 = object2.get(entry.getKey());
             if (value2 == null) {
                 continue;
             }
             if (value1 instanceof JSONArray) {
-                object1.put(key, JSONArray.merge((JSONArray) value1, value2));
+                object1.put(entry.getKey(), JSONArray.merge((JSONArray) value1, value2));
                 continue;
             }
             if (value1 instanceof JSONObject) {
-                object1.put(key, merge((JSONObject) value1, value2));
+                object1.put(entry.getKey(), merge((JSONObject) value1, value2));
                 continue;
             }
             if (value1.equals(value2)) {
@@ -197,11 +199,13 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
             // FIXME Custom error message
             throw new RuntimeException("JSON merge can not merge " + value1.getClass().getName() + " with " + value2.getClass().getName());
         }
-        for (String key : object2.keySet()) {
-            if (object1.containsKey(key)) {
+
+        for (Map.Entry<String, Object> entry : object2.entrySet()) {
+
+            if (object1.containsKey(entry.getKey())) {
                 continue;
             }
-            object1.put(key, object2.get(key));
+            object1.put(entry.getKey(), entry.getValue());
         }
         return object1;
     }
