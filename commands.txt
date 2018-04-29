@@ -1,0 +1,14 @@
+
+
+# Local development
+
+mvn clean install
+
+# Update license headers
+
+mvn license:format
+
+
+# Release to Maven central
+
+mvn clean deploy -Prelease
