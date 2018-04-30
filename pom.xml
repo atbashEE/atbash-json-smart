@@ -51,6 +51,12 @@
         </license>
     </licenses>
 
+    <scm>
+        <connection>scm:git:git://github.com/atbashEE/atbash-json-smart.git</connection>
+        <developerConnection>scm:git:ssh://github.com:atbashEE/atbash-json-smart.git</developerConnection>
+        <url>http://github.com/atbashEE/atbash-json-smart/tree/master</url>
+    </scm>
+
     <properties>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
