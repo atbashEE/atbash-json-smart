@@ -30,7 +30,7 @@
 
     <name>Atbash JSON</name>
     <description>Atbash JSON parent</description>
-    <url>https://raw.githubusercontent.com/atbashEE/atbash-json-smart/master/impl/src/main/doc/manual.adoc</url>
+    <url>https://raw.githubusercontent.com/atbashEE/atbash-json-smart/master/src/main/doc/manual.adoc</url>
 
     <developers>
         <developer>
@@ -57,23 +57,12 @@
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <atbash-utils.version>0.9.1-SNAPSHOT</atbash-utils.version>
+        <atbash-utils.version>0.9.1</atbash-utils.version>
 
         <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
         <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
 
     </properties>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>be.atbash.utils</groupId>
-                <artifactId>utils-se</artifactId>
-                <version>${atbash-utils.version}</version>
-            </dependency>
-
-        </dependencies>
-    </dependencyManagement>
 
     <dependencies>
 
@@ -87,8 +76,10 @@
         <dependency>
             <groupId>be.atbash.utils</groupId>
             <artifactId>utils-se</artifactId>
+            <version>${atbash-utils.version}</version>
         </dependency>
 
+        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
