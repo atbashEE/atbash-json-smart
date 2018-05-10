@@ -16,10 +16,10 @@
 package be.atbash.json;
 
 import be.atbash.json.annotate.JsonIgnore;
+import be.atbash.json.asm.FieldFilter;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import net.minidev.asm.FieldFilter;
 
 import java.io.IOException;
 import java.lang.reflect.Field;

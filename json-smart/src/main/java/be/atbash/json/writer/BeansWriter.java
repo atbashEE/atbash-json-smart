@@ -16,9 +16,9 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONUtil;
+import be.atbash.json.asm.Accessor;
+import be.atbash.json.asm.BeansAccess;
 import be.atbash.json.style.JSONStyle;
-import net.minidev.asm.Accessor;
-import net.minidev.asm.BeansAccess;
 
 import java.io.IOException;
 

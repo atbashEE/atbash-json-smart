@@ -71,6 +71,7 @@
     </properties>
 
     <modules>
+        <module>accessors-smart</module>
         <module>json-smart</module>
     </modules>
     <build>

@@ -28,50 +28,22 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>octopus-json-smart</artifactId>
+    <artifactId>octopus-accessors-smart</artifactId>
     <version>0.9.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
-
-    <name>Atbash JSON</name>
-    <description>Atbash JSON</description>
+    <name>ASM based accessors helper used by json-smart</name>
 
     <dependencies>
-
-        <dependency>
-            <groupId>be.atbash.json</groupId>
-            <artifactId>octopus-accessors-smart</artifactId>
-            <version>${project.parent.version}</version>
-        </dependency>
-
-        <!-- atbash -->
-        <dependency>
-            <groupId>be.atbash.utils</groupId>
-            <artifactId>utils-se</artifactId>
-            <version>${atbash-utils.version}</version>
-        </dependency>
-
-        <!-- Testing -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.13.0</version>
-            <scope>test</scope>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm</artifactId>
+            <version>5.0.4</version>
         </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>1.7.0</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
 </project>

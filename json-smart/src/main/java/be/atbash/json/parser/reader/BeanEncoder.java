@@ -32,12 +32,12 @@ package be.atbash.json.parser.reader;
  */
 
 import be.atbash.json.JSONUtil;
+import be.atbash.json.asm.Accessor;
+import be.atbash.json.asm.BeansAccess;
+import be.atbash.json.asm.ConvertDate;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.util.exception.AtbashUnexpectedException;
-import net.minidev.asm.Accessor;
-import net.minidev.asm.BeansAccess;
-import net.minidev.asm.ConvertDate;
 
 import java.lang.reflect.Type;
 import java.util.Date;
