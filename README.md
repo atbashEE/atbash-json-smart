@@ -16,7 +16,7 @@ Add artifact to pom.xml file.
     <dependency>
         <groupId>be.atbash.json</groupId>
         <artifactId>octopus-json-smart</artifactId>
-        <version>0.9.0</version>
+        <version>0.9.1</version>
     </dependency>
 ----
 
