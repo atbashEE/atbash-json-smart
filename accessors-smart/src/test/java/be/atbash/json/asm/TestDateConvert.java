@@ -15,7 +15,7 @@
  */
 package be.atbash.json.asm;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,11 +23,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class TestDateConvert extends TestCase {
+import static org.junit.Assert.assertEquals;
+
+public class TestDateConvert {
     // we do not test the century
     SimpleDateFormat sdfFull = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
     SimpleDateFormat sdfLT = new SimpleDateFormat("dd/MM/yy HH:mm");
 
+    @Test
     public void testDateFR() throws Exception {
         String expectedDateText = "23/01/12 13:42:12";
         ArrayList<String> tests = new ArrayList<String>();
@@ -41,7 +44,7 @@ public class TestDateConvert extends TestCase {
         ConvertDate.convertToDate(null);
         for (String testDate : tests) {
             String jobName = "Parsing FR Date:" + testDate;
-            Date parsed = null;
+            Date parsed;
             try {
                 parsed = ConvertDate.convertToDate(testDate);
             } catch (Exception e) {
@@ -51,27 +54,33 @@ public class TestDateConvert extends TestCase {
         }
     }
 
-    public void testAdvanceTimeStamp() throws Exception {
+    @Test
+    public void testAdvanceTimeStamp() {
         String testDate = "2014-08-27T12:53:10+02:00";
         ConvertDate.convertToDate(testDate);
     }
 
+    @Test
     public void testDateUS() throws Exception {
         testDateLocalized(Locale.US);
     }
 
+    @Test
     public void testDateFRANCE() throws Exception {
         testDateLocalized(Locale.FRANCE);
     }
 
+    @Test
     public void testDateCANADA() throws Exception {
         testDateLocalized(Locale.CANADA);
     }
 
+    @Test
     public void testDateGERMANY() throws Exception {
         testDateLocalized(Locale.GERMANY);
     }
 
+    @Test
     public void testDateITALY() throws Exception {
         testDateLocalized(Locale.ITALY);
     }
@@ -99,7 +108,7 @@ public class TestDateConvert extends TestCase {
         String jobName = "Test date format Local:" + locale + " format: " + sizeName;
         DateFormat FormatEN = DateFormat.getDateTimeInstance(sizeId, sizeId, locale);
         String testDate = FormatEN.format(expectedDate);
-        Date parse = null;
+        Date parse;
         try {
             // can not parse US Date in short mode.
             if (sizeId == DateFormat.SHORT && locale.equals(Locale.US)) {

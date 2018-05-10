@@ -27,7 +27,6 @@ public class BStrPubAc extends BeansAccess {
                 value = value.toString();
             }
             ((BStrPub) object).value = (String) value;
-            return;
         }
     }
 
@@ -46,7 +45,6 @@ public class BStrPubAc extends BeansAccess {
                 value = value.toString();
             }
             ((BStrPub) object).value = (String) value;
-            return;
         }
     }
 

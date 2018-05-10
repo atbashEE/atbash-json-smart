@@ -16,20 +16,21 @@
 package be.atbash.json.asm;
 
 import be.atbash.json.asm.bean.BTest;
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.HashMap;
 
-public class ASMTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
-    @SuppressWarnings({"unused"})
-    public void testGet() throws Exception {
-        long T1;
+public class ASMTest {
+
+    @Test
+    public void testGet() {
 
         BeansAccess<BTest> acBT = BeansAccess.get(BTest.class);
         // BeansAccess acHand = new BTestBeansAccessB();
 
-        HashMap<String, String> m = new HashMap<String, String>();
+        HashMap<String, String> m = new HashMap<>();
         m.put("A", "ab");
         m.put("B", "Bc");
         m.put("C", "cD");

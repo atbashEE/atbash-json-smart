@@ -32,7 +32,7 @@ public class BTestBeansAccessB extends BeansAccess {
     @Override
     public void set(Object object, String methodName, Object value) {
         if ("privIntValue".equals(methodName)) {
-            ((BTest) object).setPrivIntValue(DefaultConverter.convertToint(value));
+            ((BTest) object).setPrivIntValue(DefaultConverter.convertToInt(value));
             return;
         }
         if ("privStrValue".equals(methodName)) {
@@ -51,7 +51,7 @@ public class BTestBeansAccessB extends BeansAccess {
             return;
         }
         if ("pubIntValue".equals(methodName)) {
-            ((BTest) object).pubIntValue = DefaultConverter.convertToint(value);
+            ((BTest) object).pubIntValue = DefaultConverter.convertToInt(value);
             return;
         }
         if ("pubBoolValue".equals(methodName)) {
@@ -64,7 +64,6 @@ public class BTestBeansAccessB extends BeansAccess {
         }
         if ("pubTEnum".equals(methodName)) {
             ((BTest) object).pubTEnum = TEnum.valueOf((String) value);
-            return;
         }
     }
 
@@ -151,7 +150,7 @@ public class BTestBeansAccessB extends BeansAccess {
             ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
             return;
         }
-        if (methodIndex == 0) {
+        if (methodIndex == 6) {
             ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
             return;
         }
@@ -161,7 +160,6 @@ public class BTestBeansAccessB extends BeansAccess {
         }
         if (methodIndex == 8) {
             ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
-            return;
         }
     }
 

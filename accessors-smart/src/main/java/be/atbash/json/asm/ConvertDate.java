@@ -19,19 +19,15 @@ import java.text.DateFormatSymbols;
 import java.util.*;
 
 public class ConvertDate {
-    static TreeMap<String, Integer> monthsTable = new TreeMap<String, Integer>(new StringCmpNS()); // StringCmpNS.COMP
-    static TreeMap<String, Integer> daysTable = new TreeMap<String, Integer>(new StringCmpNS()); // StringCmpNS.COMP
-    private static HashSet<String> voidData = new HashSet<String>();
+    private static TreeMap<String, Integer> monthsTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+    private static TreeMap<String, Integer> daysTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+    private static HashSet<String> voidData = new HashSet<>();
 
     public static class StringCmpNS implements Comparator<String> {
         @Override
         public int compare(String o1, String o2) {
             return o1.compareToIgnoreCase(o2);
         }
-    }
-
-    public static Integer getMonth(String month) {
-        return monthsTable.get(month);
     }
 
     private static Integer parseMonth(String s1) {
@@ -42,14 +38,14 @@ public class ConvertDate {
             if (month == null) {
                 throw new NullPointerException("can not parse " + s1 + " as month");
             }
-            return month.intValue();
+            return month;
         }
     }
 
-    static TreeMap<String, TimeZone> timeZoneMapping;
+    private static TreeMap<String, TimeZone> timeZoneMapping;
 
     static {
-        timeZoneMapping = new TreeMap<String, TimeZone>();
+        timeZoneMapping = new TreeMap<>();
         voidData.add("MEZ");
         voidData.add("Uhr");
         voidData.add("h");
@@ -78,7 +74,7 @@ public class ConvertDate {
                 if (keys[i].length() == 0) {
                     continue;
                 }
-                fillMap(monthsTable, keys[i], Integer.valueOf(i));
+                fillMap(monthsTable, keys[i], i);
             }
             keys = dfs.getShortMonths();
             for (int i = 0; i < keys.length; i++) {
@@ -89,8 +85,8 @@ public class ConvertDate {
                 if (Character.isDigit(s.charAt(s.length() - 1))) {
                     continue;
                 }
-                fillMap(monthsTable, keys[i], Integer.valueOf(i));
-                fillMap(monthsTable, keys[i].replace(".", ""), Integer.valueOf(i));
+                fillMap(monthsTable, keys[i], i);
+                fillMap(monthsTable, keys[i].replace(".", ""), i);
             }
             keys = dfs.getWeekdays();
             for (int i = 0; i < keys.length; i++) {
@@ -98,8 +94,8 @@ public class ConvertDate {
                 if (s.length() == 0) {
                     continue;
                 }
-                fillMap(daysTable, s, Integer.valueOf(i));
-                fillMap(daysTable, s.replace(".", ""), Integer.valueOf(i));
+                fillMap(daysTable, s, i);
+                fillMap(daysTable, s.replace(".", ""), i);
             }
             keys = dfs.getShortWeekdays();
             for (int i = 0; i < keys.length; i++) {
@@ -107,8 +103,8 @@ public class ConvertDate {
                 if (s.length() == 0) {
                     continue;
                 }
-                fillMap(daysTable, s, Integer.valueOf(i));
-                fillMap(daysTable, s.replace(".", ""), Integer.valueOf(i));
+                fillMap(daysTable, s, i);
+                fillMap(daysTable, s.replace(".", ""), i);
             }
         }
     }
@@ -135,7 +131,7 @@ public class ConvertDate {
         }
         if (obj instanceof String) {
             StringTokenizer st = new StringTokenizer((String) obj, " -/:,.+");
-            String s1 = "";
+            String s1;
             if (!st.hasMoreTokens()) {
                 return null;
             }
@@ -237,11 +233,7 @@ public class ConvertDate {
             return addHour2(st, cal, s1);
 
         }
-        // /if (st.hasMoreTokens())
-        // return null;
-        // s1 = st.nextToken();
         return addHour(st, cal, null);
-        // return cal.getTime();
     }
 
     private static Date getDDMMYYYY(StringTokenizer st, String s1) {
@@ -286,11 +278,6 @@ public class ConvertDate {
             return cal.getTime();
         }
 
-        // if (s1.equalsIgnoreCase("h")) {
-        // if (!st.hasMoreTokens())
-        // return cal.getTime();
-        // s1 = st.nextToken();
-        // }
         cal.set(Calendar.MINUTE, Integer.parseInt(s1));
 
         if (!st.hasMoreTokens()) {

@@ -15,11 +15,12 @@
  */
 package be.atbash.json.asm;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
 import java.util.TreeMap;
 
-public class TestNewInstance extends TestCase {
+public class TestNewInstance {
+    @Test
     public void testLangUtilPkg() {
         @SuppressWarnings("rawtypes")
         BeansAccess<TreeMap> acTm = BeansAccess.get(TreeMap.class);

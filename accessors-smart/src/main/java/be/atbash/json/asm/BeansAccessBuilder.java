@@ -23,18 +23,17 @@ import java.util.HashMap;
 
 import static org.objectweb.asm.Opcodes.*;
 
-public class BeansAccessBuilder {
+class BeansAccessBuilder {
     static private String METHOD_ACCESS_NAME = Type.getInternalName(BeansAccess.class);
 
-    final Class<?> type;
-    final Accessor[] accs;
-    final DynamicClassLoader loader;
-    final String className;
-    final String accessClassName;
-    final String accessClassNameInternal;
-    final String classNameInternal;
-    final HashMap<Class<?>, Method> convMtds = new HashMap<Class<?>, Method>();
-    Class<? extends Exception> exeptionClass = NoSuchFieldException.class;
+    private final Accessor[] accs;
+    private final DynamicClassLoader loader;
+    private final String className;
+    private final String accessClassName;
+    private final String accessClassNameInternal;
+    private final String classNameInternal;
+    private final HashMap<Class<?>, Method> convMtds = new HashMap<>();
+    private Class<? extends Exception> exceptionClass = NoSuchFieldException.class;
 
     /**
      * Build reflect bytecode from accessor list.
@@ -43,8 +42,7 @@ public class BeansAccessBuilder {
      * @param accs   used accessor
      * @param loader Loader used to store the generated class
      */
-    public BeansAccessBuilder(Class<?> type, Accessor[] accs, DynamicClassLoader loader) {
-        this.type = type;
+    BeansAccessBuilder(Class<?> type, Accessor[] accs, DynamicClassLoader loader) {
         this.accs = accs;
         this.loader = loader;
 
@@ -59,7 +57,7 @@ public class BeansAccessBuilder {
         this.classNameInternal = className.replace('.', '/');
     }
 
-    public void addConversion(Iterable<Class<?>> conv) {
+    void addConversion(Iterable<Class<?>> conv) {
         if (conv == null) {
             return;
         }
@@ -68,7 +66,7 @@ public class BeansAccessBuilder {
         }
     }
 
-    public void addConversion(Class<?> conv) {
+    private void addConversion(Class<?> conv) {
         if (conv == null) {
             return;
         }
@@ -91,7 +89,7 @@ public class BeansAccessBuilder {
         }
     }
 
-    public Class<?> bulid() {
+    Class<?> build() {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         MethodVisitor mv;
 
@@ -147,8 +145,8 @@ public class BeansAccessBuilder {
                 i++;
             }
         }
-        if (exeptionClass != null) {
-            throwExIntParam(mv, exeptionClass);
+        if (exceptionClass != null) {
+            throwExIntParam(mv, exceptionClass);
         } else {
             mv.visitInsn(RETURN);
         }
@@ -215,8 +213,8 @@ public class BeansAccessBuilder {
             }
         }
 
-        if (exeptionClass != null) {
-            throwExIntParam(mv, exeptionClass);
+        if (exceptionClass != null) {
+            throwExIntParam(mv, exceptionClass);
         } else {
             mv.visitInsn(ACONST_NULL);
             mv.visitInsn(ARETURN);
@@ -242,8 +240,8 @@ public class BeansAccessBuilder {
                 mv.visitFrame(F_SAME, 0, null, 0, null);
                 i++;
             }
-            if (exeptionClass != null) {
-                throwExStrParam(mv, exeptionClass);
+            if (exceptionClass != null) {
+                throwExStrParam(mv, exceptionClass);
             } else {
                 mv.visitInsn(RETURN);
             }
@@ -279,8 +277,8 @@ public class BeansAccessBuilder {
                 mv.visitFrame(F_SAME, 0, null, 0, null);
                 i++;
             }
-            if (exeptionClass != null) {
-                throwExStrParam(mv, exeptionClass);
+            if (exceptionClass != null) {
+                throwExStrParam(mv, exceptionClass);
             } else {
                 mv.visitInsn(ACONST_NULL);
                 mv.visitInsn(ARETURN);
@@ -306,29 +304,13 @@ public class BeansAccessBuilder {
     }
 
     /**
-     * Dump Generate Code
-     */
-    @SuppressWarnings("unused")
-    private void dumpDebug(byte[] data, String destFile) {
-        // try {
-        // File debug = new File(destFile);
-        // int flags = ClassReader.SKIP_DEBUG;
-        // ClassReader cr = new ClassReader(new ByteArrayInputStream(data));
-        // cr.accept(new ASMifierClassVisitor(new PrintWriter(debug)),
-        // ASMifierClassVisitor.getDefaultAttributes(),
-        // flags);
-        // } catch (Exception e) {
-        // }
-    }
-
-    /**
      * Dump Set Field Code
      *
      * @param mv
      * @param acc
      */
     private void internalSetFiled(MethodVisitor mv, Accessor acc) {
-        /**
+        /*
          * FNC params
          *
          * 1 -> object to alter

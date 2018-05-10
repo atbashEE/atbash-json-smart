@@ -21,11 +21,6 @@ package be.atbash.json.asm.ex;
  * @author uriel
  */
 public class NoSuchFieldException extends RuntimeException {
-    private static final long serialVersionUID = 1L;
-
-    public NoSuchFieldException() {
-        super();
-    }
 
     public NoSuchFieldException(String message) {
         super(message);

@@ -48,10 +48,10 @@ public abstract class BeansAccess<T> {
     private HashMap<String, Accessor> map;
     private Accessor[] accs;
 
-    protected void setAccessor(Accessor[] accs) {
+    void setAccessor(Accessor[] accs) {
         int i = 0;
         this.accs = accs;
-        map = new HashMap<String, Accessor>();
+        map = new HashMap<>();
         for (Accessor acc : accs) {
             acc.index = i++;
             map.put(acc.getName(), acc);
@@ -69,9 +69,7 @@ public abstract class BeansAccess<T> {
     /**
      * cache used to store built BeansAccess
      */
-    private static ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<Class<?>, BeansAccess<?>>();
-
-    // private final static ConcurrentHashMap<Type, AMapper<?>> cache;
+    private static ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<>();
 
     /**
      * return the BeansAccess corresponding to a type
@@ -97,7 +95,7 @@ public abstract class BeansAccess<T> {
                 return access;
             }
         }
-        // extract all access methodes
+        // extract all access methods
         Accessor[] accs = ASMUtil.getAccessors(type, filter);
 
         // create new class name
@@ -126,7 +124,7 @@ public abstract class BeansAccess<T> {
             for (Class<?> c : parentClasses) {
                 builder.addConversion(BeansAccessConfig.classMapper.get(c));
             }
-            accessClass = builder.bulid();
+            accessClass = builder.build();
         }
         try {
             @SuppressWarnings("unchecked")
@@ -135,7 +133,7 @@ public abstract class BeansAccess<T> {
             cache.putIfAbsent(type, access);
             // add fieldname alias
             for (Class<?> c : parentClasses) {
-                addAlias(access, BeansAccessConfig.classFiledNameMapper.get(c));
+                addAlias(access, BeansAccessConfig.classFieldNameMapper.get(c));
             }
             return access;
         } catch (Exception ex) {
@@ -144,7 +142,7 @@ public abstract class BeansAccess<T> {
     }
 
     private static LinkedList<Class<?>> getParents(Class<?> type) {
-        LinkedList<Class<?>> m = new LinkedList<Class<?>>();
+        LinkedList<Class<?>> m = new LinkedList<>();
         while (type != null && !type.equals(Object.class)) {
             m.addLast(type);
             for (Class<?> c : type.getInterfaces()) {
@@ -160,12 +158,10 @@ public abstract class BeansAccess<T> {
      *
      */
     private static void addAlias(BeansAccess<?> access, HashMap<String, String> m) {
-        // HashMap<String, String> m =
-        // BeansAccessConfig.classFiledNameMapper.get(type);
         if (m == null) {
             return;
         }
-        HashMap<String, Accessor> changes = new HashMap<String, Accessor>();
+        HashMap<String, Accessor> changes = new HashMap<>();
         for (Entry<String, String> e : m.entrySet()) {
             Accessor a1 = access.map.get(e.getValue());
             if (a1 != null) {
@@ -196,7 +192,7 @@ public abstract class BeansAccess<T> {
     public void set(T object, String methodName, Object value) {
         int i = getIndex(methodName);
         if (i == -1) {
-            throw new NoSuchFieldException(methodName + " in " + object.getClass() + " to put value : " + value);
+            throw new NoSuchFieldException(String.format(" %s in %s to put value : %s ", methodName, object.getClass(), value));
         }
         set(object, i, value);
     }

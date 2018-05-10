@@ -15,14 +15,13 @@
  */
 package be.atbash.json.testclasses;
 
-import be.atbash.json.JSONAware;
 import be.atbash.json.parser.MappedBy;
 
 /**
  *
  */
 @MappedBy(writer = PriceJSONWriter.class)
-public class PriceWithWriter  {
+public class PriceWithWriter {
 
     private double value;
     private Currency currency;

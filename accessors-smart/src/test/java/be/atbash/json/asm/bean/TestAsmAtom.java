@@ -16,11 +16,14 @@
 package be.atbash.json.asm.bean;
 
 import be.atbash.json.asm.BeansAccess;
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestAsmAtom extends TestCase {
+import static org.junit.Assert.assertEquals;
 
-    public void testpub() throws Exception {
+public class TestAsmAtom {
+
+    @Test
+    public void testpub() {
         // int fieldID = 0;
         String fieldID = "value";
         {
@@ -68,7 +71,8 @@ public class TestAsmAtom extends TestCase {
 
     }
 
-    public void testPriv() throws Exception {
+    @Test
+    public void testPriv() {
         // int fieldID = 0;
         String fieldID = "value";
         {

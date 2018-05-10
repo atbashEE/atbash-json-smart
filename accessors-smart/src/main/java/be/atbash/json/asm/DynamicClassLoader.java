@@ -51,24 +51,6 @@ class DynamicClassLoader extends ClassLoader {
      */
     private final static Class<?>[] DEF_CLASS_SIG = new Class[]{String.class, byte[].class, int.class, int.class};
 
-    /**
-     * @param parent  used to choose the ClassLoader
-     * @param clsName C
-     * @param clsData
-     * @return
-     */
-    public static <T> Class<T> directLoad(Class<? extends T> parent, String clsName, byte[] clsData) {
-        DynamicClassLoader loader = new DynamicClassLoader(parent.getClassLoader());
-        @SuppressWarnings("unchecked")
-        Class<T> clzz = (Class<T>) loader.defineClass(clsName, clsData);
-        return clzz;
-    }
-
-    public static <T> T directInstance(Class<? extends T> parent, String clsName, byte[] clsData) throws InstantiationException, IllegalAccessException {
-        Class<T> clzz = directLoad(parent, clsName, clsData);
-        return clzz.newInstance();
-    }
-
     @Override
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         /*
@@ -95,7 +77,7 @@ class DynamicClassLoader extends ClassLoader {
             // protected and default access members accessible.
             Method method = ClassLoader.class.getDeclaredMethod("defineClass", DEF_CLASS_SIG);
             method.setAccessible(true);
-            return (Class<?>) method.invoke(getParent(), new Object[]{name, bytes, Integer.valueOf(0), Integer.valueOf(bytes.length)});
+            return (Class<?>) method.invoke(getParent(), new Object[]{name, bytes, 0, bytes.length});
         } catch (Exception ignored) {
         }
         return defineClass(name, bytes, 0, bytes.length);

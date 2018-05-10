@@ -25,7 +25,6 @@ public class BLongPubAc extends BeansAccess {
     public void set(Object object, int methodIndex, Object value) {
         if (methodIndex == 0) {
             ((BLongPub) object).value = DefaultConverter.convertToLong(value);
-            return;
         }
     }
 
@@ -41,7 +40,6 @@ public class BLongPubAc extends BeansAccess {
     public void set(Object object, String methodIndex, Object value) {
         if (methodIndex.equals("value")) {
             ((BLongPub) object).value = DefaultConverter.convertToLong(value);
-            return;
         }
     }
 

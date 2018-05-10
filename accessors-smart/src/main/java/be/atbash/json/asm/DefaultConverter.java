@@ -17,6 +17,7 @@ package be.atbash.json.asm;
 
 import be.atbash.json.asm.ex.ConvertException;
 
+// Method names are used by convention, so don't change them!
 public class DefaultConverter {
     public static int convertToint(Object obj) {
         if (obj == null) {
@@ -40,7 +41,7 @@ public class DefaultConverter {
             return (Integer) obj;
         }
         if (obj instanceof Number) {
-            return Integer.valueOf(((Number) obj).intValue());
+            return ((Number) obj).intValue();
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to Integer");
     }
@@ -67,7 +68,7 @@ public class DefaultConverter {
             return (Short) obj;
         }
         if (obj instanceof Number) {
-            return Short.valueOf(((Number) obj).shortValue());
+            return ((Number) obj).shortValue();
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to Short");
     }
@@ -94,7 +95,7 @@ public class DefaultConverter {
             return (Long) obj;
         }
         if (obj instanceof Number) {
-            return Long.valueOf(((Number) obj).longValue());
+            return ((Number) obj).longValue();
         }
         throw new ConvertException("Primitive: Can not convert value '" + obj + "' As " + obj.getClass().getName() + " to Long");
     }
@@ -121,7 +122,7 @@ public class DefaultConverter {
             return (Byte) obj;
         }
         if (obj instanceof Number) {
-            return Byte.valueOf(((Number) obj).byteValue());
+            return ((Number) obj).byteValue();
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to Byte");
     }
@@ -148,7 +149,7 @@ public class DefaultConverter {
             return (Float) obj;
         }
         if (obj instanceof Number) {
-            return Float.valueOf(((Number) obj).floatValue());
+            return ((Number) obj).floatValue();
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to Float");
     }
@@ -175,7 +176,7 @@ public class DefaultConverter {
             return (Double) obj;
         }
         if (obj instanceof Number) {
-            return Double.valueOf(((Number) obj).doubleValue());
+            return ((Number) obj).doubleValue();
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to Float");
     }
@@ -217,17 +218,13 @@ public class DefaultConverter {
             return false;
         }
         if (obj.getClass() == Boolean.class) {
-            return ((Boolean) obj).booleanValue();
+            return (Boolean) obj;
         }
         if (obj instanceof String) {
             return Boolean.parseBoolean((String) obj);
         }
         if (obj instanceof Number) {
-            if (obj.toString().equals("0")) {
-                return false;
-            } else {
-                return true;
-            }
+            return !obj.toString().equals("0");
         }
         throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to boolean");
     }

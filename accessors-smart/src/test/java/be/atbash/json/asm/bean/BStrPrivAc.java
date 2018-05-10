@@ -27,7 +27,6 @@ public class BStrPrivAc extends BeansAccess {
                 value = value.toString();
             }
             ((BStrPriv) object).setValue((String) value);
-            return;
         }
     }
 
@@ -46,7 +45,6 @@ public class BStrPrivAc extends BeansAccess {
                 value = value.toString();
             }
             ((BStrPriv) object).setValue((String) value);
-            return;
         }
     }
 
