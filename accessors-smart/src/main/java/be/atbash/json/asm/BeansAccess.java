@@ -54,7 +54,7 @@ public abstract class BeansAccess<T> {
         map = new HashMap<>();
         for (Accessor acc : accs) {
             acc.index = i++;
-            map.put(acc.getName(), acc);
+            map.put(acc.getPropertyName(), acc);
         }
     }
 
@@ -212,6 +212,6 @@ public abstract class BeansAccess<T> {
         if (ac == null) {
             return -1;
         }
-        return ac.index;
+        return ac.index;  // FIXME Use Getter
     }
 }

@@ -31,6 +31,9 @@ package be.atbash.json.asm;
  * limitations under the License.
  */
 
+import be.atbash.json.asm.mapper.FieldPropertyNameMapperHandler;
+
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -41,12 +44,16 @@ import java.lang.reflect.Type;
  * <p>
  * field, getter setter
  * <p>
- * this object is used internally by BeansAcces
+ * this object is used internally by BeansAccess
  *
  * @author Uriel Chemouni
+ * @author Rudy De Busscher
  * @see BeansAccess
  */
 public class Accessor {
+
+    private static final FieldPropertyNameMapperHandler MAPPER_HANDLER = new FieldPropertyNameMapperHandler();
+
     /**
      * Field to access
      */
@@ -73,6 +80,10 @@ public class Accessor {
     protected Type genericType;
 
     protected String fieldName;
+
+    protected String propertyName;
+
+    protected Annotation[] annotations;
 
     /**
      * getter for index
@@ -150,6 +161,32 @@ public class Accessor {
     }
 
     /**
+     * The property name for the field. This can be the field name or another name specified by JSONProperty of json-smart or any other framework supported through the SPI.
+     *
+     * @return The property name within JSON
+     */
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    /**
+     * Return the specified annotation on the field.
+     *
+     * @param annotationClass
+     * @param <T>
+     * @return The annotation instance on the field or null when no such annotation is present.
+     */
+    public <T> T getAnnotation(Class<T> annotationClass) {
+        T result = null;
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType().equals(annotationClass)) {
+                result = (T) annotation;
+            }
+        }
+        return result;
+    }
+
+    /**
      * build accessor for a field
      *
      * @param c     the handled class
@@ -189,6 +226,8 @@ public class Accessor {
             }
         }
 
+        // Field not public and no getter and/or setter -> not a candidate
+        // Same as isUseable(), but should not use public method from within constructor (do not allow functionality change from within subclass)
         if (this.field == null && getter == null && setter == null) {
             return;
         }
@@ -201,12 +240,18 @@ public class Accessor {
             setter = null;
         }
 
-        // disable
+        // Field not public and no getter and/or setter which we can use -> not a candidate
+        // Same as isUseable(), but should not use public method from within constructor (do not allow functionality change from within subclass)
         if (getter == null && setter == null && this.field == null) {
             return;
         }
 
         this.type = field.getType();
         this.genericType = field.getGenericType();
+
+        annotations = field.getDeclaredAnnotations();
+
+        propertyName = MAPPER_HANDLER.definePropertyName(this);
     }
+
 }

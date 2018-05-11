@@ -41,7 +41,7 @@ public class BeansWriter implements JSONWriter<Object> {
             } else {
                 needSep = true;
             }
-            String key = field.getName();
+            String key = field.getPropertyName();
             JSONUtil.writeJSONKV(key, v, out);
         }
         JSONStyle.getDefault().objectStop(out);

@@ -87,7 +87,8 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
             }
 
         }
-        beansAccess.set((T) current, key, value);
+        String fieldName = accessor.getName();
+        beansAccess.set((T) current, fieldName, value);
     }
 
     public Object getValue(T current, String key) {
