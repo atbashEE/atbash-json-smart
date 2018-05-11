@@ -9,6 +9,12 @@ User manual for Atbash JSON.
 
 == Release Notes
 
+=== 0.9.1
+
+. Support for @JsonProperty to define JSON property name
+. SPI for defining JSON property name
+. Integrated access-smart for additional features
+
 === 0.9.0
 
 . Initial release, based on the code of JSON smart v2.
@@ -54,6 +60,53 @@ Without the TypeReference information, Atbash JSON is only capable of creating a
 Converts the POJO T to a JSON String
 
 == Customizations
+
+=== Define JSON property name
+
+By default, the field name is used as property name within JSON.
+
+However, there are scenarios that you need to create a Java class for a JSON (or JWT payload) which needs to comply with some externally defined names. These property names are probably not valid Java property names according to your naming standard.
+
+The solution is to specify the fields with the @JsonProperty (be.atbash.json.annotate.JsonProperty) annotation.  The value of this annotation determine the JSON property name.  A Java class defined
+
+----
+public class Foo {
+
+    @JsonProperty("property")
+    private String stringValue;
+
+    private int intValue;
+
+    // Getters and setters for properties
+}
+----
+
+will result in a JSON like this
+
+----
+{"property":"value1","intValue":123}
+----
+
+=== SPI for defining JSON property name
+
+Atbash JSON has also an SPI available to support multiple ways of defining the property name.
+
+Key here is the interface _be.atbash.json.asm.mapper.FieldPropertyNameMapper_. This interface is used to determine the property name for a field.
+
+----
+public interface FieldPropertyNameMapper {
+
+    String getPropertyName(Accessor accessor);
+
+}
+----
+
+So implement this interface, and define the classname within a service loader definition file (within /META-INF/services/be.atbash.json.asm.mapper.FieldPropertyNameMapper)
+
+When you are not able to determine the property name (based on additional annotations or some general mapping rule based on the field name), just return _null_.
+
+You give then the opportunity that other implementations of this interface come up with a name or that the default (property name = field name) will be used.
+
 
 === Custom JSON creation
 
