@@ -15,9 +15,15 @@
  */
 package be.atbash.json;
 
-import be.atbash.json.testclasses.*;
+import be.atbash.json.testclasses.Currency;
+import be.atbash.json.testclasses.MyColor;
+import be.atbash.json.testclasses.PriceWithWriter;
+import be.atbash.json.testclasses.ProductWithWriter;
+import be.atbash.json.writer.JSONWriter;
+import be.atbash.util.codec.Hex;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,5 +58,23 @@ public class TestCustomWriter {
 
         String json = JSONValue.toJSONString(new ProductWithWriter("Atbash", price));
         assertThat(json).isEqualTo("{\"price\":\"123.45€\",\"name\":\"Atbash\"}");
+    }
+
+    @Test
+    public void testCustomWriter() {
+        JSONValue.registerWriter(MyColor.class, new MyColorWriter());
+
+        String json = JSONValue.toJSONString(new MyColor(255, 128, 64));
+        assertThat(json).isEqualTo("{\"value\":\"FF8040\"}");
+    }
+
+    private class MyColorWriter implements JSONWriter<MyColor> {
+        @Override
+        public <E extends MyColor> void writeJSONString(E value, Appendable out) throws IOException {
+            byte[] bytes = {(byte) value.getR(), (byte) value.getG(), (byte) value.getB()};
+            out.append("{\"value\":\"");
+            out.append(Hex.encodeToString(bytes));
+            out.append("\"}");
+        }
     }
 }

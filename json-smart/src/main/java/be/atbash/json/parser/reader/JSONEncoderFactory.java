@@ -31,10 +31,10 @@ package be.atbash.json.parser.reader;
  * limitations under the License.
  */
 
+import be.atbash.json.TypeReference;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.json.writer.CustomBeanJSONEncoder;
-import be.atbash.util.exception.AtbashException;
 import be.atbash.util.reflection.ClassUtils;
 
 import java.lang.reflect.ParameterizedType;
@@ -83,9 +83,12 @@ public class JSONEncoderFactory {
         cache.put(Boolean[].class, ArraysJSONEncoder.getJSONEncoderBool());
     }
 
-    // FIXME Example of programmatic and through Config.
     public <T> void registerEncoder(Class<T> type, JSONEncoder<T> jsonEncoder) {
         cache.put(type, jsonEncoder);
+    }
+
+    public <T> void registerEncoder(TypeReference<T> type, JSONEncoder<T> jsonEncoder) {
+        cache.put(type.getParameterizedType().getActualTypeArguments()[0], jsonEncoder);
     }
 
     @SuppressWarnings("unchecked")

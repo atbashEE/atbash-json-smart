@@ -121,6 +121,14 @@ public class JSONValue {
     }
 
     /**
+     * register a deserializer for a Parameterized type.
+     * TODO Document
+     */
+    public static <T> void registerEncoder(TypeReference<T> type, JSONEncoder<T> jsonEncoder) {
+        JSONEncoderFactory.getInstance().registerEncoder(type, jsonEncoder);
+    }
+
+    /**
      * Encode an object into JSON text and write it to out.
      * <p>
      * If this object is a Map or a List, and it's also a JSONStreamAware or a
