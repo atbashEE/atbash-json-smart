@@ -16,11 +16,12 @@
 package be.atbash.json.asm.ex;
 
 /**
- * Same exception as java.lang.NoSuchFieldException but uses Atbash exception hierarchy.
+ *
  */
-public class NoSuchFieldException extends AccessorException {
 
-    public NoSuchFieldException(String message) {
-        super(message);
+public class NoFieldGetterException extends AccessorException {
+
+    public NoFieldGetterException(String name, String className) {
+        super(String.format("no Getter for field %s in class %s", name, className));
     }
 }

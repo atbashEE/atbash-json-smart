@@ -15,6 +15,8 @@
  */
 package be.atbash.json.asm;
 
+import be.atbash.json.asm.ex.ConvertException;
+
 import java.text.DateFormatSymbols;
 import java.util.*;
 
@@ -36,7 +38,7 @@ public class ConvertDate {
         } else {
             Integer month = monthsTable.get(s1);
             if (month == null) {
-                throw new NullPointerException("can not parse " + s1 + " as month");
+                throw new ConvertException("can not parse " + s1 + " as month");
             }
             return month;
         }
@@ -155,7 +157,7 @@ public class ConvertDate {
             }
             return null;
         }
-        throw new RuntimeException("Primitive: Can not convert " + obj.getClass().getName() + " to int");
+        throw new ConvertException("Primitive: Can not convert " + obj.getClass().getName() + " to int");
     }
 
     private static Date getYYYYMMDD(StringTokenizer st, String s1) {
@@ -206,7 +208,7 @@ public class ConvertDate {
         GregorianCalendar cal = new GregorianCalendar(2000, 0, 0, 0, 0, 0);
         Integer month = monthsTable.get(s1);
         if (month == null) {
-            throw new NullPointerException("can not parse " + s1 + " as month");
+            throw new ConvertException("can not parse " + s1 + " as month");
         }
         cal.set(Calendar.MONTH, month);
         if (!st.hasMoreTokens()) {

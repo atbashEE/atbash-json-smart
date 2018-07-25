@@ -152,8 +152,7 @@ public class JSONEncoderFactory {
             encoder = new CollectionEncoder.MapType<>(type);
         }
         if (encoder == null) {
-            // TODO Custom exception
-            throw new AtbashException("Only parameterized types of List and Map or custom registered encoders are supported");
+            throw new UnsupportedParameterizedTypeException(type);
         }
         cache.putIfAbsent(type, encoder);
         return encoder;

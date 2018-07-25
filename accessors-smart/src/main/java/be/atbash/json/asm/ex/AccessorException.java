@@ -15,12 +15,26 @@
  */
 package be.atbash.json.asm.ex;
 
-/**
- * Same exception as java.lang.NoSuchFieldException but uses Atbash exception hierarchy.
- */
-public class NoSuchFieldException extends AccessorException {
+import be.atbash.util.exception.AtbashException;
 
-    public NoSuchFieldException(String message) {
+/**
+ * Base for all excetion within Accessors-smart library.
+ */
+public class AccessorException extends AtbashException {
+
+    public AccessorException() {
+        super();
+    }
+
+    public AccessorException(String message) {
         super(message);
+    }
+
+    public AccessorException(Throwable cause) {
+        super(cause);
+    }
+
+    public AccessorException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

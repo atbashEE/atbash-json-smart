@@ -13,14 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.asm.ex;
+package be.atbash.json.parser.reader;
+
+import be.atbash.util.exception.AtbashException;
+
+import java.lang.reflect.ParameterizedType;
 
 /**
- * Same exception as java.lang.NoSuchFieldException but uses Atbash exception hierarchy.
+ *
  */
-public class NoSuchFieldException extends AccessorException {
 
-    public NoSuchFieldException(String message) {
-        super(message);
+public class UnsupportedParameterizedTypeException extends AtbashException {
+
+    public UnsupportedParameterizedTypeException(ParameterizedType type) {
+        // TODO type.getActualTypeArguments() can be null or empty?
+        super(String.format("No encoder found for type %s, please register a custom encoder or use generic types List and Map.", type.getActualTypeArguments()[0].toString()))
+        ;
     }
 }

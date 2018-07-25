@@ -32,6 +32,7 @@ package be.atbash.json.asm;
  */
 
 import be.atbash.json.asm.ex.NoSuchFieldException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -114,6 +115,7 @@ public abstract class BeansAccess<T> {
         try {
             accessClass = loader.loadClass(accessClassName);
         } catch (ClassNotFoundException ignored) {
+            // TODO
         }
 
         LinkedList<Class<?>> parentClasses = getParents(type);
@@ -137,7 +139,7 @@ public abstract class BeansAccess<T> {
             }
             return access;
         } catch (Exception ex) {
-            throw new RuntimeException("Error constructing accessor class: " + accessClassName, ex);
+            throw new AtbashUnexpectedException("Error constructing accessor class: " + accessClassName);
         }
     }
 
@@ -212,6 +214,6 @@ public abstract class BeansAccess<T> {
         if (ac == null) {
             return -1;
         }
-        return ac.index;  // FIXME Use Getter
+        return ac.getIndex();
     }
 }

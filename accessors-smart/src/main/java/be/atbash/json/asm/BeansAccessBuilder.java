@@ -15,6 +15,8 @@
  */
 package be.atbash.json.asm;
 
+import be.atbash.json.asm.ex.NoFieldGetterException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 import org.objectweb.asm.*;
 
 import java.lang.reflect.Method;
@@ -199,7 +201,8 @@ class BeansAccessBuilder {
                     mv.visitFieldInsn(GETFIELD, classNameInternal, acc.getName(), fieldType.getDescriptor());
                 } else {
                     if (acc.getter == null) {
-                        throw new RuntimeException("no Getter for field " + acc.getName() + " in class " + this.className);
+                        throw new NoFieldGetterException(acc.getName(), className);
+
                     }
                     String sig = Type.getMethodDescriptor(acc.getter);
                     mv.visitMethodInsn(INVOKEVIRTUAL, classNameInternal, acc.getter.getName(), sig);
@@ -431,7 +434,7 @@ class BeansAccessBuilder {
             mv.visitIntInsn(BIPUSH, value);
             mv.visitJumpInsn(IF_ICMPNE, label);
         } else {
-            throw new RuntimeException("non supported negative values");
+            throw new AtbashUnexpectedException("non supported negative values");
         }
     }
 }

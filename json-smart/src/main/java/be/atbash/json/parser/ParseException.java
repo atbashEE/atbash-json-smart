@@ -31,12 +31,14 @@ package be.atbash.json.parser;
  * limitations under the License.
  */
 
+import be.atbash.util.exception.AtbashException;
+
 /**
  * ParseException explains why and where the error occurs in source JSON text.
  *
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  */
-public class ParseException extends RuntimeException {
+public class ParseException extends AtbashException {
     public static final int ERROR_UNEXPECTED_CHAR = 0;
     public static final int ERROR_UNEXPECTED_TOKEN = 1;
     public static final int ERROR_UNEXPECTED_EXCEPTION = 2;

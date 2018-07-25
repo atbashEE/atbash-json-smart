@@ -15,7 +15,7 @@
  */
 package be.atbash.json.asm.ex;
 
-public class ConvertException extends RuntimeException {
+public class ConvertException extends AccessorException {
 
     public ConvertException(String message) {
         super(message);
