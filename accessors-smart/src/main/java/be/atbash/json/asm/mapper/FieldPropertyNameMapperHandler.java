@@ -34,9 +34,8 @@ public final class FieldPropertyNameMapperHandler {
     public FieldPropertyNameMapperHandler() {
         mappers = new ArrayList<>();
 
-        Iterator<FieldPropertyNameMapper> iterator = ServiceLoader.load(FieldPropertyNameMapper.class).iterator();
-        while (iterator.hasNext()) {
-            mappers.add(iterator.next());
+        for (FieldPropertyNameMapper fieldPropertyNameMapper : ServiceLoader.load(FieldPropertyNameMapper.class)) {
+            mappers.add(fieldPropertyNameMapper);
         }
     }
 

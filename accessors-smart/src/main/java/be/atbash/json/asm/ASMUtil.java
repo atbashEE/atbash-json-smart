@@ -58,7 +58,7 @@ public final class ASMUtil {
      */
     static Accessor[] getAccessors(Class<?> type, FieldFilter filter) {
         Class<?> nextClass = type;
-        HashMap<String, Accessor> map = new HashMap<String, Accessor>();
+        HashMap<String, Accessor> map = new HashMap<>();
         if (filter == null) {
             filter = BasicFieldFilter.SINGLETON;
         }

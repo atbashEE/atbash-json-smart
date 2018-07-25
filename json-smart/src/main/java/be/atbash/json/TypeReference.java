@@ -20,8 +20,7 @@ import java.lang.reflect.Type;
 
 /**
  * This generic abstract class is used for obtaining full generics type information
- * by sub-classing; it must be converted to {@link ResolvedType} implementation
- * (implemented by <code>JavaType</code> from "databind" bundle) to be used.
+ * by sub-classing;
  * Class is based on ideas from
  * <a href="http://gafter.blogspot.com/2006/12/super-type-tokens.html"
  * >http://gafter.blogspot.com/2006/12/super-type-tokens.html</a>,
@@ -36,8 +35,7 @@ import java.lang.reflect.Type;
  * <pre>
  *  TypeReference ref = new TypeReference&lt;List&lt;Integer&gt;&gt;() { };
  * </pre>
- * which can be passed to methods that accept TypeReference, or resolved
- * using <code>TypeFactory</code> to obtain {@link ResolvedType}.
+ * which can be passed to methods that accept TypeReference.
  * <p>
  * Copied from Jackson (https://github.com/FasterXML/jackson-core) as a workaround to specify Parameterized Types.
  */

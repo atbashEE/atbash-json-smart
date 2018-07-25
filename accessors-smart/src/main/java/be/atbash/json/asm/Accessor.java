@@ -208,6 +208,7 @@ public class Accessor {
         try {
             setter = c.getDeclaredMethod(name, field.getType());
         } catch (Exception e) {
+            // setter is not found, but we can carry on.
         }
         boolean isBool = field.getType().equals(Boolean.TYPE);
         if (isBool) {
@@ -218,11 +219,13 @@ public class Accessor {
         try {
             getter = c.getDeclaredMethod(name);
         } catch (Exception e) {
+            // getter is not found, but we can carry on.
         }
         if (getter == null && isBool) {
             try {
                 getter = c.getDeclaredMethod(ASMUtil.getGetterName(field.getName()));
             } catch (Exception e) {
+                // getter is not found, but we can carry on.
             }
         }
 

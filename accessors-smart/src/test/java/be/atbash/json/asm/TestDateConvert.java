@@ -33,7 +33,7 @@ public class TestDateConvert {
     @Test
     public void testDateFR() throws Exception {
         String expectedDateText = "23/01/12 13:42:12";
-        ArrayList<String> tests = new ArrayList<String>();
+        ArrayList<String> tests = new ArrayList<>();
         tests.add("23 janvier 2012 13:42:12");
         tests.add("lundi 23 janvier 2012 13:42:12");
         tests.add("2012-01-23 13:42:12");
