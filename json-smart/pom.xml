@@ -53,4 +53,46 @@
 
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>clirr-maven-plugin</artifactId>
+                <version>2.8</version>
+                <configuration>
+                    <ignored>
+                        <difference>
+                            <!-- internal, no effect -->
+                            <className>**/JSONUtil$JsonSmartFieldFilter</className>
+                            <differenceType>4001</differenceType>
+                            <to>**/FieldFilter</to>
+                        </difference>
+                        <difference>
+                            <!-- internal, no effect -->
+                            <className>**/JSONUtil$JsonSmartFieldFilter</className>
+                            <differenceType>7002</differenceType>
+                            <method>*</method>
+                        </difference>
+                        <difference>
+                            <!-- internal, no effect -->
+                            <className>**/JSONUtil$JsonSmartFieldFilter</className>
+                            <differenceType>7009</differenceType>
+                            <method>*</method>
+                        </difference>
+                        <difference>
+                            <!-- internal, no effect -->
+                            <className>**/reader/BeanEncoder</className>
+                            <differenceType>6004</differenceType>
+                            <field>beansAccess</field>
+                            <from>*</from>
+                            <to>*</to>
+                        </difference>
+
+                    </ignored>
+
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

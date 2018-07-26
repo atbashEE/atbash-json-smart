@@ -15,6 +15,9 @@ User manual for Atbash JSON.
 . SPI for defining JSON property name
 . Integrated access-smart for additional features
 
+Breaking changes
+. Due to integration of _access-smart_, some internal classes are using now other dependent class names (to Atbash package names). But should not affect developer code which only uses @PublicAPI.
+
 === 0.9.0
 
 . Initial release, based on the code of JSON smart v2.
@@ -162,6 +165,15 @@ public class PriceJSONWriter implements JSONWriter<PriceWithWriter> {
 
 In this example, the Currency object implements the _JSONAware_ interface.
 
+The last option discussed here, is to register the JSONWriter within the system, as follows
+
+----
+    JSONValue.registerWriter(MyColor.class, new MyColorWriter());
+----
+
+Then the writer is picked up whenever you ask for converting the MyColor class in this example to JSON.
+
+
 === Custom reading of JSON
 
 The conversion from JSON to an object instance can be customized by encoders which can be defined with _@MappedBy_.
@@ -185,6 +197,21 @@ An implementation of this interface or the class, needs a no argument constructo
 
 Both classes needs to be specified by a @MappedBy annotation, _encoder()_ member for the simple CustomJSONEncoder implementation, _beanEncoder()_ member for CustomBeanJSONEncoder class.
 
+Another customization is possible by registering encoders into the system itself, and then they don't need to be defined by a _mappedBy_ annotation. (It has more flexibility but is more difficult)
+
+Start by extending the ++JSONEncoder<T>++ class and register it by
+
+----
+   JSONValue.registerEncoder(<target>.class, new CustomEncoder());
+
+   JSONValue.registerEncoder(new TypeReference<MyType<...>>() {}, new CustomEncoder());
+----
+
+The second statement is for registering a Typed reference. This workaround is required to compensate for the Type erasure which is performed by Java.
+
+After registering, this encoder are used when you ask to _parse_ a certain String to the specified type.
+
+The test classes have examples if you want to use this type of customization.
 
 == @JsonIgnore
 
