@@ -12,3 +12,7 @@ mvn license:format
 # Release to Maven central
 
 mvn clean deploy -Prelease
+
+# Setting versions
+
+mvn versions:set -DnewVersion=0.9.1 -DgenerateBackupPoms=false
