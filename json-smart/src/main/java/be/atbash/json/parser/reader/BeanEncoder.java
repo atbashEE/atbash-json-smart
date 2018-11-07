@@ -39,6 +39,8 @@ import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,8 +65,23 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
 
     public BeanEncoder(Class<T> clz) {
         this.clz = clz;
-        this.beansAccess = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
-        this.index = beansAccess.getMap();
+        if (hasProperConstructor(clz)) {
+            this.beansAccess = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
+            this.index = beansAccess.getMap();
+        } else {
+            beansAccess = null;
+            index = null;
+        }
+    }
+
+    private boolean hasProperConstructor(Class<T> clz) {
+        boolean result = false;
+        for (Constructor<?> constructor : clz.getConstructors()) {
+            if ((constructor.getModifiers() & Modifier.PUBLIC) != 0 && constructor.getParameterTypes().length == 0) {
+                result = true;
+            }
+        }
+        return result;
     }
 
     @Override
@@ -121,7 +138,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
 
     @Override
     public T createObject() {
-        return beansAccess.newInstance();
+        return beansAccess == null ? null : beansAccess.newInstance();
     }
 
     static JSONEncoder<Date> getJsonEncoderDate() {

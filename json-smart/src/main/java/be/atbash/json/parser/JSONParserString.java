@@ -33,6 +33,7 @@ package be.atbash.json.parser;
 
 import be.atbash.json.parser.reader.DefaultJSONEncoder;
 import be.atbash.json.parser.reader.JSONEncoder;
+import be.atbash.json.parser.reader.JSONEncoderBuilder;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -531,12 +532,16 @@ class JSONParserString {
         }
     }
 
-    private <T> T readObject(JSONEncoder<T> jsonEncoder) {
+    private <T, U> T readObject(JSONEncoder<T> jsonEncoder) {
         //
         if (c != '{') {
             throw new RuntimeException("Internal Error");
         }
         T current = jsonEncoder.createObject();
+        U builder = null;
+        if (jsonEncoder instanceof JSONEncoderBuilder) {
+            builder = ((JSONEncoderBuilder<T, U>) jsonEncoder).createBuilder();
+        }
         boolean needData = false;
         boolean acceptData = true;
         for (; ; ) {
@@ -593,7 +598,12 @@ class JSONParserString {
                     readNoEnd(); /* skip : */
                     lastKey = key;
                     Object value = readMain(jsonEncoder, stopValue);
-                    jsonEncoder.setValue(current, key, value);
+                    if (builder == null) {
+                        jsonEncoder.setValue(current, key, value);
+                    } else {
+                        ((JSONEncoderBuilder<T, U>) jsonEncoder).setBuilderValue(builder, key, value);
+
+                    }
                     lastKey = null;
 
                     // should loop skipping read step
@@ -601,7 +611,11 @@ class JSONParserString {
                     if (c == '}') {
                         read(); /* unstack */
                         //
-                        return jsonEncoder.convert(current);
+                        if (builder == null) {
+                            return jsonEncoder.convert(current);
+                        } else {
+                            return ((JSONEncoderBuilder<T, U>) jsonEncoder).build(builder);
+                        }
                     }
                     if (c == EOI) // Fixed on 18/10/2011 reported by vladimir
                     {

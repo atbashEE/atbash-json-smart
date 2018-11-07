@@ -11,6 +11,7 @@ User manual for Atbash JSON.
 
 === 0.9.2
 
+. Support for creating instances of immutable class through the builder pattern.
 
 === 0.9.1
 
@@ -202,6 +203,24 @@ Both classes needs to be specified by a @MappedBy annotation, _encoder()_ member
 
 Another customization is possible by registering encoders into the system itself, and then they don't need to be defined by a _mappedBy_ annotation. (It has more flexibility but is more difficult)
 
+In the case where the bean is an immutable instance, not default no argument constructor and no setters, there is a specific CustomBeanJSONEncoder available called +CustomBeanBuilderJSONEncoder+.
+
+Subclasses of +CustomBeanBuilderJSONEncoder+ can also be defined as the value of the _beanEncoder_ member of the @MappedBy annotation. Besides the class which will be created, a Bilder class needs to be defined also.
+
+----
+   public class ImmutableBeanJSONEncoder extends CustomBeanBuilderJSONEncoder<ImmutableBean, ImmutableBeanBuilder> {
+----
+
+This specific encoder must implements 2 methods
+
+----
+    void setBuilderValue(U builder, String key, Object value);
+
+    T build(U builder);
+----
+
+The _setBuilderValue_ needs to call the corresponding method on the builder for the key property read from the JSON. The _build_ method should then create the instance of the requested class, most likely by calling the _build()_ method of the builder.
+
 Start by extending the ++JSONEncoder<T>++ class and register it by
 
 ----
@@ -218,4 +237,6 @@ The test classes have examples if you want to use this type of customization.
 
 == @JsonIgnore
 
-TODO
+When a field is marked with the ++@JsonIgnore++ annotation, it is ignored during the encoding and decoding process.
+
+It can also be used in combination with the @MappedBy.beanEncoder feature. Such a field (which is annotated with @JsonIgnore) will not handled by the default bean encoder when the JSON property key and field name matches, but the value will always be passed to the _setValue()_ of the CustomBeanJSONEncoder.
