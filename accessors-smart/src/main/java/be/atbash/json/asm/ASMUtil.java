@@ -78,7 +78,7 @@ public final class ASMUtil {
             }
             nextClass = nextClass.getSuperclass();
         }
-        return map.values().toArray(new Accessor[map.size()]);
+        return map.values().toArray(new Accessor[0]);
     }
 
     /**

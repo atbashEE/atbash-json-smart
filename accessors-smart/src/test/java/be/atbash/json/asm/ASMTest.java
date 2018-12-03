@@ -139,8 +139,8 @@ public class ASMTest {
         acc.set(t, "pubStrValue", "Test");
         acc.set(t, "privIntValue", 16);
         acc.set(t, "privStrValue", "test Priv");
-        assertEquals(Integer.valueOf(13), acc.get(t, "pubIntValue"));
+        assertEquals(13, acc.get(t, "pubIntValue"));
         acc.set(t, "pubIntValue", 14);
-        assertEquals(Integer.valueOf(14), acc.get(t, "pubIntValue"));
+        assertEquals(14, acc.get(t, "pubIntValue"));
     }
 }

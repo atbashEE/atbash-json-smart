@@ -84,7 +84,7 @@ public class BTestBeansAccessB extends BeansAccess {
         if ("pubIntValue".equals(methodName)) {
             return ((BTest) object).pubIntValue;
         }
-        if ("privStrValue".equals(methodName)) {
+        if ("pubBoolValue".equals(methodName)) {
             return ((BTest) object).pubBoolValue;
         }
         if ("pubIntegerValue".equals(methodName)) {
@@ -112,7 +112,7 @@ public class BTestBeansAccessB extends BeansAccess {
                 ((BTest) object).pubIntValue = ((Number) value).intValue();
                 break;
             case 4: // pubBoolValue;
-                ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+                ((BTest) object).pubBoolValue = (Boolean) value;
                 break;
             case 5:
                 ((BTest) object).pubIntegerValue = DefaultConverter.convertToInt(value);
@@ -143,23 +143,23 @@ public class BTestBeansAccessB extends BeansAccess {
             return;
         }
         if (methodIndex == 4) {
-            ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+            ((BTest) object).pubBoolValue = (Boolean) value;
             return;
         }
         if (methodIndex == 5) {
-            ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+            ((BTest) object).pubBoolValue = (Boolean) value;
             return;
         }
         if (methodIndex == 6) {
-            ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+            ((BTest) object).pubBoolValue = (Boolean) value;
             return;
         }
         if (methodIndex == 7) {
-            ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+            ((BTest) object).pubBoolValue = (Boolean) value;
             return;
         }
         if (methodIndex == 8) {
-            ((BTest) object).pubBoolValue = ((Boolean) value).booleanValue();
+            ((BTest) object).pubBoolValue = (Boolean) value;
         }
     }
 
