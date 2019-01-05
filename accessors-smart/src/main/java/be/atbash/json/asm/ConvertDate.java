@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,9 @@ public class ConvertDate {
     private static TreeMap<String, Integer> monthsTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
     private static TreeMap<String, Integer> daysTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
     private static HashSet<String> voidData = new HashSet<>();
+
+    private ConvertDate() {
+    }
 
     public static class StringCmpNS implements Comparator<String> {
         @Override

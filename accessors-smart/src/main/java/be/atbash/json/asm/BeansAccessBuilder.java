@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,7 +26,7 @@ import java.util.HashMap;
 import static org.objectweb.asm.Opcodes.*;
 
 class BeansAccessBuilder {
-    static private String METHOD_ACCESS_NAME = Type.getInternalName(BeansAccess.class);
+    private static String METHOD_ACCESS_NAME = Type.getInternalName(BeansAccess.class);
 
     private final Accessor[] accs;
     private final DynamicClassLoader loader;
@@ -95,8 +95,8 @@ class BeansAccessBuilder {
         ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS);
         MethodVisitor mv;
 
-        boolean USE_HASH = accs.length > 10;
-        int HASH_LIMIT = 14;
+        boolean useHash = accs.length > 10;
+        int hashLimit = 14;
 
         String signature = "Lbe/atbash/json/asm/BeansAccess<L" + classNameInternal + ";>;";
 
@@ -119,7 +119,7 @@ class BeansAccessBuilder {
         if (accs.length == 0) {
             //
             // mv.visitInsn(RETURN);
-        } else if (accs.length > HASH_LIMIT) {
+        } else if (accs.length > hashLimit) {
             // lots of field Use Switch Statement
             mv.visitVarInsn(ILOAD, 2);
             Label[] labels = ASMUtil.newLabels(accs.length);
@@ -161,7 +161,7 @@ class BeansAccessBuilder {
         // if (USE_HASH)
         if (accs.length == 0) {
             mv.visitFrame(F_SAME, 0, null, 0, null);
-        } else if (accs.length > HASH_LIMIT) {
+        } else if (accs.length > hashLimit) {
             mv.visitVarInsn(ILOAD, 2);
             Label[] labels = ASMUtil.newLabels(accs.length);
             Label defaultLabel = new Label();
@@ -225,7 +225,7 @@ class BeansAccessBuilder {
         mv.visitMaxs(0, 0);
         mv.visitEnd();
 
-        if (!USE_HASH) {
+        if (!useHash) {
             // Object get(Object object, String methodName)
             mv = cw.visitMethod(ACC_PUBLIC, "set", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/Object;)V", null, null);
             mv.visitCode();
@@ -252,7 +252,7 @@ class BeansAccessBuilder {
             mv.visitEnd();
         }
 
-        if (!USE_HASH) {
+        if (!useHash) {
             // get(Object object, String methodName)
             mv = cw.visitMethod(ACC_PUBLIC, "get", "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;", null, null);
             mv.visitCode();

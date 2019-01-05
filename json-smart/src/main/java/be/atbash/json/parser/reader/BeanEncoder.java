@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class BeanEncoder<T> extends JSONEncoder<T> {
@@ -52,7 +52,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
 
     private final Class<T> clz;
     protected final BeansAccess<T> beansAccess;
-    private final HashMap<String, Accessor> index;
+    private final Map<String, Accessor> index;
 
     static {
         jsonEncoderDate = new ArraysJSONEncoder<Date>() {
@@ -108,6 +108,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
         beansAccess.set(current, fieldName, value);
     }
 
+    @Override
     public Object getValue(T current, String key) {
         return beansAccess.get(current, key);
     }

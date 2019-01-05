@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,6 +36,7 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -59,7 +60,7 @@ public abstract class BeansAccess<T> {
         }
     }
 
-    public HashMap<String, Accessor> getMap() {
+    public Map<String, Accessor> getMap() {
         return map;
     }
 
@@ -78,7 +79,7 @@ public abstract class BeansAccess<T> {
      * @param type to be access
      * @return the BeansAccess
      */
-    static public <P> BeansAccess<P> get(Class<P> type) {
+    public static <P> BeansAccess<P> get(Class<P> type) {
         return get(type, null);
     }
 
@@ -88,7 +89,7 @@ public abstract class BeansAccess<T> {
      * @param type to be access
      * @return the BeansAccess
      */
-    static public <P> BeansAccess<P> get(Class<P> type, FieldFilter filter) {
+    public static <P> BeansAccess<P> get(Class<P> type, FieldFilter filter) {
         {
             @SuppressWarnings("unchecked")
             BeansAccess<P> access = (BeansAccess<P>) cache.get(type);
@@ -132,7 +133,9 @@ public abstract class BeansAccess<T> {
             @SuppressWarnings("unchecked")
             BeansAccess<P> access = (BeansAccess<P>) accessClass.newInstance();
             access.setAccessor(accs);
-            cache.putIfAbsent(type, access);
+            if (!cache.containsKey(type)) {
+                cache.put(type, access);
+            }
             // add fieldname alias
             for (Class<?> c : parentClasses) {
                 addAlias(access, BeansAccessConfig.classFieldNameMapper.get(c));
@@ -176,17 +179,17 @@ public abstract class BeansAccess<T> {
     /**
      * set field value by field index
      */
-    abstract public void set(T object, int methodIndex, Object value);
+    public abstract void set(T object, int methodIndex, Object value);
 
     /**
      * get field value by field index
      */
-    abstract public Object get(T object, int methodIndex);
+    public abstract Object get(T object, int methodIndex);
 
     /**
      * create a new targeted object
      */
-    abstract public T newInstance();
+    public abstract T newInstance();
 
     /**
      * set field value by fieldname

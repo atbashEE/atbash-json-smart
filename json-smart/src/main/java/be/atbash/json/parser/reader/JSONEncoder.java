@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,7 +43,7 @@ import java.lang.reflect.Type;
 // Original name was JsonReaderI
 public abstract class JSONEncoder<T> {
 
-    private static String ERR_MSG = "Invalid or non Implemented status";
+    private static final String ERR_MSG = "Invalid or non Implemented status";
 
     /**
      * called when json-smart parser meet an object key

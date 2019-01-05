@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,7 @@ public class BTestBeansAccessB extends BeansAccess {
     @Override
     public void set(Object object, String methodName, Object value) {
         if ("privIntValue".equals(methodName)) {
-            ((BTest) object).setPrivIntValue(DefaultConverter.convertToInt(value));
+            ((BTest) object).setPrivIntValue(DefaultConverter.convertToIntObject(value));
             return;
         }
         if ("privStrValue".equals(methodName)) {
@@ -51,15 +51,15 @@ public class BTestBeansAccessB extends BeansAccess {
             return;
         }
         if ("pubIntValue".equals(methodName)) {
-            ((BTest) object).pubIntValue = DefaultConverter.convertToInt(value);
+            ((BTest) object).pubIntValue = DefaultConverter.convertToIntObject(value);
             return;
         }
         if ("pubBoolValue".equals(methodName)) {
-            ((BTest) object).pubBoolValue = DefaultConverter.convertTobool(value);
+            ((BTest) object).pubBoolValue = DefaultConverter.convertToBool(value);
             return;
         }
         if ("pubIntegerValue".equals(methodName)) {
-            ((BTest) object).pubIntegerValue = DefaultConverter.convertToInt(value);
+            ((BTest) object).pubIntegerValue = DefaultConverter.convertToIntObject(value);
             return;
         }
         if ("pubTEnum".equals(methodName)) {
@@ -115,7 +115,7 @@ public class BTestBeansAccessB extends BeansAccess {
                 ((BTest) object).pubBoolValue = (Boolean) value;
                 break;
             case 5:
-                ((BTest) object).pubIntegerValue = DefaultConverter.convertToInt(value);
+                ((BTest) object).pubIntegerValue = DefaultConverter.convertToIntObject(value);
                 break;
             case 6:
                 ((BTest) object).pubTEnum = TEnum.valueOf((String) value);

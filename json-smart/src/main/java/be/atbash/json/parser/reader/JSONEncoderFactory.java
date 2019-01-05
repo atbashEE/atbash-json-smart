@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -138,7 +138,9 @@ public class JSONEncoderFactory {
                 encoder = new BeanEncoder<>(type);
             }
         }
-        cache.putIfAbsent(type, encoder);
+        if (!cache.containsKey(type)) {
+            cache.put(type, encoder);
+        }
         return encoder;
     }
 
@@ -157,21 +159,19 @@ public class JSONEncoderFactory {
         if (encoder == null) {
             throw new UnsupportedParameterizedTypeException(type);
         }
-        cache.putIfAbsent(type, encoder);
+        if (!cache.containsKey(type)) {
+            cache.put(type, encoder);
+        }
         return encoder;
     }
 
     /**
      * Returns an instance of the factory, create and initialize if needed.
      */
-    public static JSONEncoderFactory getInstance() {
+    public static synchronized JSONEncoderFactory getInstance() {
         if (INSTANCE == null) {
-            synchronized (LOCK) {
-                if (INSTANCE == null) {
-                    INSTANCE = new JSONEncoderFactory();
-                    INSTANCE.initEncoders();
-                }
-            }
+            INSTANCE = new JSONEncoderFactory();
+            INSTANCE.initEncoders();
         }
         return INSTANCE;
     }
