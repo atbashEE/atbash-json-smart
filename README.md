@@ -22,7 +22,7 @@ Add artifact to pom.xml file.
     <dependency>
         <groupId>be.atbash.json</groupId>
         <artifactId>octopus-json-smart</artifactId>
-        <version>0.9.1</version>
+        <version>0.9.2</version>
     </dependency>
 ----
 
@@ -46,4 +46,6 @@ Converts the POJO T to a JSON String
 ## Customizing JSON reading/creation
 
 * Implement the _JSONAware_ interface
-* Define custom encoders and writers with _@MappedBy_ and custom _CustomJSONEncoder_, _CustomBeanJSONEncoder_ and/or _Writer_. 
+* Define custom encoders and writers with _@MappedBy_ and custom _CustomJSONEncoder_, _CustomBeanJSONEncoder_ and/or _Writer_.
+* Define a custom Encoder which also implement _JSONEncoderBuilder_ interface to have a builder like pattern for encoding JSON to Java.  
+  Extend _CustomBeanBuilderJSONEncoder_ and define it as encoder at @MappedBy.  
