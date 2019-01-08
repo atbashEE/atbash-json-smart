@@ -8,6 +8,12 @@ Small library capable of converting Java instances to JSON and back, for Java 7 
 
 With the standardization of this functionality in JSON-B, it advised to use a JSON-B implementation when using Java 8.
 
+## Requirements
+
+Runs on JDK 7, JDK 8 and JDK 11 ClassPath.
+
+On JDK 11 there are issues with some _Locale_ for Date parsing. 
+
 ## Configuration
 
 Add artifact to pom.xml file.

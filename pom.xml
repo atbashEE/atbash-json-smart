@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+    Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -68,6 +68,7 @@
         <asciidoctor.maven.plugin.version>1.5.6</asciidoctor.maven.plugin.version>
         <asciidoctorj.pdf.version>1.5.0-alpha.16</asciidoctorj.pdf.version>
 
+        <documentation.skip>false</documentation.skip>
     </properties>
 
     <modules>
@@ -158,6 +159,7 @@
                                 <idprefix/>
                                 <idseparator>-</idseparator>
                             </attributes>
+                            <skip>${documentation.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
@@ -280,6 +282,15 @@
                 </plugins>
             </build>
 
+        </profile>
+        <profile>
+            <id>jdk11-Profile</id>
+            <properties>
+                <documentation.skip>true</documentation.skip>
+            </properties>
+            <activation>
+                <jdk>11</jdk>
+            </activation>
         </profile>
     </profiles>
 </project>
