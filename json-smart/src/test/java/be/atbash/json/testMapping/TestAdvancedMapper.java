@@ -21,7 +21,6 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static be.atbash.json.accessor.BeansAccessConfig.addTypeMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAdvancedMapper {
@@ -29,7 +28,6 @@ public class TestAdvancedMapper {
 
     @Test
     public void testCustomBean() {
-        addTypeMapper(Object.class, MyLocalConverterot.class);
         String s = "{'val':2,'date':'19/04/2010'}";
         TestBean r = JSONValue.parse(s, TestBean.class);
         assertThat(sdf.format(r.date)).isEqualTo("19/04/2010");
@@ -40,13 +38,4 @@ public class TestAdvancedMapper {
         public Date date;
     }
 
-    public static class MyLocalConverterot {
-
-        public static Date fromString(Object text) throws Exception {
-            if (text == null) {
-                return null;
-            }
-            return sdf.parse(text.toString());
-        }
-    }
 }

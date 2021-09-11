@@ -34,7 +34,6 @@ package be.atbash.json.parser.reader;
 import be.atbash.json.JSONUtil;
 import be.atbash.json.accessor.BeansAccess;
 import be.atbash.json.accessor.ConvertDate;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapperHandler;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -44,8 +43,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @SuppressWarnings("unchecked")
