@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
 
     @Override
     public void setValue(T current, String key, Object value) {
-        if (beansAccess.getIndex(key) == -1) {
+        if (!beansAccess.getField(key).isPresent()) {
             // No field found, so ask for custom handling
             setCustomValue(current, key, value);
         } else {

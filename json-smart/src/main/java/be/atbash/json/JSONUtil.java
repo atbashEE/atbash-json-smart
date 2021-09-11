@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package be.atbash.json;
 
 import be.atbash.json.annotate.JsonIgnore;
-import be.atbash.json.asm.FieldFilter;
+import be.atbash.json.accessor.FieldFilter;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.json.style.JSONStyle;
 import be.atbash.util.exception.AtbashUnexpectedException;
@@ -180,6 +180,9 @@ public final class JSONUtil {
             boolean result = canUse(field);
             if (!result) {
                 return false;
+            }
+            if (method == null) {
+                return true;
             }
             JsonIgnore ignore = method.getAnnotation(JsonIgnore.class);
             return ignore == null || !ignore.value();

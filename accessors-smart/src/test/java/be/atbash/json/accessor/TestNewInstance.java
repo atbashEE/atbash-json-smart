@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
+package be.atbash.json.accessor;
 
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
+import org.junit.Test;
 
-import java.lang.reflect.Field;
+import java.util.TreeMap;
 
-/**
- *
- */
-
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
-
-    @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
+public class TestNewInstance {
+    @Test
+    public void testLangUtilPkg() {
+        @SuppressWarnings("rawtypes")
+        BeansAccess<TreeMap> acTm = BeansAccess.get(TreeMap.class);
+        // FIXME
     }
-
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
+package be.atbash.json.accessor.bean;
 
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
+public class BStrPriv {
+    private String value;
 
-import java.lang.reflect.Field;
+    public String getValue() {
+        return value;
+    }
 
-/**
- *
- */
-
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
-
-    @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,18 +32,21 @@ package be.atbash.json.parser.reader;
  */
 
 import be.atbash.json.JSONUtil;
-import be.atbash.json.asm.Accessor;
-import be.atbash.json.asm.BeansAccess;
-import be.atbash.json.asm.ConvertDate;
+import be.atbash.json.accessor.BeansAccess;
+import be.atbash.json.accessor.ConvertDate;
+import be.atbash.json.accessor.mapper.FieldPropertyNameMapperHandler;
 import be.atbash.json.parser.CustomJSONEncoder;
 import be.atbash.json.parser.MappedBy;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("unchecked")
 public class BeanEncoder<T> extends JSONEncoder<T> {
@@ -52,7 +55,6 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
 
     private final Class<T> clz;
     protected final BeansAccess<T> beansAccess;
-    private final Map<String, Accessor> index;
 
     static {
         jsonEncoderDate = new ArraysJSONEncoder<Date>() {
@@ -66,11 +68,11 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
     public BeanEncoder(Class<T> clz) {
         this.clz = clz;
         if (hasProperConstructor(clz)) {
-            this.beansAccess = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
-            this.index = beansAccess.getMap();
+            beansAccess = BeansAccess.get(clz, JSONUtil.JSON_SMART_FIELD_FILTER);
+
         } else {
             beansAccess = null;
-            index = null;
+
         }
     }
 
@@ -87,12 +89,13 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
     @Override
     public void setValue(T current, String key, Object value) {
         // Atbash support for MappedBy
-        Accessor accessor = index.get(key);
-        if (accessor == null) {
+        Optional<Field> field = beansAccess.getField(key);
+        if (!field.isPresent()) {
             // annotated with JsonIgnore or unexisting field
             return;
         }
-        MappedBy mappedBy = accessor.getType().getAnnotation(MappedBy.class);
+
+        MappedBy mappedBy = field.get().getType().getAnnotation(MappedBy.class);
         if (mappedBy != null) {
             if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
 
@@ -104,8 +107,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
             }
 
         }
-        String fieldName = accessor.getName();
-        beansAccess.set(current, fieldName, value);
+        beansAccess.set(current, field.get().getName(), value);
     }
 
     @Override
@@ -115,26 +117,26 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
 
     @Override
     public Type getType(String key) {
-        Accessor nfo = index.get(key);
-        return nfo.getGenericType();
+        Optional<Field> field = beansAccess.getField(key);
+        return field.map(Field::getGenericType).orElse(null);
     }
 
     @Override
     public JSONEncoder<?> startArray(String key) {
-        Accessor nfo = index.get(key);
-        if (nfo == null) {
+        Type type = getType(key);
+        if (type == null) {
             throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
         }
-        return JSONEncoderFactory.getInstance().getEncoder(nfo.getGenericType());
+        return JSONEncoderFactory.getInstance().getEncoder(type);
     }
 
     @Override
     public JSONEncoder<?> startObject(String key) {
-        Accessor f = index.get(key);
-        if (f == null) {
+        Type type = getType(key);
+        if (type == null) {
             throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
         }
-        return JSONEncoderFactory.getInstance().getEncoder(f.getGenericType());
+        return JSONEncoderFactory.getInstance().getEncoder(type);
     }
 
     @Override

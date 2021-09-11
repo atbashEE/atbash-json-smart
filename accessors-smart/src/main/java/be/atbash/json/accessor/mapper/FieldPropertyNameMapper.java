@@ -13,10 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
-
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
+package be.atbash.json.accessor.mapper;
 
 import java.lang.reflect.Field;
 
@@ -24,15 +21,8 @@ import java.lang.reflect.Field;
  *
  */
 
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
+public interface FieldPropertyNameMapper {
 
-    @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
-    }
+    String getPropertyName(Field field);
 
 }

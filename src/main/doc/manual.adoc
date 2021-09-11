@@ -1,6 +1,6 @@
 = Atbash JSON Smart
 Rudy De Busscher <rdebusscher@gmail.com>
-v0.9.2, 08/01/2019
+v1.0.0, ??/??/2021
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../../main/java]
@@ -9,6 +9,9 @@ User manual for Atbash JSON.
 
 == Release Notes
 
+=== 1.0.0
+
+Rewrite `accessors-smart` part to remove the dependency on ASM and usage of `setAccessible` and use
 === 0.9.2
 
 . Support for creating instances of immutable class through the builder pattern.

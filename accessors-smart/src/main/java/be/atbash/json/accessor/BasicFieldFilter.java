@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
-
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
+package be.atbash.json.accessor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-/**
- *
- */
-
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
+public class BasicFieldFilter implements FieldFilter {
+    static final BasicFieldFilter SINGLETON = new BasicFieldFilter();
 
     @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
+    public boolean canUse(Field field, Method method) {
+        return true;
     }
 
 }

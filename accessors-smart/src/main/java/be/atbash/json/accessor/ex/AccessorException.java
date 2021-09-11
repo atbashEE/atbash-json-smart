@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
+package be.atbash.json.accessor.ex;
 
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
-
-import java.lang.reflect.Field;
+import be.atbash.util.exception.AtbashException;
 
 /**
- *
+ * Base for all excetion within Accessors-smart library.
  */
+public class AccessorException extends AtbashException {
 
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
-
-    @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
+    public AccessorException() {
+        super();
     }
 
+    public AccessorException(String message) {
+        super(message);
+    }
+
+    public AccessorException(Throwable cause) {
+        super(cause);
+    }
+
+    public AccessorException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

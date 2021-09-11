@@ -16,7 +16,7 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONUtil;
-import be.atbash.json.asm.BeansAccess;
+import be.atbash.json.accessor.BeansAccess;
 import be.atbash.json.parser.reader.JSONEncoderBuilder;
 import be.atbash.util.PublicAPI;
 

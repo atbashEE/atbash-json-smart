@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,23 +16,29 @@
 package be.atbash.json.writer;
 
 import be.atbash.json.JSONUtil;
-import be.atbash.json.asm.Accessor;
-import be.atbash.json.asm.BeansAccess;
+import be.atbash.json.accessor.BeansAccess;
+import be.atbash.json.accessor.mapper.FieldPropertyNameMapperHandler;
 import be.atbash.json.style.JSONStyle;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.List;
 
 // This is the net.minidev.BeansWriterASM
 public class BeansWriter implements JSONWriter<Object> {
+
+    private FieldPropertyNameMapperHandler nameMapperHandler = FieldPropertyNameMapperHandler.getInstance();
+
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
         Class<?> cls = value.getClass();
         boolean needSep = false;
         @SuppressWarnings("rawtypes")
-        BeansAccess fields = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
+        BeansAccess beansAccess = BeansAccess.get(cls, JSONUtil.JSON_SMART_FIELD_FILTER);
         JSONStyle.getDefault().objectStart(out);
-        for (Accessor field : fields.getAccessors()) {
+        List<Field> fields = beansAccess.getFields();
+        for (Field field : fields) {
             @SuppressWarnings("unchecked")
-            Object v = fields.get(value, field.getIndex());
+            Object v = beansAccess.get(value, field.getName());
             if (v == null && JSONStyle.getDefault().ignoreNull()) {
                 continue;
             }
@@ -41,7 +47,8 @@ public class BeansWriter implements JSONWriter<Object> {
             } else {
                 needSep = true;
             }
-            String key = field.getPropertyName();
+
+            String key = nameMapperHandler.definePropertyName(field);
             JSONUtil.writeJSONKV(key, v, out);
         }
         JSONStyle.getDefault().objectStop(out);

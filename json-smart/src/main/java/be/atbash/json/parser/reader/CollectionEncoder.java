@@ -34,7 +34,7 @@ package be.atbash.json.parser.reader;
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONUtil;
-import be.atbash.json.asm.BeansAccess;
+import be.atbash.json.accessor.BeansAccess;
 import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.reflect.ParameterizedType;

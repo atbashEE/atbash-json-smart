@@ -21,7 +21,7 @@ import org.junit.Test;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static be.atbash.json.asm.BeansAccessConfig.addTypeMapper;
+import static be.atbash.json.accessor.BeansAccessConfig.addTypeMapper;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestAdvancedMapper {

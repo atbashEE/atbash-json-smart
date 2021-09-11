@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ public class TestJSONAware {
         Price price = new Price(123.45, Currency.EURO);
 
         String json = JSONValue.toJSONString(new Product("Atbash", price));
-        assertThat(json).isEqualTo("{\"price\":\"123.45€\",\"name\":\"Atbash\"}");
+        assertThat(json).isEqualTo("{\"name\":\"Atbash\",\"price\":\"123.45€\"}");
     }
 
     @Test

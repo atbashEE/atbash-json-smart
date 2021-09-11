@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,26 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package be.atbash.json.mapper;
-
-import be.atbash.json.annotate.JsonProperty;
-import be.atbash.json.accessor.mapper.FieldPropertyNameMapper;
+package be.atbash.json.accessor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
- *
+ * allow to control read/write access to field
  */
+public interface FieldFilter {
 
-public class DefaultFieldPropertyNameMapper implements FieldPropertyNameMapper {
-
-    @Override
-    public String getPropertyName(Field field) {
-        JsonProperty annotation = field.getAnnotation(JsonProperty.class);
-        if (annotation != null) {
-            return annotation.value();
-        }
-        return null;
-    }
+    /**
+     * Determines if this field can be used in the Java - Json conversion. For example, an
+     * annotation JsonIgnore can be used to indicate the field should be ignored.
+     * @param field
+     * @param method optional, when no getter for field null is passed to this method.
+     * @return
+     */
+    boolean canUse(Field field, Method method);
 
 }

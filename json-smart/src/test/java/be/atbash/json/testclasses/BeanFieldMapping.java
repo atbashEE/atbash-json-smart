@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,7 +25,7 @@ public class BeanFieldMapping {
 
     @JsonProperty("property")
     private String stringValue;
-    private int intValue;
+    private Integer intValue;
 
     // required since the JSONEncoder/Parser needs to create an instance.
     public BeanFieldMapping() {
@@ -45,11 +45,11 @@ public class BeanFieldMapping {
         this.stringValue = stringValue;
     }
 
-    public int getIntValue() {
+    public Integer getIntValue() {
         return intValue;
     }
 
-    public void setIntValue(int intValue) {
+    public void setIntValue(Integer intValue) {
         this.intValue = intValue;
     }
 
