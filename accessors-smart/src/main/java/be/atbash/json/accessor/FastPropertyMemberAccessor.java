@@ -21,6 +21,8 @@ package be.atbash.json.accessor;
  * Copyright 2018 Red Hat, Inc. and/or its affiliates.
  */
 
+import be.atbash.json.accessor.ex.NoSuchFieldException;
+
 import java.lang.invoke.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -28,7 +30,6 @@ import java.lang.reflect.Modifier;
 import java.util.Date;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
-import be.atbash.json.accessor.ex.NoSuchFieldException;
 
 public class FastPropertyMemberAccessor {
 
@@ -112,13 +113,41 @@ public class FastPropertyMemberAccessor {
                     lookup.findVirtual(declaringClass, setterMethod.getName(), MethodType.methodType(void.class, propertyType)),
                     MethodType.methodType(void.class, declaringClass, propertyType));
         } catch (LambdaConversionException | NoSuchMethodException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Lambda creation failed for setterMethod (" + setterMethod + ").", e);
+
+            setterSite = createSetterFunctionJDK11(lookup, declaringClass);
         }
         try {
             return (BiConsumer) setterSite.getTarget().invokeExact();
         } catch (Throwable e) {
             throw new IllegalArgumentException("Lambda creation failed for setterMethod (" + setterMethod + ").", e);
         }
+    }
+
+    private CallSite createSetterFunctionJDK11(MethodHandles.Lookup lookup, Class<?> declaringClass) {
+        CallSite setterSite;
+        // This is required for JDK 11
+        // Everything should be an object.
+        Class<?> updatedPropertyType = null;
+        if (propertyType == Integer.TYPE) {
+            updatedPropertyType = Integer.class;
+        }
+        if (propertyType == Long.TYPE) {
+            updatedPropertyType = Long.class;
+        }
+        if (propertyType == Boolean.TYPE) {
+            updatedPropertyType = Boolean.class;
+        }
+        try {
+            setterSite = LambdaMetafactory.metafactory(lookup,
+                    "accept",
+                    MethodType.methodType(BiConsumer.class),
+                    MethodType.methodType(void.class, Object.class, Object.class),
+                    lookup.findVirtual(declaringClass, setterMethod.getName(), MethodType.methodType(void.class, propertyType)),
+                    MethodType.methodType(void.class, declaringClass, updatedPropertyType));
+        } catch (LambdaConversionException | NoSuchMethodException | IllegalAccessException e) {
+            throw new IllegalArgumentException("Lambda creation failed for setterMethod (" + setterMethod + ").", e);
+        }
+        return setterSite;
     }
 
     public String getName() {

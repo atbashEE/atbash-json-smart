@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
+import be.atbash.json.JSONValue;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import org.junit.Test;
@@ -69,5 +70,12 @@ public class TestString {
         } catch (ParseException e) {
             // expected
         }
+    }
+
+    @Test
+    public void testEscaping() {
+        String contextRoot = "/root";
+        String data = JSONValue.toJSONString(contextRoot);
+        assertThat(data).isEqualTo("\"\\/root\"");  // `/` CAN be escaped according to JSON spec
     }
 }
