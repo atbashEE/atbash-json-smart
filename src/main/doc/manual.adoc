@@ -1,6 +1,6 @@
 = Atbash JSON Smart
 Rudy De Busscher <rdebusscher@gmail.com>
-v1.0.0, ??/??/2021
+v1.0.0, 08/01/2022
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../../main/java]
@@ -15,7 +15,7 @@ Rewrite `accessors-smart` part to remove the dependency on ASM and usage of `set
 
 Breaking changes
 
-. Primitives are no longer supported in the case of getter and setter usage. They are still supported when using public properties in classes.
+. Primitives are no longer supported in some cases of getter and setter usage. They are still supported when using public properties in classes.
 . The package of `FieldPropertyNameMapper` is changed.
 . The package of `FieldFilter` is changed.
 . `BeanAccessConfig` is removed and also the possibilities to map Classes and Fields (other alternatives still exist)

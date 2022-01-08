@@ -4,15 +4,13 @@
 
 # atbash-json-smart
 
-Small library capable of converting Java instances to JSON and back, for Java 8 inspired on [JSON Smart v2](https://github.com/netplex/json-smart-v2).
+Small library capable of converting Java instances to JSON and back, for Java 8, 11 and 17 inspired on [JSON Smart v2](https://github.com/netplex/json-smart-v2).
 
-With the standardization of this functionality in JSON-B, it advised to use a JSON-B implementation.
+With the standardization of this functionality in JSON-B, it advised to use a JSON-B implementation unless you are outside a Jakarta runtime and want some small and fast JSON handling.
 
 ## Requirements
 
-Runs on JDK 8 and JDK 11 ClassPath.
-
-On JDK 11 there are issues with some _Locale_ for Date parsing. 
+Runs on JDK 8, JDK 11 ClassPath, and JDK 17 ClassPath.
 
 ## Configuration
 
@@ -22,7 +20,7 @@ Add artifact to pom.xml file.
     <dependency>
         <groupId>be.atbash.json</groupId>
         <artifactId>octopus-json-smart</artifactId>
-        <version>0.9.3</version>
+        <version>1.0.0</version>
     </dependency>
 ----
 
