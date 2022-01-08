@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -106,8 +106,8 @@ public class TestDateConvert {
 
     public void fullTestDate(Date expectedDate, Locale locale, String sizeName, int sizeId) throws Exception {
         String jobName = "Test date format Local:" + locale + " format: " + sizeName;
-        DateFormat FormatEN = DateFormat.getDateTimeInstance(sizeId, sizeId, locale);
-        String testDate = FormatEN.format(expectedDate);
+        DateFormat format = DateFormat.getDateTimeInstance(sizeId, sizeId, locale);
+        String testDate = format.format(expectedDate);
         Date parse;
         try {
             // can not parse US Date in short mode.

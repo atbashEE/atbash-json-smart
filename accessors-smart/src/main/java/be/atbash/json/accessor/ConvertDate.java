@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -135,7 +135,9 @@ public class ConvertDate {
             return new Date(((Number) obj).longValue());
         }
         if (obj instanceof String) {
-            StringTokenizer st = new StringTokenizer((String) obj, " -/:,.+");
+            // there is a.m. and AM as markers. This code expect AM so we convert
+            String input = ((String) obj).replaceAll("a\\.m\\.", "AM").replaceAll("p\\.m\\.", "PM");
+            StringTokenizer st = new StringTokenizer(input, " -/:,.+");
             String s1;
             if (!st.hasMoreTokens()) {
                 return null;
@@ -266,6 +268,12 @@ public class ConvertDate {
                 return cal.getTime();
             }
             s1 = st.nextToken();
+
+            if (Character.isLetter(s1.charAt(0))) {
+                // There are full format that have something like 'at' between day and hour.
+                // We ignore that (but it might be wrong word)
+                s1 = st.nextToken();
+            }
         }
         return addHour2(st, cal, s1);
     }
