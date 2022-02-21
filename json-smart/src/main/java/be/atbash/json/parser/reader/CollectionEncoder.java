@@ -39,8 +39,10 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public final class CollectionEncoder {
     // CollectionEncoder is just holder of the 4 collection encoders
@@ -268,4 +270,96 @@ public final class CollectionEncoder {
         }
     }
 
+    public static class SetType<T> extends JSONEncoder<T> {
+        private final ParameterizedType type;
+        private final Class<?> rawClass;
+        private final Class<?> instance;
+        private final BeansAccess<?> beansAccess;
+
+        private final Type valueType;
+        private final Class<?> valueClass;
+
+        private JSONEncoder<?> subJSONEncoder;
+
+        SetType(ParameterizedType type) {
+            this.type = type;
+            this.rawClass = (Class<?>) type.getRawType();
+            if (rawClass.isInterface()) {
+                instance = HashSet.class;
+            } else {
+                instance = rawClass;
+            }
+            beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
+            valueType = type.getActualTypeArguments()[0];
+            if (valueType instanceof Class) {
+                valueClass = (Class<?>) valueType;
+            } else {
+                valueClass = (Class<?>) ((ParameterizedType) valueType).getRawType();
+            }
+        }
+
+        @Override
+        public Object createArray() {
+            return beansAccess.newInstance();
+        }
+
+        @Override
+        public JSONEncoder<?> startArray(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(type.getActualTypeArguments()[0]);
+            }
+            return subJSONEncoder;
+        }
+
+        @Override
+        public JSONEncoder<?> startObject(String key) {
+            if (subJSONEncoder == null) {
+                subJSONEncoder = JSONEncoderFactory.getInstance().getEncoder(type.getActualTypeArguments()[0]);
+            }
+            return subJSONEncoder;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void addValue(Object current, Object value) {
+            ((Set<Object>) current).add(JSONUtil.convertToX(value, valueClass));
+        }
+    }
+
+    public static class SetClass<T> extends JSONEncoder<T> {
+        final Class<?> type;
+        final Class<?> instance;
+        final BeansAccess<?> beansAccess;
+
+        SetClass(Class<?> clazz) {
+            this.type = clazz;
+            if (clazz.isInterface()) {
+                instance = HashSet.class;
+            } else {
+                instance = clazz;
+            }
+            beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER);
+        }
+
+        @Override
+        public Object createArray() {
+            return beansAccess.newInstance();
+        }
+
+        @Override
+        public JSONEncoder<?> startArray(String key) {
+            return DefaultJSONEncoder.getInstance();// _ARRAY;
+        }
+
+        @Override
+        public JSONEncoder<?> startObject(String key) {
+            return DefaultJSONEncoder.getInstance();// _MAP;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void addValue(Object current, Object value) {
+            ((Set<Object>) current).add(value);
+        }
+    }
 }

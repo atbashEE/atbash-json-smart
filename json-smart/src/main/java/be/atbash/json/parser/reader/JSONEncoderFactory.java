@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -42,6 +42,7 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONEncoderFactory {
@@ -116,6 +117,8 @@ public class JSONEncoderFactory {
             encoder = new ArraysJSONEncoder.GenericJSONEncoder<>(type);
         } else if (List.class.isAssignableFrom(type)) {
             encoder = new CollectionEncoder.ListClass<>(type);
+        } else if (Set.class.isAssignableFrom(type)) {
+            encoder = new CollectionEncoder.SetClass<>(type);
         } else if (Map.class.isAssignableFrom(type)) {
             encoder = new CollectionEncoder.MapClass<>(type);
         } else {
@@ -155,6 +158,8 @@ public class JSONEncoderFactory {
             encoder = new CollectionEncoder.ListType<>(type);
         } else if (Map.class.isAssignableFrom(clz)) {
             encoder = new CollectionEncoder.MapType<>(type);
+        } else if (Set.class.isAssignableFrom(clz)) {
+            encoder = new CollectionEncoder.SetType<>(type);
         }
         if (encoder == null) {
             throw new UnsupportedParameterizedTypeException(type);
