@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,7 +122,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
     public JSONEncoder<?> startArray(String key) {
         Type type = getType(key);
         if (type == null) {
-            throw new RuntimeException("Can not find Array '" + key + "' field in " + clz);
+            throw new IncorrectContentException("Can not find Array '" + key + "' field in " + clz);
         }
         return JSONEncoderFactory.getInstance().getEncoder(type);
     }
@@ -131,7 +131,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
     public JSONEncoder<?> startObject(String key) {
         Type type = getType(key);
         if (type == null) {
-            throw new RuntimeException("Can not find Object '" + key + "' field in " + clz);
+            throw new IncorrectContentException("Can not find Object '" + key + "' field in " + clz);
         }
         return JSONEncoderFactory.getInstance().getEncoder(type);
     }

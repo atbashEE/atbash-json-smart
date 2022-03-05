@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,7 @@ package be.atbash.json.parser;
 import be.atbash.json.parser.reader.DefaultJSONEncoder;
 import be.atbash.json.parser.reader.JSONEncoder;
 import be.atbash.json.parser.reader.JSONEncoderBuilder;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -274,7 +275,7 @@ class JSONParserString {
     private <T> T readArray(JSONEncoder<T> jsonEncoder) {
         Object current = jsonEncoder.createArray();
         if (c != '[') {
-            throw new RuntimeException("Internal Error");
+            throw new AtbashUnexpectedException("Internal Error");
         }
         read();
         boolean needData = false;
@@ -535,7 +536,7 @@ class JSONParserString {
     private <T, U> T readObject(JSONEncoder<T> jsonEncoder) {
         //
         if (c != '{') {
-            throw new RuntimeException("Internal Error");
+            throw new AtbashUnexpectedException("Internal Error");
         }
         T current = jsonEncoder.createObject();
         U builder = null;

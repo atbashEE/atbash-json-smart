@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -167,8 +167,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         if (object2 instanceof JSONObject) {
             return merge(object1, (JSONObject) object2);
         }
-        // FIXME Custom error message
-        throw new RuntimeException("JSON merge : Cannot merge JSONObject with " + object2.getClass());
+        throw new JSONMergeException("JSON merge : Cannot merge JSONObject with " + object2.getClass());
     }
 
     public static JSONObject merge(JSONObject object1, JSONObject object2) {
@@ -194,11 +193,9 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
                 continue;
             }
             if (value1.getClass().equals(value2.getClass())) {
-                // FIXME Custom error message
-                throw new RuntimeException("JSON merge can not merge two " + value1.getClass().getName() + " Object together");
+                throw new JSONMergeException("JSON merge can not merge two " + value1.getClass().getName() + " Object together");
             }
-            // FIXME Custom error message
-            throw new RuntimeException("JSON merge can not merge " + value1.getClass().getName() + " with " + value2.getClass().getName());
+            throw new JSONMergeException("JSON merge can not merge " + value1.getClass().getName() + " with " + value2.getClass().getName());
         }
 
         for (Map.Entry<String, Object> entry : object2.entrySet()) {
