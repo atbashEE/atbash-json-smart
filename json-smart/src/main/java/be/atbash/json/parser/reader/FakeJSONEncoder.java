@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -32,6 +32,9 @@ package be.atbash.json.parser.reader;
  * limitations under the License.
  */
 
+/**
+ * Encoder ise to test if the JSON is valid with performing the entire mapping.
+ */
 public class FakeJSONEncoder extends JSONEncoder<Object> {
     private static final JSONEncoder<Object> INSTANCE = new FakeJSONEncoder();
 
@@ -50,19 +53,23 @@ public class FakeJSONEncoder extends JSONEncoder<Object> {
 
     @Override
     public void setValue(Object current, String key, Object value) {
+        // No need to set the actual value into the object.
     }
 
     @Override
     public void addValue(Object current, Object value) {
+        // No need to set the actual value into the JSON Array.
     }
 
     @Override
     public Object createObject() {
+        // We don't create an object here, just want to test the JSON structure.
         return null;
     }
 
     @Override
     public Object createArray() {
+        // We don't create an object here, just want to test the JSON structure.
         return null;
     }
 

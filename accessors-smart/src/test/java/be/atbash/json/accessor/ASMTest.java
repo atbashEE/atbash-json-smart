@@ -15,7 +15,7 @@
  */
 package be.atbash.json.accessor;
 
-import be.atbash.json.accessor.bean.BTest;
+import be.atbash.json.accessor.bean.BTestMixture;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -27,7 +27,7 @@ public class ASMTest {
     @Test
     public void testGet() {
 
-        BeansAccess<BTest> acBT = BeansAccess.get(BTest.class);
+        BeansAccess<BTestMixture> acBT = BeansAccess.get(BTestMixture.class);
         // BeansAccess acHand = new BTestBeansAccessB();
 
         HashMap<String, String> m = new HashMap<>();
@@ -120,7 +120,7 @@ public class ASMTest {
         // 596 295 451
         // 2 321 087 341
 
-        BeansAccess<BTest> ac;
+        BeansAccess<BTestMixture> ac;
         ac = acBT;
         // ac = acHand;
         // ac = acASMHand;
@@ -132,8 +132,8 @@ public class ASMTest {
         // System.out.println("// Time: " + T1);
     }
 
-    private void subtext(BeansAccess<BTest> acc) {
-        BTest t = new BTest();
+    private void subtext(BeansAccess<BTestMixture> acc) {
+        BTestMixture t = new BTestMixture();
         acc.set(t, "pubBoolValue", true);
         acc.set(t, "pubIntValue", 13);
         acc.set(t, "pubStrValue", "Test");

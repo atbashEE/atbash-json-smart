@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ public class JSONWriterFactory {
      */
     private static final JSONWriterFactory WRITER_FACTORY = new JSONWriterFactory();
 
-    private ConcurrentHashMap<Class<?>, JSONWriter<?>> writerCache;
-    private LinkedList<WriterByInterface> writerInterfaces;
+    private final ConcurrentHashMap<Class<?>, JSONWriter<?>> writerCache;
+    private final LinkedList<WriterByInterface> writerInterfaces;
 
     private JSONWriter<JSONAware> jsonAwareJSONWriter;
 
@@ -81,8 +81,8 @@ public class JSONWriterFactory {
     @SuppressWarnings("rawtypes")
     public JSONWriter getWriterByInterface(Class<?> clazz) {
         for (WriterByInterface w : writerInterfaces) {
-            if (w._interface.isAssignableFrom(clazz)) {
-                return w._writer;
+            if (w.interfaceClass.isAssignableFrom(clazz)) {
+                return w.writer;
             }
         }
         return null;
@@ -269,7 +269,6 @@ public class JSONWriterFactory {
 
         enumWriter = new JSONWriter<Enum<?>>() {
             public <E extends Enum<?>> void writeJSONString(E value, Appendable out) throws IOException {
-                @SuppressWarnings("rawtypes")
                 String s = value.name();
                 JSONStyle.getDefault().writeString(out, s);
             }
@@ -300,7 +299,6 @@ public class JSONWriterFactory {
                         JSONStyle.getDefault().objectNext(out);
                     }
                     JSONUtil.writeJSONKV(entry.getKey().toString(), v, out);
-                    // compression.objectElmStop(out);
                 }
                 JSONStyle.getDefault().objectStop(out);
             }
@@ -373,12 +371,12 @@ public class JSONWriterFactory {
     }
 
     static class WriterByInterface {
-        private Class<?> _interface;
-        private JSONWriter<?> _writer;
+        private final Class<?> interfaceClass;
+        private final JSONWriter<?> writer;
 
-        WriterByInterface(Class<?> _interface, JSONWriter<?> _writer) {
-            this._interface = _interface;
-            this._writer = _writer;
+        WriterByInterface(Class<?> interfaceClass, JSONWriter<?> writer) {
+            this.interfaceClass = interfaceClass;
+            this.writer = writer;
         }
     }
 }

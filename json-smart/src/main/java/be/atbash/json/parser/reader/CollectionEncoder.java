@@ -18,7 +18,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -51,10 +51,8 @@ public final class CollectionEncoder {
 
     public static class MapType<T> extends JSONEncoder<T> {
         private final ParameterizedType type;
-        private final Class<?> rawClass;
         private final Class<?> instance;
 
-        private final Type keyType;
         private final Type valueType;
 
         private final Class<?> keyClass;
@@ -64,14 +62,14 @@ public final class CollectionEncoder {
 
         MapType(ParameterizedType type) {
             this.type = type;
-            this.rawClass = (Class<?>) type.getRawType();
+            Class<?> rawClass = (Class<?>) type.getRawType();
             if (rawClass.isInterface()) {
                 instance = JSONObject.class;
             } else {
                 instance = rawClass;
             }
 
-            keyType = type.getActualTypeArguments()[0];
+            Type keyType = type.getActualTypeArguments()[0];
             valueType = type.getActualTypeArguments()[1];
             if (keyType instanceof Class) {
                 keyClass = (Class<?>) keyType;
@@ -110,14 +108,12 @@ public final class CollectionEncoder {
             return subJSONEncoder;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void setValue(Object current, String key, Object value) {
             ((Map<Object, Object>) current).put(JSONUtil.convertToX(key, keyClass),
                     JSONUtil.convertToX(value, valueClass));
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public Object getValue(Object current, String key) {
             return ((Map<String, Object>) current).get(JSONUtil.convertToX(key, keyClass));
@@ -131,11 +127,11 @@ public final class CollectionEncoder {
 
     public static class MapClass<T> extends JSONEncoder<T> {
         private final Class<?> type;
-        private final Class<?> instance;
         private final BeansAccess<?> beansAccess;
 
         MapClass(Class<?> type) {
             this.type = type;
+            Class<?> instance;
             if (type.isInterface()) {
                 instance = JSONObject.class;
             } else {
@@ -159,13 +155,11 @@ public final class CollectionEncoder {
             return DefaultJSONEncoder.getInstance(); // _MAP
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void setValue(Object current, String key, Object value) {
             ((Map<String, Object>) current).put(key, value);
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public Object getValue(Object current, String key) {
             return ((Map<String, Object>) current).get(key);
@@ -179,25 +173,23 @@ public final class CollectionEncoder {
 
     public static class ListType<T> extends JSONEncoder<T> {
         private final ParameterizedType type;
-        private final Class<?> rawClass;
-        private final Class<?> instance;
         private final BeansAccess<?> beansAccess;
 
-        private final Type valueType;
         private final Class<?> valueClass;
 
         private JSONEncoder<?> subJSONEncoder;
 
         ListType(ParameterizedType type) {
             this.type = type;
-            this.rawClass = (Class<?>) type.getRawType();
+            Class<?> rawClass = (Class<?>) type.getRawType();
+            Class<?> instance;
             if (rawClass.isInterface()) {
                 instance = JSONArray.class;
             } else {
                 instance = rawClass;
             }
             beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
-            valueType = type.getActualTypeArguments()[0];
+            Type valueType = type.getActualTypeArguments()[0];
             if (valueType instanceof Class) {
                 valueClass = (Class<?>) valueType;
             } else {
@@ -226,7 +218,6 @@ public final class CollectionEncoder {
             return subJSONEncoder;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void addValue(Object current, Object value) {
             ((List<Object>) current).add(JSONUtil.convertToX(value, valueClass));
@@ -255,15 +246,14 @@ public final class CollectionEncoder {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return DefaultJSONEncoder.getInstance();// _ARRAY;
+            return DefaultJSONEncoder.getInstance();// _ARRAY
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return DefaultJSONEncoder.getInstance();// _MAP;
+            return DefaultJSONEncoder.getInstance();// _MAP
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void addValue(Object current, Object value) {
             ((List<Object>) current).add(value);
@@ -272,25 +262,23 @@ public final class CollectionEncoder {
 
     public static class SetType<T> extends JSONEncoder<T> {
         private final ParameterizedType type;
-        private final Class<?> rawClass;
-        private final Class<?> instance;
         private final BeansAccess<?> beansAccess;
 
-        private final Type valueType;
         private final Class<?> valueClass;
 
         private JSONEncoder<?> subJSONEncoder;
 
         SetType(ParameterizedType type) {
             this.type = type;
-            this.rawClass = (Class<?>) type.getRawType();
+            Class<?> rawClass = (Class<?>) type.getRawType();
+            Class<?> instance;
             if (rawClass.isInterface()) {
                 instance = HashSet.class;
             } else {
                 instance = rawClass;
             }
             beansAccess = BeansAccess.get(instance, JSONUtil.JSON_SMART_FIELD_FILTER); // NEW
-            valueType = type.getActualTypeArguments()[0];
+            Type valueType = type.getActualTypeArguments()[0];
             if (valueType instanceof Class) {
                 valueClass = (Class<?>) valueType;
             } else {
@@ -319,7 +307,6 @@ public final class CollectionEncoder {
             return subJSONEncoder;
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void addValue(Object current, Object value) {
             ((Set<Object>) current).add(JSONUtil.convertToX(value, valueClass));
@@ -348,15 +335,14 @@ public final class CollectionEncoder {
 
         @Override
         public JSONEncoder<?> startArray(String key) {
-            return DefaultJSONEncoder.getInstance();// _ARRAY;
+            return DefaultJSONEncoder.getInstance();// _ARRAY
         }
 
         @Override
         public JSONEncoder<?> startObject(String key) {
-            return DefaultJSONEncoder.getInstance();// _MAP;
+            return DefaultJSONEncoder.getInstance();// _MAP
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public void addValue(Object current, Object value) {
             ((Set<Object>) current).add(value);

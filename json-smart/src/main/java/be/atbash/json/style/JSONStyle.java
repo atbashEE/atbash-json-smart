@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package be.atbash.json.style;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -43,9 +43,9 @@ public class JSONStyle {
 
     private static final JSONStyle DEFAULT = new JSONStyle();  // NO-COMPRESS of smart-json
 
-    private boolean _ignore_null = true;  // FIXME Config?
+    private final boolean _ignore_null = true;  // FIXME Config?
 
-    private JStylerObj.StringProtector esc = JStylerObj.ESCAPE4Web;
+    private final JStylerObj.StringProtector esc = JStylerObj.ESCAPE4Web;
 
     private JSONStyle() {
     }
@@ -85,6 +85,7 @@ public class JSONStyle {
      * Start the first Object element
      */
     public void objectFirstStart(Appendable out) {
+        // No action required.
     }
 
     /**
@@ -98,6 +99,7 @@ public class JSONStyle {
      * End Of Object element
      */
     public void objectElmStop(Appendable out) {
+        // No action required.
     }
 
     /**
@@ -125,6 +127,7 @@ public class JSONStyle {
      * Start the first Array element
      */
     public void arrayFirstObject(Appendable out) {
+        // No action required.
     }
 
     /**
@@ -138,6 +141,7 @@ public class JSONStyle {
      * End of an Array element
      */
     public void arrayObjectEnd(Appendable out) {
+        // No action required.
     }
 
     public static JSONStyle getDefault() {

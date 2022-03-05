@@ -18,7 +18,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -45,10 +45,9 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.Optional;
 
-@SuppressWarnings("unchecked")
 public class BeanEncoder<T> extends JSONEncoder<T> {
 
-    private static JSONEncoder<Date> jsonEncoderDate;
+    private static final JSONEncoder<Date> jsonEncoderDate;
 
     private final Class<T> clz;
     protected final BeansAccess<T> beansAccess;
@@ -78,6 +77,7 @@ public class BeanEncoder<T> extends JSONEncoder<T> {
         for (Constructor<?> constructor : clz.getConstructors()) {
             if ((constructor.getModifiers() & Modifier.PUBLIC) != 0 && constructor.getParameterTypes().length == 0) {
                 result = true;
+                break;
             }
         }
         return result;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  */
 package be.atbash.json.accessor.bean;
 
-public class BTest {
+public class BTestMixture {
     public int pubIntValue;
     public String pubStrValue;
     private Integer privIntValue;

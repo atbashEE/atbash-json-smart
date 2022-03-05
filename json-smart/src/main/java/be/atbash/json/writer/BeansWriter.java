@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ import java.util.List;
 // This is the net.minidev.BeansWriterASM
 public class BeansWriter implements JSONWriter<Object> {
 
-    private FieldPropertyNameMapperHandler nameMapperHandler = FieldPropertyNameMapperHandler.getInstance();
+    private final FieldPropertyNameMapperHandler nameMapperHandler = FieldPropertyNameMapperHandler.getInstance();
 
     public <E> void writeJSONString(E value, Appendable out) throws IOException {
         Class<?> cls = value.getClass();
@@ -37,7 +37,6 @@ public class BeansWriter implements JSONWriter<Object> {
         JSONStyle.getDefault().objectStart(out);
         List<Field> fields = beansAccess.getFields();
         for (Field field : fields) {
-            @SuppressWarnings("unchecked")
             Object v = beansAccess.get(value, field.getName());
             if (v == null && JSONStyle.getDefault().ignoreNull()) {
                 continue;

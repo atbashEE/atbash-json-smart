@@ -18,7 +18,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSONEncoderFactory {
-    private static final Object LOCK = new Object();
     private static JSONEncoderFactory INSTANCE;
 
     private ConcurrentHashMap<Type, JSONEncoder<?>> cache;
@@ -92,7 +91,6 @@ public class JSONEncoderFactory {
         cache.put(type.getParameterizedType().getActualTypeArguments()[0], jsonEncoder);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> JSONEncoder<T> getEncoder(Type type) {
         if (type instanceof ParameterizedType) {
             return getEncoder((ParameterizedType) type);
@@ -107,7 +105,6 @@ public class JSONEncoderFactory {
      */
     public <T> JSONEncoder<T> getEncoder(Class<T> type) {
         // look for cached JSONEncoder
-        @SuppressWarnings("unchecked")
         JSONEncoder<T> encoder = (JSONEncoder<T>) cache.get(type);
         if (encoder != null) {
             return encoder;
@@ -127,7 +124,7 @@ public class JSONEncoderFactory {
             if (mappedBy != null) {
                 if (!(mappedBy.encoder().equals(CustomJSONEncoder.NOPJSONEncoder.class))) {
 
-                    encoder = new JSONEncoderWrappedCustomEncoder((CustomJSONEncoder) ClassUtils.newInstance(mappedBy.encoder()));
+                    encoder = new JSONEncoderWrappedCustomEncoder(ClassUtils.newInstance(mappedBy.encoder()));
 
                 } else {
                     if (!(mappedBy.beanEncoder().equals(CustomBeanJSONEncoder.NOPCustomBeanJSONEncoder.class))) {
@@ -141,13 +138,11 @@ public class JSONEncoderFactory {
                 encoder = new BeanEncoder<>(type);
             }
         }
-        if (!cache.containsKey(type)) {
-            cache.put(type, encoder);
-        }
+
+        cache.put(type, encoder);
         return encoder;
     }
 
-    @SuppressWarnings("unchecked")
     private <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
         JSONEncoder<T> encoder = (JSONEncoder<T>) cache.get(type);
         if (encoder != null) {

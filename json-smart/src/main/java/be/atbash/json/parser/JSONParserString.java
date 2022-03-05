@@ -18,7 +18,7 @@ package be.atbash.json.parser;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except json compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -49,11 +49,11 @@ import static be.atbash.json.parser.ParseException.*;
 class JSONParserString {
     private static final byte EOI = 0x1A;
     private static final char MAX_STOP = 126; // '}' -> 125
-    private static boolean[] stopAll = new boolean[MAX_STOP];
-    private static boolean[] stopArray = new boolean[MAX_STOP];
-    private static boolean[] stopKey = new boolean[MAX_STOP];
-    private static boolean[] stopValue = new boolean[MAX_STOP];
-    private static boolean[] stopX = new boolean[MAX_STOP];
+    private static final boolean[] stopAll = new boolean[MAX_STOP];
+    private static final boolean[] stopArray = new boolean[MAX_STOP];
+    private static final boolean[] stopKey = new boolean[MAX_STOP];
+    private static final boolean[] stopValue = new boolean[MAX_STOP];
+    private static final boolean[] stopX = new boolean[MAX_STOP];
 
     static {
         stopKey[':'] = stopKey[EOI] = true;
@@ -704,7 +704,7 @@ class JSONParserString {
                 case (char) 14: // Shift Out, alternate character set
                 case (char) 15: // Shift In, resume defaultn character set
                 case (char) 16: // Data link escape
-                case (char) 17: // XON, with XOFF to pause listings;
+                case (char) 17: // XON, with XOFF to pause listings
                 case (char) 18: // Device control 2, block-mode flow control
                 case (char) 19: // XOFF, with XON is TERM=18 flow control
                 case (char) 20: // Device control 4
@@ -730,6 +730,8 @@ class JSONParserString {
                     if (reject127) {
                         throw new ParseException(pos, ERROR_UNEXPECTED_CHAR, c);
                     }
+                    sb.append(c);
+                    break;
                 default:
                     sb.append(c);
             }

@@ -21,9 +21,9 @@ import java.text.DateFormatSymbols;
 import java.util.*;
 
 public class ConvertDate {
-    private static TreeMap<String, Integer> monthsTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
-    private static TreeMap<String, Integer> daysTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
-    private static HashSet<String> voidData = new HashSet<>();
+    private static final TreeMap<String, Integer> monthsTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+    private static final TreeMap<String, Integer> daysTable = new TreeMap<>(new StringCmpNS()); // StringCmpNS.COMP
+    private static final HashSet<String> voidData = new HashSet<>();
 
     private ConvertDate() {
     }
@@ -47,7 +47,7 @@ public class ConvertDate {
         }
     }
 
-    private static TreeMap<String, TimeZone> timeZoneMapping;
+    private static final TreeMap<String, TimeZone> timeZoneMapping;
 
     static {
         timeZoneMapping = new TreeMap<>();
@@ -122,8 +122,9 @@ public class ConvertDate {
     }
 
     /**
-     * try read a Date from a Object
+     * try read a Date from an Object.
      */
+    @SuppressWarnings("squid:S5361")
     public static Date convertToDate(Object obj) {
         if (obj == null) {
             return null;
@@ -136,6 +137,7 @@ public class ConvertDate {
         }
         if (obj instanceof String) {
             // there is a.m. and AM as markers. This code expect AM so we convert
+            // Can't use replace() due to the . (dot) in
             String input = ((String) obj).replaceAll("a\\.m\\.", "AM").replaceAll("p\\.m\\.", "PM");
             StringTokenizer st = new StringTokenizer(input, " -/:,.+");
             String s1;
@@ -262,7 +264,6 @@ public class ConvertDate {
     }
 
     private static Date addHour(StringTokenizer st, Calendar cal, String s1) {
-        // String s1;
         if (s1 == null) {
             if (!st.hasMoreTokens()) {
                 return cal.getTime();
@@ -315,10 +316,8 @@ public class ConvertDate {
         }
         // TODO ADD TIME ZONE
         s1 = trySkip(st, s1, cal);
-        // if (s1.equalsIgnoreCase("pm"))
-        // cal.add(Calendar.HOUR_OF_DAY, 12);
 
-        if (s1.length() == 4 && Character.isDigit(s1.charAt(0))) {
+        if (s1 != null && s1.length() == 4 && Character.isDigit(s1.charAt(0))) {
             cal.set(Calendar.YEAR, getYear(s1));
         }
 

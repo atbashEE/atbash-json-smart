@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 package be.atbash.json.accessor;
 
 import be.atbash.json.accessor.mapper.FieldPropertyNameMapperHandler;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -35,7 +36,7 @@ public final class BeansAccess<T> {
     /**
      * cache used to store built BeansAccess
      */
-    private static ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<Class<?>, BeansAccess<?>> cache = new ConcurrentHashMap<>();
 
     private final FieldPropertyNameMapperHandler nameMapperHandler = FieldPropertyNameMapperHandler.getInstance();
     private final HashMap<String, FastPropertyMemberAccessor> map = new HashMap<>();
@@ -44,7 +45,7 @@ public final class BeansAccess<T> {
     private final Map<String, Field> jsonNames;
 
     /**
-     * @param beanClass
+     * @param beanClass Class for which the Accessors are created.
      * @param filter    used when looking up all fields of the class and if they should be filtered (discarded) or not.
      *                  Providing null means all Discovered Fields will be used.
      */
@@ -58,18 +59,13 @@ public final class BeansAccess<T> {
 
     }
 
-    /**
+    /*
      * Find all fields in Class and superclass(es).
-     *
-     * @param beanClass
-     * @param filter
-     * @return
      */
     private List<Field> defineFields(Class<?> beanClass, FieldFilter filter) {
-        List<Field> result = new ArrayList<>();
-        result.addAll(Arrays.stream(beanClass.getDeclaredFields())
+        List<Field> result = Arrays.stream(beanClass.getDeclaredFields())
                 .filter(f -> canUse(f, filter))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
         if (!beanClass.equals(Object.class)) {
             result.addAll(defineFields(beanClass.getSuperclass(), filter));
         }
@@ -78,12 +74,12 @@ public final class BeansAccess<T> {
 
     /**
      * Can the field be used or should it be discarded?
-     *
-     * @param field
-     * @param filter
-     * @return
      */
     private boolean canUse(Field field, FieldFilter filter) {
+        // Synthetic fields are created by Compiler or agents.
+        if (field.isSynthetic()) {
+            return false;
+        }
         if (filter == null) {
             return true;
         }
@@ -109,13 +105,7 @@ public final class BeansAccess<T> {
      */
     public static <P> BeansAccess<P> get(Class<P> type, FieldFilter filter) {
 
-        BeansAccess<P> access = (BeansAccess<P>) cache.get(type);
-        if (access == null) {
-            access = new BeansAccess<>(type, filter);
-            cache.put(type, access);
-        }
-
-        return access;
+        return (BeansAccess<P>) cache.computeIfAbsent(type, t -> new BeansAccess<>(t, filter));
 
     }
 
@@ -134,40 +124,27 @@ public final class BeansAccess<T> {
     }
 
     /**
-     * set field value by fieldName
+     * set field value by fieldName.
      */
     public void set(T object, String propertyName, Object value) {
-        FastPropertyMemberAccessor memberAccessor = map.get(propertyName);
-        if (memberAccessor == null) {
-            memberAccessor = new FastPropertyMemberAccessor(object.getClass(), propertyName);
-
-            map.put(propertyName, memberAccessor);
-        }
+        FastPropertyMemberAccessor memberAccessor = map.computeIfAbsent(propertyName, n -> new FastPropertyMemberAccessor(object.getClass(), n));
 
         memberAccessor.executeSetter(object, value);
     }
 
     /**
-     * get field value by fieldname
+     * get field value by fieldname.
      */
     public Object get(T object, String propertyName) {
-        FastPropertyMemberAccessor memberAccessor = map.get(propertyName);
-        if (memberAccessor == null) {
-            memberAccessor = new FastPropertyMemberAccessor(object.getClass(), propertyName);
-
-            map.put(propertyName, memberAccessor);
-        }
+        FastPropertyMemberAccessor memberAccessor = map.computeIfAbsent(propertyName, n -> new FastPropertyMemberAccessor(object.getClass(), n));
         return memberAccessor.executeGetter(object);
     }
 
     public T newInstance() {
         try {
             return (T) beanClass.newInstance();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new AtbashUnexpectedException(e);
         }
-        return null;
     }
 }

@@ -26,9 +26,9 @@ public interface FieldFilter {
     /**
      * Determines if this field can be used in the Java - Json conversion. For example, an
      * annotation JsonIgnore can be used to indicate the field should be ignored.
-     * @param field
+     * @param field  The Field in question
      * @param method optional, when no getter for field null is passed to this method.
-     * @return
+     * @return true when Field should be used.
      */
     boolean canUse(Field field, Method method);
 

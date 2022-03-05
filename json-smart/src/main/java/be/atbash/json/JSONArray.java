@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package be.atbash.json;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -51,7 +51,7 @@ public class JSONArray extends ArrayList<Object> implements JSONAware {
      * also a JSONAware, JSONAware specific behaviours will be omitted at this
      * top level.
      *
-     * @param list
+     * @param list The List to convert.
      * @return JSON text, or "null" if list is null.
      * @see JSONValue#toJSONString(Object)
      */
@@ -70,8 +70,8 @@ public class JSONArray extends ArrayList<Object> implements JSONAware {
      * JSONStreamAware or a JSONAware, JSONStreamAware and JSONAware specific
      * behaviours will be ignored at this top level.
      *
-     * @param list
-     * @param out
+     * @param list The List to Convert
+     * @param out The Appendable to concat the contents to.
      * @see JSONValue#writeJSONString(Object, Appendable)
      */
     private static void writeJSONString(Iterable<?> list, Appendable out)

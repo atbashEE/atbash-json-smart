@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2019 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -30,6 +30,8 @@ package be.atbash.json.parser.reader;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.reflect.Type;
 
@@ -43,13 +45,13 @@ import java.lang.reflect.Type;
 // Original name was JsonReaderI
 public abstract class JSONEncoder<T> {
 
-    private static final String ERR_MSG = "Invalid or non Implemented status";
+    private static final String ERR_MSG = "Invalid or non Implemented method";
 
     /**
      * called when json-smart parser meet an object key
      */
     public JSONEncoder<?> startObject(String key) {
-        throw new RuntimeException(ERR_MSG + " startObject(String key) in " + this.getClass() + " key=" + key);
+        throw new AtbashUnexpectedException(ERR_MSG + " startObject(String key) in " + this.getClass() + " key=" + key);
     }
 
     /**
@@ -58,47 +60,47 @@ public abstract class JSONEncoder<T> {
      * @param key the destination key name, or null.
      */
     public JSONEncoder<?> startArray(String key) {
-        throw new RuntimeException(ERR_MSG + " startArray in " + this.getClass() + " key=" + key);
+        throw new AtbashUnexpectedException(ERR_MSG + " startArray in " + this.getClass() + " key=" + key);
     }
 
     /**
      * called when json-smart done parsing a value
      */
     public void setValue(T current, String key, Object value) {
-        throw new RuntimeException(ERR_MSG + " setValue in " + this.getClass() + " key=" + key);
+        throw new AtbashUnexpectedException(ERR_MSG + " setValue in " + this.getClass() + " key=" + key);
     }
 
     /**
      * -------------
      */
     public Object getValue(T current, String key) {
-        throw new RuntimeException(ERR_MSG + " getValue(Object current, String key) in " + this.getClass() + " key=" + key);
+        throw new AtbashUnexpectedException(ERR_MSG + " getValue(Object current, String key) in " + this.getClass() + " key=" + key);
     }
 
     // Object current,
     public Type getType(String key) {
-        throw new RuntimeException(ERR_MSG + " getType(String key) in " + this.getClass() + " key=" + key);
+        throw new AtbashUnexpectedException(ERR_MSG + " getType(String key) in " + this.getClass() + " key=" + key);
     }
 
     /**
      * add a value in an array json object.
      */
     public void addValue(Object current, Object value) {
-        throw new RuntimeException(ERR_MSG + " addValue(Object current, Object value) in " + this.getClass());
+        throw new AtbashUnexpectedException(ERR_MSG + " addValue(Object current, Object value) in " + this.getClass());
     }
 
     /**
      * use to instantiate a new object that will be used as an object
      */
     public T createObject() {
-        throw new RuntimeException(ERR_MSG + " createObject() in " + this.getClass());
+        throw new AtbashUnexpectedException(ERR_MSG + " createObject() in " + this.getClass());
     }
 
     /**
      * use to instantiate a new object that will be used as an array
      */
     public Object createArray() {
-        throw new RuntimeException(ERR_MSG + " createArray() in " + this.getClass());
+        throw new AtbashUnexpectedException(ERR_MSG + " createArray() in " + this.getClass());
     }
 
     /**
@@ -106,7 +108,6 @@ public abstract class JSONEncoder<T> {
      * <p>
      * example: convert an List&lt;Integer&gt; to an int[]
      */
-    @SuppressWarnings("unchecked")
     public T convert(Object current) {
         return (T) current;
     }

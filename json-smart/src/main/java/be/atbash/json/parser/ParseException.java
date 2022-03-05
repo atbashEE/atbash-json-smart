@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package be.atbash.json.parser;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -48,7 +48,7 @@ public class ParseException extends AtbashException {
     public static final int ERROR_UNEXPECTED_LEADING_0 = 6;
 
     private final int errorType;
-    private final Object unexpectedObject;
+    private final transient Object unexpectedObject;
     private final int position;
 
     public ParseException(int position, int errorType, Object unexpectedObject) {

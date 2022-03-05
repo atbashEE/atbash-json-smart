@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
     /**
      * Reader can be link to the JsonReader Base
      *
-     * @param clz
+     * @param clz The Class on which this Custom Encoder operates.
      */
     protected CustomBeanJSONEncoder(Class<T> clz) {
         super(clz);
@@ -37,6 +37,9 @@ public abstract class CustomBeanJSONEncoder<T> extends BeanEncoder<T> {
 
     @Override
     public void setValue(T current, String key, Object value) {
+        if (beansAccess == null) {
+            throw new IllegalStateException("Can't set a value of the instance as no proper constructor was found. Class : " + current.getClass().getName());
+        }
         if (!beansAccess.getField(key).isPresent()) {
             // No field found, so ask for custom handling
             setCustomValue(current, key, value);

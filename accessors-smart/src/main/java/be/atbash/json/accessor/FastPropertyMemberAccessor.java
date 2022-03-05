@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package be.atbash.json.accessor;
 
 /*
@@ -22,6 +21,7 @@ package be.atbash.json.accessor;
  */
 
 import be.atbash.json.accessor.ex.NoSuchFieldException;
+import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Field;
@@ -36,9 +36,9 @@ public class FastPropertyMemberAccessor {
     private final Class<?> propertyType;
     private final String propertyName;
     private final Method getterMethod;
-    private final Function getterFunction;
+    private final Function<Object, Object> getterFunction;
     private final Method setterMethod;
-    private final BiConsumer setterFunction;
+    private final BiConsumer<Object, Object> setterFunction;
     private final Field field;
 
     public FastPropertyMemberAccessor(Class<?> beanClass, String propertyName) {
@@ -77,7 +77,7 @@ public class FastPropertyMemberAccessor {
         }
     }
 
-    private Function createGetterFunction(MethodHandles.Lookup lookup) {
+    private Function<Object, Object> createGetterFunction(MethodHandles.Lookup lookup) {
         Class<?> declaringClass = getterMethod.getDeclaringClass();
         CallSite getterSite;
         try {
@@ -88,18 +88,22 @@ public class FastPropertyMemberAccessor {
                     lookup.findVirtual(declaringClass, getterMethod.getName(), MethodType.methodType(propertyType)),
                     MethodType.methodType(propertyType, declaringClass));
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Lambda creation failed for getterMethod (" + getterMethod + ").\n", e);
+            throw new IllegalStateException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
         } catch (LambdaConversionException | NoSuchMethodException e) {
-            throw new IllegalArgumentException("Lambda creation failed for getterMethod (" + getterMethod + ").", e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
         }
         try {
-            return (Function) getterSite.getTarget().invokeExact();
+            return (Function<Object, Object>) getterSite.getTarget().invokeExact();
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Lambda creation failed for getterMethod (" + getterMethod + ").", e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
         }
     }
 
-    private BiConsumer createSetterFunction(MethodHandles.Lookup lookup) {
+    private String getLambdaCreationErrorMessage(String methodType, Method method) {
+        return "Lambda creation failed for " + methodType + "(" + method + ").";
+    }
+
+    private BiConsumer<Object, Object> createSetterFunction(MethodHandles.Lookup lookup) {
         if (setterMethod == null) {
             return null;
         }
@@ -117,9 +121,9 @@ public class FastPropertyMemberAccessor {
             setterSite = createSetterFunctionJDK11(lookup, declaringClass);
         }
         try {
-            return (BiConsumer) setterSite.getTarget().invokeExact();
+            return (BiConsumer<Object, Object>) setterSite.getTarget().invokeExact();
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Lambda creation failed for setterMethod (" + setterMethod + ").", e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage("setterMethod", setterMethod), e);
         }
     }
 
@@ -145,7 +149,7 @@ public class FastPropertyMemberAccessor {
                     lookup.findVirtual(declaringClass, setterMethod.getName(), MethodType.methodType(void.class, propertyType)),
                     MethodType.methodType(void.class, declaringClass, updatedPropertyType));
         } catch (LambdaConversionException | NoSuchMethodException | IllegalAccessException e) {
-            throw new IllegalArgumentException("Lambda creation failed for setterMethod (" + setterMethod + ").", e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage("setterMethod", setterMethod), e);
         }
         return setterSite;
     }
@@ -165,17 +169,16 @@ public class FastPropertyMemberAccessor {
             try {
                 return field.get(bean);
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                // FIXME
+                throw new AtbashUnexpectedException(e);
             }
         }
-        return null;
     }
 
     public boolean supportSetter() {
         return setterMethod != null;
     }
 
+    @SuppressWarnings("squid:S3011")
     public void executeSetter(Object bean, Object value) {
         if (setterFunction != null) {
             setterFunction.accept(bean, value);
@@ -183,8 +186,7 @@ public class FastPropertyMemberAccessor {
             try {
                 field.set(bean, convertValue(value, field.getType()));
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
-                ///FIXME
+                throw new AtbashUnexpectedException(e);
             }
         }
     }

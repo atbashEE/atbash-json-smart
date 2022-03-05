@@ -18,23 +18,12 @@ package be.atbash.json.accessor.ex;
 import be.atbash.util.exception.AtbashException;
 
 /**
- * Base for all excetion within Accessors-smart library.
+ * Base for all exception within Accessors-smart library.
  */
 public class AccessorException extends AtbashException {
-
-    public AccessorException() {
-        super();
-    }
 
     public AccessorException(String message) {
         super(message);
     }
 
-    public AccessorException(Throwable cause) {
-        super(cause);
-    }
-
-    public AccessorException(String message, Throwable cause) {
-        super(message, cause);
-    }
 }

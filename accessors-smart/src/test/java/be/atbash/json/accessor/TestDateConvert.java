@@ -57,7 +57,12 @@ public class TestDateConvert {
     @Test
     public void testAdvanceTimeStamp() {
         String testDate = "2014-08-27T12:53:10+02:00";
-        ConvertDate.convertToDate(testDate);
+        Date date = ConvertDate.convertToDate(testDate);
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        String text = format.format(date);
+        assertEquals("2014-08-27 12:53:10", text);
+        // FIXME Is this Correct. It seems that TimeZone is ignored in ConvertDate.convertToDate.
     }
 
     @Test

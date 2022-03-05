@@ -18,7 +18,7 @@ package be.atbash.json.parser.reader;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -379,13 +379,11 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
         return new ArrayList<>();
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void addValue(Object current, Object value) {
         ((List<Object>) current).add(value);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public T convert(Object current) {
         return (T) current;
@@ -399,7 +397,6 @@ public class ArraysJSONEncoder<T> extends JSONEncoder<T> {
             this.componentType = type.getComponentType();
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public T convert(Object current) {
             int p = 0;

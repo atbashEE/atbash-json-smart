@@ -18,7 +18,7 @@ package be.atbash.json;
 /*
  *    Copyright 2011 JSON-SMART authors
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
+ * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -128,7 +128,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
      * also a JSONAware, JSONAware specific behaviours will be omitted at this
      * top level.
      *
-     * @param map
+     * @param map The Map to convert.
      * @return JSON text, or "null" if map is null.
      * @see JSONValue#toJSONString(Object)
      */
