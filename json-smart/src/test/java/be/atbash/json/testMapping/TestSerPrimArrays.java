@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,9 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,7 +32,7 @@ public class TestSerPrimArrays {
     private String testDateString;
     private Date testDate;
 
-    @Before
+    @BeforeEach
     public void setup() throws ParseException {
         sdf = new SimpleDateFormat("dd/MM/yyyy");
         testDateString = "12/01/2010";

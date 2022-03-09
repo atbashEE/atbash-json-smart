@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@ package be.atbash.json.test;
 
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
+import org.assertj.core.api.Assertions;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
 
 public class MustThrows {
 
@@ -43,7 +43,7 @@ public class MustThrows {
             } else {
                 p.parse(json, cls);
             }
-            fail("Exception Should Occur parsing:" + json);
+            Assertions.fail("Exception Should Occur parsing:" + json);
         } catch (ParseException e) {
             if (exceptionType != -1) {
                 assertThat(e.getErrorType()).isEqualTo(exceptionType);

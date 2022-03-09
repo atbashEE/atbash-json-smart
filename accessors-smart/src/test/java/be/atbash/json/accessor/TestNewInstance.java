@@ -15,8 +15,9 @@
  */
 package be.atbash.json.accessor;
 
-import org.junit.Assert;
-import org.junit.Test;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.TreeMap;
 
@@ -27,6 +28,7 @@ public class TestNewInstance {
         BeansAccess<TreeMap> acTm = BeansAccess.get(TreeMap.class);
 
         TreeMap treeMap = acTm.newInstance();
-        Assert.assertEquals("TreeMap", treeMap.getClass().getSimpleName());
+        Assertions.assertThat(treeMap.getClass().getSimpleName()).isEqualTo("TreeMap");
+        // FIXME Some more tests
     }
 }

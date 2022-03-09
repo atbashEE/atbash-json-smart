@@ -15,7 +15,9 @@
  */
 package be.atbash.json.accessor;
 
-import org.junit.Test;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
 
 public class TestDateConvert {
     // we do not test the century
@@ -50,7 +51,7 @@ public class TestDateConvert {
             } catch (Exception e) {
                 throw new Exception(jobName, e);
             }
-            assertEquals(jobName, expectedDateText, sdfFull.format(parsed));
+            Assertions.assertThat(sdfFull.format(parsed)).isEqualTo(expectedDateText).as(jobName);
         }
     }
 
@@ -61,7 +62,7 @@ public class TestDateConvert {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         String text = format.format(date);
-        assertEquals("2014-08-27 12:53:10", text);
+        Assertions.assertThat(text).isEqualTo("2014-08-27 12:53:10");
         // FIXME Is this Correct. It seems that TimeZone is ignored in ConvertDate.convertToDate.
     }
 
@@ -131,11 +132,12 @@ public class TestDateConvert {
         if (testDate.contains("59")) {
             String resultStr = sdfFull.format(parse);
             String expectedDateText = sdfFull.format(expectedDate);
-            assertEquals(jobName, expectedDateText, resultStr);
+            Assertions.assertThat(resultStr).isEqualTo(expectedDateText).as(jobName);
+
         } else {
             String resultStr = sdfLT.format(parse);
             String expectedDateText = sdfLT.format(expectedDate);
-            assertEquals(jobName, expectedDateText, resultStr);
+            Assertions.assertThat(resultStr).isEqualTo(expectedDateText).as(jobName);
         }
 //			System.err.printf("no sec for Format %-6s %-40s -> %10s\n", sizeName, testDate, resultStr);
     }

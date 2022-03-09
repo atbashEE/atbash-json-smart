@@ -16,11 +16,11 @@
 package be.atbash.json.accessor;
 
 import be.atbash.json.accessor.bean.BTestMixture;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 
-import static org.junit.Assert.assertEquals;
 
 public class ASMTest {
 
@@ -139,8 +139,8 @@ public class ASMTest {
         acc.set(t, "pubStrValue", "Test");
         acc.set(t, "privIntValue", 16);
         acc.set(t, "privStrValue", "test Priv");
-        assertEquals(13, acc.get(t, "pubIntValue"));
+        Assertions.assertThat(acc.get(t, "pubIntValue")).isEqualTo(13);
         acc.set(t, "pubIntValue", 14);
-        assertEquals(14, acc.get(t, "pubIntValue"));
+        Assertions.assertThat(acc.get(t, "pubIntValue")).isEqualTo(14);
     }
 }

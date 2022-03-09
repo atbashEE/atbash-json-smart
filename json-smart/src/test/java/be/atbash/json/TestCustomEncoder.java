@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,8 @@ import be.atbash.json.testclasses.MyColor;
 import be.atbash.json.testclasses.MyImplementation;
 import be.atbash.json.testclasses.MyType;
 import be.atbash.util.codec.Hex;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -40,10 +41,12 @@ public class TestCustomEncoder {
         assertThat(result.getValue()).isEqualTo("value1");
     }
 
-    @Test(expected = UnsupportedParameterizedTypeException.class)
+    @Test
     public void customEncoder_unknownParameterizedType() {
-        JSONValue.parse("[\"value1\"]", new TypeReference<MyType<Double>>() {
-        });
+        Assertions.assertThatThrownBy(() ->
+                JSONValue.parse("[\"value1\"]", new TypeReference<MyType<Double>>() {
+                })
+        ).isInstanceOf(UnsupportedParameterizedTypeException.class);
 
     }
 

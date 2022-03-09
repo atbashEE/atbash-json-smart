@@ -17,7 +17,7 @@ package be.atbash.json;
 
 import be.atbash.json.testclasses.Bean1;
 import be.atbash.json.testclasses.Bean6;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
 import java.util.LinkedHashSet;

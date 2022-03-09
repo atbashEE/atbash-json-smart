@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2018 Rudy De Busscher (https://www.atbash.be)
+ * Copyright 2017-2022 Rudy De Busscher (https://www.atbash.be)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@ package be.atbash.json.test;
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
 import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+
 
 public class TestStrict {
 
@@ -59,7 +60,7 @@ public class TestStrict {
         assertThat(o.get("t")).isEqualTo("Before\u000CAfter");
         try {
             new JSONParser(MODE_RFC4627).parse(s);
-            fail("Parsing should fail in RFC4627 mode");
+            Assertions.fail("Parsing should fail in RFC4627 mode");
         } catch (ParseException e) {
             // expected
         }
