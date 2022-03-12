@@ -36,6 +36,7 @@ import be.atbash.util.exception.AtbashUnexpectedException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -45,6 +46,80 @@ import java.util.List;
  * @author Uriel Chemouni &lt;uchemouni@gmail.com&gt;
  */
 public class JSONArray extends ArrayList<Object> implements JSONAware {
+
+    public JSONArray() {
+    }
+
+    public JSONArray(Collection<?> c) {
+        super(c);
+    }
+
+    /**
+     * Appends the specified element and returns this.
+     * Handy alternative to add(E e) method.
+     *
+     * @param element element to be appended to this array.
+     * @return this
+     */
+    public JSONArray appendElement(Object element) {
+        add(element);
+        return this;
+    }
+
+    /**
+     * Merge the Object into this JSONArray. This is, append it at the end.
+     */
+    public void merge(Object object) {
+        merge(this, object);
+    }
+
+    /**
+     * Explicitly Serialize Object as JSon String.
+     */
+    public String toJSONString() {
+        StringBuilder sb = new StringBuilder();
+        try {
+
+            JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(this, sb);
+
+        } catch (IOException e) {
+            throw new AtbashUnexpectedException(e);
+        }
+        return sb.toString();
+    }
+
+    /**
+     * Override toString() and calling {@link toJSONString()}.
+     */
+    @Override
+    public String toString() {
+        return toJSONString();
+    }
+
+    /**
+     * Appends the Object to the JSONArray.  If Object is a JSONArray, the elements are added individually.
+     *
+     * @param array  JSONArray where we append some elements.
+     * @param object The Object to add.
+     * @return The same as the JSONArray parameter.
+     */
+    public static JSONArray merge(JSONArray array, Object object) {
+        if (object == null) {
+            return array;
+        }
+        if (object instanceof JSONArray) {
+            return merge(array, (JSONArray) object);
+        }
+        array.add(object);
+        return array;
+    }
+
+    public static JSONArray merge(JSONArray array1, JSONArray array2) {
+        if (array2 != null) {
+            array1.addAll(array2);
+        }
+        return array1;
+    }
 
     /**
      * Convert a list to JSON text. The result is a JSON array. If this list is
@@ -71,7 +146,7 @@ public class JSONArray extends ArrayList<Object> implements JSONAware {
      * behaviours will be ignored at this top level.
      *
      * @param list The List to Convert
-     * @param out The Appendable to concat the contents to.
+     * @param out  The Appendable to concat the contents to.
      * @see JSONValue#writeJSONString(Object, Appendable)
      */
     private static void writeJSONString(Iterable<?> list, Appendable out)
@@ -81,62 +156,6 @@ public class JSONArray extends ArrayList<Object> implements JSONAware {
             return;
         }
         JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(list, out);
-    }
-
-    /**
-     * Appends the specified element and returns this.
-     * Handy alternative to add(E e) method.
-     *
-     * @param element element to be appended to this array.
-     * @return this
-     */
-    public JSONArray appendElement(Object element) {
-        add(element);
-        return this;
-    }
-
-    public void merge(Object object) {
-        merge(this, object);
-    }
-
-    /**
-     * Explicitely Serialize Object as JSon String
-     */
-    public String toJSONString() {
-        StringBuilder sb = new StringBuilder();
-        try {
-
-            JSONWriterFactory.getInstance().getJsonIterableWriter().writeJSONString(this, sb);
-
-        } catch (IOException e) {
-            throw new AtbashUnexpectedException(e);
-        }
-        return sb.toString();
-    }
-
-    /**
-     * Override toString().
-     */
-    @Override
-    public String toString() {
-        return toJSONString();
-    }
-
-    // FIXME Testing of this and the other methods
-    public static JSONArray merge(JSONArray array1, Object array2) {
-        if (array2 == null) {
-            return array1;
-        }
-        if (array2 instanceof JSONArray) {
-            return merge(array1, (JSONArray) array2);
-        }
-        array1.add(array2);
-        return array1;
-    }
-
-    public static JSONArray merge(JSONArray array1, JSONArray array2) {
-        array1.addAll(array2);
-        return array1;
     }
 
 }

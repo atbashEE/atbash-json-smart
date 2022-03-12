@@ -50,7 +50,6 @@ import java.util.Map;
 public class JSONObject extends HashMap<String, Object> implements JSONAware {
 
     public JSONObject() {
-        super();
     }
 
     /**
@@ -75,7 +74,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
     }
 
     /**
-     * A Simple Helper object to String
+     * A Simple Helper object to String.
      *
      * @return a value.toString() or null
      */
@@ -88,7 +87,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
     }
 
     /**
-     * A Simple Helper cast an Object to an Number
+     * A Simple Helper cast an Object to a Number.
      *
      * @return a Number or null
      */
@@ -132,7 +131,7 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
      * @return JSON text, or "null" if map is null.
      * @see JSONValue#toJSONString(Object)
      */
-    private String toJSONString(Map<String, ?> map) {
+    public static String toJSONString(Map<String, ?> map) {
         StringBuilder sb = new StringBuilder();
         try {
             writeJSON(map, sb);
@@ -159,7 +158,6 @@ public class JSONObject extends HashMap<String, Object> implements JSONAware {
         JSONWriterFactory.getInstance().getJsonMapWriter().writeJSONString(map, out);
     }
 
-    // FIXME Testing of this and the other methods
     public static JSONObject merge(JSONObject object1, Object object2) {
         if (object2 == null) {
             return object1;
