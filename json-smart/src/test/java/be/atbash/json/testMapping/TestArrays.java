@@ -17,9 +17,8 @@ package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONArray;
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestArrays {
 
@@ -28,7 +27,7 @@ public class TestArrays {
         String s = "[true,true,false]";
         boolean[] bs = new boolean[]{true, true, false};
         String s2 = JSONValue.toJSONString(bs);
-        assertThat(s).isEqualTo(s2);
+        Assertions.assertThat(s).isEqualTo(s2);
     }
 
     @Test
@@ -36,7 +35,7 @@ public class TestArrays {
         String s = "[1,2,3]";
         int[] bs = new int[]{1, 2, 3};
         String s2 = JSONValue.toJSONString(bs);
-        assertThat(s).isEqualTo(s2);
+        Assertions.assertThat(s).isEqualTo(s2);
     }
 
     @Test
@@ -48,13 +47,13 @@ public class TestArrays {
         array.add(-12L);
 
         String json = JSONValue.toJSONString(array);
-        assertThat(json).isEqualTo("[23,21,-12]");
+        Assertions.assertThat(json).isEqualTo("[23,21,-12]");
     }
 
     @Test
     public void testJSONArray_fromJSON() {
         JSONArray array = (JSONArray) JSONValue.parse("[23,21,-12]");
-        assertThat(array).hasSize(3);
-        assertThat(array).containsOnly(-12, 21, 23);
+        Assertions.assertThat(array).hasSize(3)
+        .containsOnly(-12, 21, 23);
     }
 }

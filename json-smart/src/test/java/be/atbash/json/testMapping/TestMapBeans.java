@@ -16,12 +16,12 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
 
 import static be.atbash.json.testMapping.TestMapBeans.ColorEnum.red;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestMapBeans {
 
@@ -29,42 +29,42 @@ public class TestMapBeans {
     public void testObjInts() {
         String s = "{\"vint\":[1,2,3]}";
         T1 r = JSONValue.parse(s, T1.class);
-        assertThat(r.vint[2]).isEqualTo(3);
+        Assertions.assertThat(r.vint[2]).isEqualTo(3);
     }
 
     @Test
     public void testObjIntKey() {
         String s = "{\"data\":{\"1\":\"toto\"}}";
         T2 r = JSONValue.parse(s, T2.class);
-        assertThat(r.data.get(1)).isEqualTo("toto");
+        Assertions.assertThat(r.data).containsEntry(1, "toto");
     }
 
     @Test
     public void testObjEnumKey() {
         String s = "{\"data\":{\"red\":10}}";
         T3 r = JSONValue.parse(s, T3.class);
-        assertThat(r.data.get(red)).isEqualTo((Integer) 10);
+        Assertions.assertThat(r.data).containsEntry(red, 10);
     }
 
     @Test
     public void testObjBool1() {
         String s = "{\"data\":true}";
         T4 r = JSONValue.parse(s, T4.class);
-        assertThat(r.data).isEqualTo(true);
+        Assertions.assertThat(r.data).isTrue();
     }
 
     @Test
     public void testUnknownField() {
         String s = "{\"data\":\"Atbash\", \"notExisting\":\"blablabla\"}";
         T6 r = JSONValue.parse(s, T6.class);
-        assertThat(r.data).isEqualTo("Atbash");
+        Assertions.assertThat(r.data).isEqualTo("Atbash");
     }
 
     @Test
     public void testObjBool2() {
         String s = "{\"data\":true}";
         T5 r = JSONValue.parse(s, T5.class);
-        assertThat(r.data).isEqualTo(true);
+        Assertions.assertThat(r.data).isTrue();
     }
 
     /**

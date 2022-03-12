@@ -16,9 +16,8 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestMapPublic {
 
@@ -26,7 +25,7 @@ public class TestMapPublic {
     public void testObjInts() {
         String s = "{\"vint\":[1,2,3]}";
         T1 r = JSONValue.parse(s, T1.class);
-        assertThat(r.vint[2]).isEqualTo(3);
+        Assertions.assertThat(r.vint[2]).isEqualTo(3);
     }
 
     String MultiTyepJson = "{\"name\":\"B\",\"age\":120,\"cost\":12000,\"flag\":3,\"valid\":true,\"f\":1.2,\"d\":1.5,\"l\":12345678912345}";
@@ -35,29 +34,29 @@ public class TestMapPublic {
     public void testObjMixte() {
         T2 r = JSONValue.parse(MultiTyepJson, T2.class);
 
-        assertThat(r.name).isEqualTo("B");
+        Assertions.assertThat(r.name).isEqualTo("B");
 
-        assertThat(r.age).isEqualTo(Short.valueOf("120"));
-        assertThat(r.cost).isEqualTo(12000);
-        assertThat(r.flag).isEqualTo(Byte.valueOf("3"));
-        assertThat(r.valid).isTrue();
-        assertThat(r.f).isEqualTo(1.2F);
-        assertThat(r.d).isEqualTo(1.5);
-        assertThat(r.l).isEqualTo(12345678912345L);
+        Assertions.assertThat(r.age).isEqualTo(Short.valueOf("120"));
+        Assertions.assertThat(r.cost).isEqualTo(12000);
+        Assertions.assertThat(r.flag).isEqualTo(Byte.valueOf("3"));
+        Assertions.assertThat(r.valid).isTrue();
+        Assertions.assertThat(r.f).isEqualTo(1.2F);
+        Assertions.assertThat(r.d).isEqualTo(1.5);
+        Assertions.assertThat(r.l).isEqualTo(12345678912345L);
     }
 
     @Test
     public void testObjMixtePrim() {
         T3 r = JSONValue.parse(MultiTyepJson, T3.class);
-        assertThat(r.name).isEqualTo("B");
+        Assertions.assertThat(r.name).isEqualTo("B");
 
-        assertThat(r.age).isEqualTo(Short.valueOf("120"));
-        assertThat(r.cost).isEqualTo(12000);
-        assertThat(r.flag).isEqualTo(Byte.valueOf("3"));
-        assertThat(r.valid).isTrue();
-        assertThat(r.f).isEqualTo(1.2F);
-        assertThat(r.d).isEqualTo(1.5);
-        assertThat(r.l).isEqualTo(12345678912345L);
+        Assertions.assertThat(r.age).isEqualTo(Short.valueOf("120"));
+        Assertions.assertThat(r.cost).isEqualTo(12000);
+        Assertions.assertThat(r.flag).isEqualTo(Byte.valueOf("3"));
+        Assertions.assertThat(r.valid).isTrue();
+        Assertions.assertThat(r.f).isEqualTo(1.2F);
+        Assertions.assertThat(r.d).isEqualTo(1.5);
+        Assertions.assertThat(r.l).isEqualTo(12345678912345L);
     }
 
     public static class T1 {

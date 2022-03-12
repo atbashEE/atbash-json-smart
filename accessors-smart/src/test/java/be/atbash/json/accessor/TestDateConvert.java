@@ -51,7 +51,7 @@ public class TestDateConvert {
             } catch (Exception e) {
                 throw new Exception(jobName, e);
             }
-            Assertions.assertThat(sdfFull.format(parsed)).isEqualTo(expectedDateText).as(jobName);
+            Assertions.assertThat(sdfFull.format(parsed)).as(jobName).isEqualTo(expectedDateText);
         }
     }
 
@@ -132,12 +132,12 @@ public class TestDateConvert {
         if (testDate.contains("59")) {
             String resultStr = sdfFull.format(parse);
             String expectedDateText = sdfFull.format(expectedDate);
-            Assertions.assertThat(resultStr).isEqualTo(expectedDateText).as(jobName);
+            Assertions.assertThat(resultStr).as(jobName).isEqualTo(expectedDateText);
 
         } else {
             String resultStr = sdfLT.format(parse);
             String expectedDateText = sdfLT.format(expectedDate);
-            Assertions.assertThat(resultStr).isEqualTo(expectedDateText).as(jobName);
+            Assertions.assertThat(resultStr).as(jobName).isEqualTo(expectedDateText);
         }
 //			System.err.printf("no sec for Format %-6s %-40s -> %10s\n", sizeName, testDate, resultStr);
     }

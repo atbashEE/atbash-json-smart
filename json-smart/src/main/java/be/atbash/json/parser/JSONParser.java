@@ -114,7 +114,6 @@ public class JSONParser {
     /**
      * Default json-smart processing mode
      */
-    // FIXME Use config
     public static final int DEFAULT_PERMISSIVE_MODE = (System.getProperty("JSON_SMART_SIMPLE") != null) ? MODE_JSON_SIMPLE
             : MODE_PERMISSIVE;
 

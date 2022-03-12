@@ -143,6 +143,7 @@ public class JSONEncoderFactory {
         return encoder;
     }
 
+    @SuppressWarnings("squid:S3824")
     private <T> JSONEncoder<T> getEncoder(ParameterizedType type) {
         JSONEncoder<T> encoder = (JSONEncoder<T>) cache.get(type);
         if (encoder != null) {

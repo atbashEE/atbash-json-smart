@@ -23,8 +23,6 @@ import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
 import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
-import static org.assertj.core.api.Assertions.assertThat;
-
 
 public class TestStrict {
 
@@ -33,7 +31,7 @@ public class TestStrict {
         String text = "My Test";
         String s = "{t:\"" + text + "\"}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
@@ -41,7 +39,7 @@ public class TestStrict {
         String text = "My Test";
         String s = "{t:'" + text + "'}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
@@ -50,14 +48,14 @@ public class TestStrict {
         String text2 = "My\\r\\nTest";
         String s = "{t:'" + text2 + "'}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
     public void testBadString() {
         String s = "{\"t\":\"Before\u000CAfter\"}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo("Before\u000CAfter");
+        Assertions.assertThat(o).containsEntry("t", "Before\u000CAfter");
         try {
             new JSONParser(MODE_RFC4627).parse(s);
             Assertions.fail("Parsing should fail in RFC4627 mode");

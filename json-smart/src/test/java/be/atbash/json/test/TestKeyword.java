@@ -18,10 +18,10 @@ package be.atbash.json.test;
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestKeyword {
 
@@ -29,25 +29,25 @@ public class TestKeyword {
     public void testBool() {
         String s = "{t:true}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(true);
+        Assertions.assertThat(o).containsEntry("t", true);
 
         s = "{t:false}";
         o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(false);
+        Assertions.assertThat(o).containsEntry("t", false);
     }
 
     @Test
     public void testNull() {
         String s = "{t:null}";
         JSONObject o = (JSONObject) new JSONParser(JSONParser.MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isNull();
+        Assertions.assertThat(o).containsEntry("t", null);
     }
 
     @Test
     public void testNaN() {
         String s = "{t:NaN}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(Float.NaN);
+        Assertions.assertThat(o).containsEntry("t", Float.NaN);
     }
 
     @Test

@@ -16,13 +16,8 @@
 package be.atbash.json;
 
 import be.atbash.json.testclasses.Bean4;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 
 public class TestJsonIgnore {
 
@@ -31,14 +26,14 @@ public class TestJsonIgnore {
         Bean4 bean4 = new Bean4("Atbash", 123);
         String data = JSONValue.toJSONString(bean4);
 
-        assertThat(data).isEqualTo("{\"intValue\":123}");
+        Assertions.assertThat(data).isEqualTo("{\"intValue\":123}");
     }
 
     @Test
     public void testIgnore_Encoder() {
         Bean4 data = JSONValue.parse("{\"intValue\":123, \"stringValue\":\"Ignored\"}", Bean4.class);
 
-        assertThat(data.getIntValue()).isEqualTo(123);
-        assertThat(data.getStringValue()).isNull();
+        Assertions.assertThat(data.getIntValue()).isEqualTo(123);
+        Assertions.assertThat(data.getStringValue()).isNull();
     }
 }

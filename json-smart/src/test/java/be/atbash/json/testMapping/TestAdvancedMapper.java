@@ -16,21 +16,20 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class TestAdvancedMapper {
-    private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    private static final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
     @Test
     public void testCustomBean() {
         String s = "{'val':2,'date':'19/04/2010'}";
         TestBean r = JSONValue.parse(s, TestBean.class);
-        assertThat(sdf.format(r.date)).isEqualTo("19/04/2010");
+        Assertions.assertThat(sdf.format(r.date)).isEqualTo("19/04/2010");
     }
 
     public static class TestBean {

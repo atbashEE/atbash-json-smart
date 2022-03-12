@@ -21,31 +21,25 @@ import be.atbash.json.parser.JSONParser;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
-
 public class TestCornerCases {
 
     @Test
     public void testEmpty() {
         String data = (String) new JSONParser().parse("");
-        assertThat(data).isEmpty();
+        Assertions.assertThat(data).isEmpty();
     }
 
     @Test
     public void testSpaces() {
         String data = (String) new JSONParser().parse("  ");
-        assertThat(data).isEmpty();
+        Assertions.assertThat(data).isEmpty();
     }
 
     @Test
     public void testCurlyBraces() {
         JSONObject data = (JSONObject) new JSONParser().parse("{}");
-        assertThat(data).isNotNull();
-        assertThat(data.keySet()).isEmpty();
+        Assertions.assertThat(data).isNotNull();
+        Assertions.assertThat(data.keySet()).isEmpty();
     }
 
     @Test
@@ -57,12 +51,12 @@ public class TestCornerCases {
     @Test
     public void testNullText() {
         Object data = new JSONParser().parse("null");
-        assertThat(data).isNull();
+        Assertions.assertThat(data).isNull();
     }
 
     @Test
     public void toJSONString_Null() {
         String data = JSONValue.toJSONString(null);
-        assertThat(data).isEqualTo("null");
+        Assertions.assertThat(data).isEqualTo("null");
     }
 }

@@ -19,8 +19,6 @@ import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import org.assertj.core.api.Assertions;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class MustThrows {
 
     public static void testStrictInvalidJson(String json, int exceptionType) {
@@ -46,7 +44,7 @@ public class MustThrows {
             Assertions.fail("Exception Should Occur parsing:" + json);
         } catch (ParseException e) {
             if (exceptionType != -1) {
-                assertThat(e.getErrorType()).isEqualTo(exceptionType);
+                Assertions.assertThat(e.getErrorType()).isEqualTo(exceptionType);
             }
         }
     }

@@ -17,9 +17,8 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestFloatStrict {
 
@@ -30,7 +29,7 @@ public class TestFloatStrict {
             Double val = Double.valueOf(s.trim());
             JSONObject obj = (JSONObject) new JSONParser(JSONParser.MODE_RFC4627).parse(json);
             Object value = obj.get("v");
-            assertThat(value).as("Should be parse as double").isEqualTo(val);
+            Assertions.assertThat(value).as("Should be parse as double").isEqualTo(val);
         }
     }
 

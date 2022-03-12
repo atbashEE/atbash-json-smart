@@ -16,13 +16,8 @@
 package be.atbash.json;
 
 import be.atbash.json.testclasses.BeanFieldMapping;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 
 public class TestFieldMapper {
 
@@ -30,14 +25,14 @@ public class TestFieldMapper {
     public void testWriterWithFieldMapping() {
         BeanFieldMapping value = new BeanFieldMapping("value1", 123);
         String json = JSONValue.toJSONString(value);
-        assertThat(json).isEqualTo("{\"property\":\"value1\",\"intValue\":123}");
+        Assertions.assertThat(json).isEqualTo("{\"property\":\"value1\",\"intValue\":123}");
     }
 
     @Test
     public void testParserWithFieldMapping() {
         BeanFieldMapping bean = JSONValue.parse("{\"property\":\"value1\",\"intValue\":123}", BeanFieldMapping.class);
-        assertThat(bean.getStringValue()).isEqualTo("value1");
-        assertThat(bean.getIntValue()).isEqualTo(123);
+        Assertions.assertThat(bean.getStringValue()).isEqualTo("value1");
+        Assertions.assertThat(bean.getIntValue()).isEqualTo(123);
     }
 
 }

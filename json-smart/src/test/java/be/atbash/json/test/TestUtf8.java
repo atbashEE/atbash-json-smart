@@ -17,13 +17,12 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestUtf8 {
     // Sinhalese language
-    private static String[] nonLatinTexts = new String[]{"සිංහල ජාතිය", "日本語", "Русский", "فارسی", "한국어", "Հայերեն", "हिन्दी", "עברית", "中文", "አማርኛ", "മലയാളം",
+    private static final String[] nonLatinTexts = new String[]{"සිංහල ජාතිය", "日本語", "Русский", "فارسی", "한국어", "Հայերեն", "हिन्दी", "עברית", "中文", "አማርኛ", "മലയാളം",
             "ܐܬܘܪܝܐ", "მარგალური"};
 
     @Test
@@ -32,7 +31,7 @@ public class TestUtf8 {
             String s = "{\"key\":\"" + nonLatinText + "\"}";
             JSONObject obj = (JSONObject) JSONValue.parse(s);
             String v = (String) obj.get("key"); // result is incorrect
-            assertThat(v).isEqualTo(nonLatinText);
+            Assertions.assertThat(v).isEqualTo(nonLatinText);
         }
     }
 

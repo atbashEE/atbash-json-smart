@@ -15,22 +15,15 @@
  */
 package be.atbash.json;
 
-import be.atbash.json.JSONObject;
-import be.atbash.json.JSONValue;
-import be.atbash.json.TypeReference;
 import be.atbash.json.testclasses.Bean1;
 import be.atbash.json.testclasses.Bean3;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 public class TestMap {
 
     @Test
@@ -42,29 +35,29 @@ public class TestMap {
         String result = JSONValue.toJSONString(data);
 
         // The exact order of the entries within a Map is not determined. Therefor we only test fragments
-        assertThat(result).contains("\"value3\":-321");
-        assertThat(result).contains("\"value1\":123");
-        assertThat(result).contains("\"value2\":0");
+        Assertions.assertThat(result).contains("\"value3\":-321")
+                .contains("\"value1\":123")
+                .contains("\"value2\":0");
     }
 
     @Test
     public void testMapParser_Simple() {
         Map<String, Integer> data = JSONValue.parse("{\"value3\":-321,\"value1\":123,\"value2\":0}", HashMap.class);
-        assertThat(data).hasSize(3);
-        assertThat(data).containsKeys("value1", "value2", "value3");
-        assertThat(data).containsEntry("value1", 123);
-        assertThat(data).containsEntry("value2", 0);
-        assertThat(data).containsEntry("value3", -321);
+        Assertions.assertThat(data).hasSize(3);
+        Assertions.assertThat(data).containsKeys("value1", "value2", "value3")
+                .containsEntry("value1", 123)
+                .containsEntry("value2", 0)
+                .containsEntry("value3", -321);
     }
 
     @Test
     public void testMapParser_Simple_OtherImpl() {
         Map<String, Integer> data = JSONValue.parse("{\"value3\":-321,\"value1\":123,\"value2\":0}", LinkedHashMap.class);
-        assertThat(data).hasSize(3);
-        assertThat(data).containsKeys("value1", "value2", "value3");
-        assertThat(data).containsEntry("value1", 123);
-        assertThat(data).containsEntry("value2", 0);
-        assertThat(data).containsEntry("value3", -321);
+        Assertions.assertThat(data).hasSize(3)
+                .containsKeys("value1", "value2", "value3")
+                .containsEntry("value1", 123)
+                .containsEntry("value2", 0)
+                .containsEntry("value3", -321);
     }
 
     @Test
@@ -77,9 +70,9 @@ public class TestMap {
         String result = JSONValue.toJSONString(data);
 
         // The exact order of the entries within a Map is not determined. Therefor we only test fragments
-        assertThat(result).contains("\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123}");
-        assertThat(result).contains("\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321}");
-        assertThat(result).contains("\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}");
+        Assertions.assertThat(result).contains("\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123}")
+                .contains("\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321}")
+                .contains("\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}");
     }
 
     @Test
@@ -87,24 +80,24 @@ public class TestMap {
 
         Map<String, JSONObject> data = (Map<String, JSONObject>) JSONValue.parse("{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123},\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321},\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}}", HashMap.class);
 
-        assertThat(data).hasSize(3);
-        assertThat(data).containsKeys("bean1", "bean2", "bean3");
-        assertThat(data).containsEntry("bean1", new JSONObject().appendField("stringValue", "value1").appendField("intValue", 123));
-        assertThat(data).containsEntry("bean2", new JSONObject().appendField("stringValue", "value2").appendField("intValue", 0));
-        assertThat(data).containsEntry("bean3", new JSONObject().appendField("stringValue", "value3").appendField("intValue", -321));
+        Assertions.assertThat(data).hasSize(3)
+                .containsKeys("bean1", "bean2", "bean3")
+                .containsEntry("bean1", new JSONObject().appendField("stringValue", "value1").appendField("intValue", 123))
+                .containsEntry("bean2", new JSONObject().appendField("stringValue", "value2").appendField("intValue", 0))
+                .containsEntry("bean3", new JSONObject().appendField("stringValue", "value3").appendField("intValue", -321));
     }
 
     @Test
     public void testMapParser_BeanParameterTypeReferenced() {
 
-        Map<String, Bean1> data = (Map<String, Bean1>) JSONValue.parse("{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123},\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321},\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}}", new TypeReference<Map<String, Bean1>>() {
+        Map<String, Bean1> data = JSONValue.parse("{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123},\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321},\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}}", new TypeReference<Map<String, Bean1>>() {
         });
 
-        assertThat(data).hasSize(3);
-        assertThat(data).containsKeys("bean1", "bean2", "bean3");
-        assertThat(data).containsEntry("bean1", new Bean1("value1", 123));
-        assertThat(data).containsEntry("bean2", new Bean1("value2", 0));
-        assertThat(data).containsEntry("bean3", new Bean1("value3", -321));
+        Assertions.assertThat(data).hasSize(3)
+                .containsKeys("bean1", "bean2", "bean3")
+                .containsEntry("bean1", new Bean1("value1", 123))
+                .containsEntry("bean2", new Bean1("value2", 0))
+                .containsEntry("bean3", new Bean1("value3", -321));
 
     }
 
@@ -121,10 +114,10 @@ public class TestMap {
         String result = JSONValue.toJSONString(data);
 
         // The exact order of the entries within a Map is not determined. Therefor we only test fragments
-        assertThat(result).startsWith("{\"bean1Map\":");
-        assertThat(result).contains("{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123}");
-        assertThat(result).contains("\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321}");
-        assertThat(result).contains("\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}");
+        Assertions.assertThat(result).startsWith("{\"bean1Map\":")
+                .contains("{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123}")
+                .contains("\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321}")
+                .contains("\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}");
     }
 
     @Test
@@ -132,11 +125,11 @@ public class TestMap {
 
         Bean3 data = JSONValue.parse("{\"bean1Map\":{\"bean1\":{\"stringValue\":\"value1\",\"intValue\":123},\"bean3\":{\"stringValue\":\"value3\",\"intValue\":-321},\"bean2\":{\"stringValue\":\"value2\",\"intValue\":0}}}", Bean3.class);
 
-        assertThat(data.getBean1Map()).hasSize(3);
-        assertThat(data.getBean1Map()).containsKeys("bean1", "bean2", "bean3");
-        assertThat(data.getBean1Map()).containsEntry("bean1", new Bean1("value1", 123));
-        assertThat(data.getBean1Map()).containsEntry("bean2", new Bean1("value2", 0));
-        assertThat(data.getBean1Map()).containsEntry("bean3", new Bean1("value3", -321));
+        Assertions.assertThat(data.getBean1Map()).hasSize(3)
+                .containsKeys("bean1", "bean2", "bean3")
+                .containsEntry("bean1", new Bean1("value1", 123))
+                .containsEntry("bean2", new Bean1("value2", 0))
+                .containsEntry("bean3", new Bean1("value3", -321));
 
     }
 

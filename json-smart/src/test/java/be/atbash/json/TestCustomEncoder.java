@@ -24,21 +24,15 @@ import be.atbash.util.codec.Hex;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
-
 public class TestCustomEncoder {
 
     @Test
     public void customEncoder_parameterizedType() {
         JSONValue.registerEncoder(new TypeReference<MyType<String>>() {
         }, new MyImplementationEncoder());
-        MyType<String> result = (MyType<String>) JSONValue.parse("[\"value1\"]", new TypeReference<MyType<String>>() {
+        MyType<String> result = JSONValue.parse("[\"value1\"]", new TypeReference<MyType<String>>() {
         });
-        assertThat(result.getValue()).isEqualTo("value1");
+        Assertions.assertThat(result.getValue()).isEqualTo("value1");
     }
 
     @Test
@@ -54,9 +48,9 @@ public class TestCustomEncoder {
     public void customEncoder_class() {
         JSONValue.registerEncoder(MyColor.class, new RGBEncoder());
         MyColor color = JSONValue.parse("{\"value\":\"FF8040\"}", MyColor.class);
-        assertThat(color.getR()).isEqualTo(255);
-        assertThat(color.getG()).isEqualTo(128);
-        assertThat(color.getB()).isEqualTo(64);
+        Assertions.assertThat(color.getR()).isEqualTo(255);
+        Assertions.assertThat(color.getG()).isEqualTo(128);
+        Assertions.assertThat(color.getB()).isEqualTo(64);
     }
 
     public static class MyImplementationEncoder extends JSONEncoder {

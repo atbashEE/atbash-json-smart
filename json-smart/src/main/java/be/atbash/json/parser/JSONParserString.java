@@ -154,22 +154,22 @@ class JSONParserString {
         }
         int l = xs.length();
         for (int i = 0; i < l; i++) {
-            char c = xs.charAt(i);
-            if (c <= 31) {
-                throw new ParseException(pos + i, ERROR_UNEXPECTED_CHAR, c);
+            char ch = xs.charAt(i);
+            if (ch <= 31) {
+                throw new ParseException(pos + i, ERROR_UNEXPECTED_CHAR, ch);
             }
-            if (c == 127 && reject127) {
-                throw new ParseException(pos + i, ERROR_UNEXPECTED_CHAR, c);
+            if (ch == 127 && reject127) {
+                throw new ParseException(pos + i, ERROR_UNEXPECTED_CHAR, ch);
             }
         }
     }
 
     private void checkLeadingZero() {
-        int len = xs.length();
-        if (len == 1) {
+        int l = xs.length();
+        if (l == 1) {
             return;
         }
-        if (len == 2) {
+        if (l == 2) {
             if ("00".equals(xs)) {
                 throw new ParseException(pos, ERROR_UNEXPECTED_LEADING_0, xs);
             }

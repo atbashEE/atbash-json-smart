@@ -16,9 +16,8 @@
 package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestMapPrimArrays {
 
@@ -26,43 +25,43 @@ public class TestMapPrimArrays {
     public void testInts() {
         String s = "[1,2,3]";
         int[] r = JSONValue.parse(s, int[].class);
-        assertThat(r[2]).isEqualTo(3);
+        Assertions.assertThat(r[2]).isEqualTo(3);
     }
 
     @Test
     public void testIntss() {
         String s = "[[1],[2],[3,4]]";
         int[][] r = JSONValue.parse(s, int[][].class);
-        assertThat(r[2][0]).isEqualTo(3);
-        assertThat(r[2][1]).isEqualTo(4);
+        Assertions.assertThat(r[2][0]).isEqualTo(3);
+        Assertions.assertThat(r[2][1]).isEqualTo(4);
     }
 
     @Test
     public void testLongs() {
         String s = "[1,2,3]";
         long[] r = JSONValue.parse(s, long[].class);
-        assertThat(r[2]).isEqualTo(3);
+        Assertions.assertThat(r[2]).isEqualTo(3);
     }
 
     @Test
     public void testFloat() {
         String s = "[1.2,22.4,3.14]";
         float[] r = JSONValue.parse(s, float[].class);
-        assertThat(r[2]).isEqualTo(3.14F);
+        Assertions.assertThat(r[2]).isEqualTo(3.14F);
     }
 
     @Test
     public void testDouble() {
         String s = "[1.2,22.4,3.14]";
         double[] r = JSONValue.parse(s, double[].class);
-        assertThat(r[2]).isEqualTo(3.14D);
+        Assertions.assertThat(r[2]).isEqualTo(3.14D);
     }
 
     @Test
     public void testBooleans() {
         String s = "[true,true,false]";
         boolean[] r = JSONValue.parse(s, boolean[].class);
-        assertThat(r[1]).isEqualTo(true);
-        assertThat(r[2]).isEqualTo(false);
+        Assertions.assertThat(r[1]).isTrue();
+        Assertions.assertThat(r[2]).isFalse();
     }
 }

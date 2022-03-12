@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
 import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestString {
 
@@ -38,7 +37,7 @@ public class TestString {
         String text = "My Test";
         String s = "{t:\"" + text + "\"}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
@@ -46,7 +45,7 @@ public class TestString {
         String text = "My Test";
         String s = "{t:'" + text + "'}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
@@ -55,27 +54,23 @@ public class TestString {
         String text2 = "My\\r\\nTest";
         String s = "{t:'" + text2 + "'}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(text);
+        Assertions.assertThat(o).containsEntry("t", text);
     }
 
     @Test
     public void testBadString() {
         String s = "{\"t\":\"Before\u000CAfter\"}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo("Before\u000CAfter");
-        try {
-            // FIXME
-            new JSONParser(MODE_RFC4627).parse(s);
-            Assertions.fail("Parsing should fail in RFC4627 mode");
-        } catch (ParseException e) {
-            // expected
-        }
+        Assertions.assertThat(o).containsEntry("t", "Before\u000CAfter");
+        Assertions.assertThatThrownBy(() ->
+                    new JSONParser(MODE_RFC4627).parse(s)
+        ).isInstanceOf(ParseException.class);
     }
 
     @Test
     public void testEscaping() {
         String contextRoot = "/root";
         String data = JSONValue.toJSONString(contextRoot);
-        assertThat(data).isEqualTo("\"\\/root\"");  // `/` CAN be escaped according to JSON spec
+        Assertions.assertThat(data).isEqualTo("\"\\/root\"");  // `/` CAN be escaped according to JSON spec
     }
 }

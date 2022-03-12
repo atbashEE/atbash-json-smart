@@ -17,9 +17,8 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test all Compression Styles
@@ -36,7 +35,7 @@ public class TestCompressorFlags {
 
         // test DEFAULT
         String r = obj.toJSONString();
-        assertThat(r).isEqualTo(nCompress);
+        Assertions.assertThat(r).isEqualTo(nCompress);
 
     }
 

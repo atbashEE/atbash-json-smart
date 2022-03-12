@@ -19,10 +19,10 @@ import be.atbash.json.JSONArray;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import be.atbash.json.test.MustThrows;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Test control charaters
@@ -38,7 +38,7 @@ public class TestSpecialChar {
         MustThrows.testInvalidJson(s, JSONParser.MODE_STRICTEST, ParseException.ERROR_UNEXPECTED_CHAR);
 
         JSONArray o = (JSONArray) new JSONParser(MODE_RFC4627).parse(s);
-        assertThat(o.get(0)).isEqualTo(s127);
+        Assertions.assertThat(o.get(0)).isEqualTo(s127);
     }
 
     @Test

@@ -17,6 +17,7 @@ package be.atbash.json.testMapping;
 
 import be.atbash.json.JSONValue;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -24,17 +25,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class TestSerPrimArrays {
-    private SimpleDateFormat sdf;
 
     private String testDateString;
     private Date testDate;
 
     @BeforeEach
     public void setup() throws ParseException {
-        sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
         testDateString = "12/01/2010";
         testDate = sdf.parse(testDateString);
     }
@@ -43,14 +41,14 @@ public class TestSerPrimArrays {
     public void testDate() {
         String s = "'" + testDateString + "'";
         Date dt = JSONValue.parse(s, Date.class);
-        assertThat(dt).isEqualTo(this.testDate);
+        Assertions.assertThat(dt).isEqualTo(this.testDate);
     }
 
     @Test
     public void testDtObj() {
         String s = "{date:'" + testDateString + "'}";
         ADate dt = JSONValue.parse(s, ADate.class);
-        assertThat(dt.date).isEqualTo(this.testDate);
+        Assertions.assertThat(dt.date).isEqualTo(this.testDate);
     }
 
     public static class ADate {

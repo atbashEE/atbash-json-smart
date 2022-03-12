@@ -17,9 +17,8 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestInvalidNumber {
 
@@ -29,10 +28,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertThat(comp).isEqualTo("{\"a\":\"51e88\"}");
+        Assertions.assertThat(comp).isEqualTo("{\"a\":\"51e88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertThat(o.get("a")).isEqualTo(test);
+        Assertions.assertThat(o).containsEntry("a", test);
     }
 
     @Test
@@ -41,10 +40,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertThat(comp).isEqualTo("{\"a\":\"51e+88\"}");
+        Assertions.assertThat(comp).isEqualTo("{\"a\":\"51e+88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertThat(test).isEqualTo(o.get("a"));
+        Assertions.assertThat(test).isEqualTo(o.get("a"));
     }
 
     @Test
@@ -53,10 +52,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertThat(comp).isEqualTo("{\"a\":\"51e-88\"}");
+        Assertions.assertThat(comp).isEqualTo("{\"a\":\"51e-88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertThat(o.get("a")).isEqualTo(test);
+        Assertions.assertThat(o).containsEntry("a", test);
     }
 
     @Test
@@ -65,10 +64,10 @@ public class TestInvalidNumber {
         JSONObject o = new JSONObject();
         o.put("a", test);
         String comp = JSONValue.toJSONString(o);
-        assertThat(comp).isEqualTo("{\"a\":\"51ee88\"}");
+        Assertions.assertThat(comp).isEqualTo("{\"a\":\"51ee88\"}");
 
         o = JSONValue.parse(comp, JSONObject.class);
-        assertThat(o.get("a")).isEqualTo(test);
+        Assertions.assertThat(o).containsEntry("a", test);
     }
 
 }

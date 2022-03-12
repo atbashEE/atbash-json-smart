@@ -16,27 +16,22 @@
 package be.atbash.json.test;
 
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 
 public class TestIsValid {
 
     @Test
     public void isValid_True() {
         boolean validJson = JSONValue.isValidJson("{t:" + Integer.MAX_VALUE + "}");
-        assertThat(validJson).isTrue();
+        Assertions.assertThat(validJson).isTrue();
 
     }
 
     @Test
     public void isValid_False() {
         boolean validJson = JSONValue.isValidJson("{\"1\":\"one\"\n\"2\":\"two\"}");
-        assertThat(validJson).isFalse();
+        Assertions.assertThat(validJson).isFalse();
 
     }
 }

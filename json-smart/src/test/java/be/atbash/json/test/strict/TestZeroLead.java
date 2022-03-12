@@ -21,13 +21,14 @@ import be.atbash.json.JSONValue;
 import be.atbash.json.parser.JSONParser;
 import be.atbash.json.parser.ParseException;
 import be.atbash.json.test.MustThrows;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
 import static be.atbash.json.parser.JSONParser.MODE_RFC4627;
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
+ *
  */
 public class TestZeroLead {
 
@@ -35,7 +36,7 @@ public class TestZeroLead {
     public void test0O() {
         String s = "{\"t\":0}";
         JSONObject o = (JSONObject) new JSONParser(MODE_RFC4627).parse(s);
-        assertThat(o.get("t")).isEqualTo(0);
+        Assertions.assertThat(o).containsEntry("t", 0);
         JSONValue.parse(s);
     }
 
@@ -43,7 +44,7 @@ public class TestZeroLead {
     public void test0A() {
         String s = "[0]";
         JSONArray o = (JSONArray) new JSONParser(MODE_RFC4627).parse(s);
-        assertThat(o.get(0)).isEqualTo(0);
+        Assertions.assertThat(o).containsExactly(0);
         JSONValue.parse(s);
     }
 
@@ -69,7 +70,7 @@ public class TestZeroLead {
     public void test00001() {
         String s = "{\"t\":00001}";
         JSONObject o = (JSONObject) new JSONParser(MODE_PERMISSIVE).parse(s);
-        assertThat(o.get("t")).isEqualTo(1);
+        Assertions.assertThat(o).containsEntry("t", 1);
         JSONValue.parse(s);
     }
 

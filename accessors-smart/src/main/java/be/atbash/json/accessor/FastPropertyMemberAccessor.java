@@ -33,6 +33,8 @@ import java.util.function.Function;
 
 public class FastPropertyMemberAccessor {
 
+    private  static final String GETTER_METHOD = "getterMethod";
+
     private final Class<?> propertyType;
     private final String propertyName;
     private final Method getterMethod;
@@ -88,14 +90,14 @@ public class FastPropertyMemberAccessor {
                     lookup.findVirtual(declaringClass, getterMethod.getName(), MethodType.methodType(propertyType)),
                     MethodType.methodType(propertyType, declaringClass));
         } catch (IllegalAccessException e) {
-            throw new IllegalStateException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
+            throw new IllegalStateException(getLambdaCreationErrorMessage(GETTER_METHOD, getterMethod), e);
         } catch (LambdaConversionException | NoSuchMethodException e) {
-            throw new IllegalArgumentException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage(GETTER_METHOD, getterMethod), e);
         }
         try {
             return (Function<Object, Object>) getterSite.getTarget().invokeExact();
         } catch (Throwable e) {
-            throw new IllegalArgumentException(getLambdaCreationErrorMessage("getterMethod", getterMethod), e);
+            throw new IllegalArgumentException(getLambdaCreationErrorMessage(GETTER_METHOD, getterMethod), e);
         }
     }
 

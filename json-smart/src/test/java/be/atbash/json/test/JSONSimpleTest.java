@@ -17,11 +17,11 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONArray;
 import be.atbash.json.parser.JSONParser;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static be.atbash.json.parser.JSONParser.MODE_JSON_SIMPLE;
 import static be.atbash.json.parser.JSONParser.MODE_PERMISSIVE;
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class JSONSimpleTest {
 
@@ -30,7 +30,7 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(MODE_JSON_SIMPLE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertThat(array.get(0)).isEqualTo(1L);
+        Assertions.assertThat(array.get(0)).isEqualTo(1L);
     }
 
     @Test
@@ -38,6 +38,6 @@ public class JSONSimpleTest {
         String s = "[1]";
         JSONParser p = new JSONParser(MODE_PERMISSIVE);
         JSONArray array = (JSONArray) p.parse(s);
-        assertThat(array.get(0)).isEqualTo(1);
+        Assertions.assertThat(array.get(0)).isEqualTo(1);
     }
 }

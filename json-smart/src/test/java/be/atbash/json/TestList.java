@@ -17,17 +17,12 @@ package be.atbash.json;
 
 import be.atbash.json.testclasses.Bean1;
 import be.atbash.json.testclasses.Bean2;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 
 public class TestList {
 
@@ -38,19 +33,19 @@ public class TestList {
         data.add("value2");
         data.add("value3");
         String result = JSONValue.toJSONString(data);
-        assertThat(result).isEqualTo("[\"value1\",\"value2\",\"value3\"]");
+        Assertions.assertThat(result).isEqualTo("[\"value1\",\"value2\",\"value3\"]");
     }
 
     @Test
     public void testListParse_String() {
         ArrayList<String> result = JSONValue.parse("[\"value1\",\"value2\",\"value3\"]", ArrayList.class);
-        assertThat(result).containsSequence("value1", "value2", "value3");
+        Assertions.assertThat(result).containsSequence("value1", "value2", "value3");
     }
 
     @Test
     public void testListParse_String_OtherImpl() {
         LinkedList<String> result = JSONValue.parse("[\"value1\",\"value2\",\"value3\"]", LinkedList.class);
-        assertThat(result).containsSequence("value1", "value2", "value3");
+        Assertions.assertThat(result).containsSequence("value1", "value2", "value3");
     }
 
     @Test
@@ -60,20 +55,20 @@ public class TestList {
         data.add(new Bean1("value2", 0));
         data.add(new Bean1("value3", -321));
         String result = JSONValue.toJSONString(data);
-        assertThat(result).isEqualTo("[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]");
+        Assertions.assertThat(result).isEqualTo("[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]");
     }
 
     @Test
     public void testListParse_Bean() {
         List<JSONObject> result = JSONValue.parse("[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]", ArrayList.class);
-        assertThat(result.get(0)).isInstanceOf(JSONObject.class);
+        Assertions.assertThat(result.get(0)).isInstanceOf(JSONObject.class);
     }
 
     @Test
     public void testListParse_BeanParameterTypeReferenced() {
-        List<Bean1> result = (List<Bean1>) JSONValue.parse("[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]", new TypeReference<List<Bean1>>() {
+        List<Bean1> result =  JSONValue.parse("[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]", new TypeReference<List<Bean1>>() {
         });
-        assertThat(result.get(0).getStringValue()).isEqualTo("value1");
+        Assertions.assertThat(result.get(0).getStringValue()).isEqualTo("value1");
     }
 
     @Test
@@ -86,15 +81,15 @@ public class TestList {
         Bean2 data = new Bean2();
         data.setBean1List(list);
         String result = JSONValue.toJSONString(data);
-        assertThat(result).isEqualTo("{\"bean1List\":[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]}");
+        Assertions.assertThat(result).isEqualTo("{\"bean1List\":[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]}");
     }
 
     @Test
     public void testListParse_BeanWithList() {
         Bean2 bean2 = JSONValue.parse("{\"bean1List\":[{\"stringValue\":\"value1\",\"intValue\":123},{\"stringValue\":\"value2\",\"intValue\":0},{\"stringValue\":\"value3\",\"intValue\":-321}]}", Bean2.class);
-        assertThat(bean2.getBean1List()).hasSize(3);
-        assertThat(bean2.getBean1List().get(0)).isInstanceOf(Bean1.class);
-        assertThat(bean2.getBean1List().get(0).getStringValue()).isEqualTo("value1");
+        Assertions.assertThat(bean2.getBean1List()).hasSize(3);
+        Assertions.assertThat(bean2.getBean1List().get(0)).isInstanceOf(Bean1.class);
+        Assertions.assertThat(bean2.getBean1List().get(0).getStringValue()).isEqualTo("value1");
     }
 
 }

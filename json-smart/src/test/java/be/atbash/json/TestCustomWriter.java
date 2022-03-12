@@ -21,17 +21,12 @@ import be.atbash.json.testclasses.PriceWithWriter;
 import be.atbash.json.testclasses.ProductWithWriter;
 import be.atbash.json.writer.JSONWriter;
 import be.atbash.util.codec.Hex;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
-/**
- *
- */
 
 public class TestCustomWriter {
 
@@ -39,7 +34,7 @@ public class TestCustomWriter {
     public void testWriter_simple() {
         PriceWithWriter price = new PriceWithWriter(123.45, Currency.EURO);
         String json = JSONValue.toJSONString(price);
-        assertThat(json).isEqualTo("\"123.45€\"");
+        Assertions.assertThat(json).isEqualTo("\"123.45€\"");
 
     }
 
@@ -49,7 +44,7 @@ public class TestCustomWriter {
         data.add(new PriceWithWriter(123.45, Currency.EURO));
         data.add(new PriceWithWriter(86.34, Currency.USD));
         String json = JSONValue.toJSONString(data);
-        assertThat(json).isEqualTo("[\"123.45€\",\"86.34USD\"]");
+        Assertions.assertThat(json).isEqualTo("[\"123.45€\",\"86.34USD\"]");
     }
 
     @Test
@@ -57,7 +52,7 @@ public class TestCustomWriter {
         PriceWithWriter price = new PriceWithWriter(123.45, Currency.EURO);
 
         String json = JSONValue.toJSONString(new ProductWithWriter("Atbash", price));
-        assertThat(json).isEqualTo("{\"name\":\"Atbash\",\"price\":\"123.45€\"}");
+        Assertions.assertThat(json).isEqualTo("{\"name\":\"Atbash\",\"price\":\"123.45€\"}");
     }
 
     @Test
@@ -65,10 +60,10 @@ public class TestCustomWriter {
         JSONValue.registerWriter(MyColor.class, new MyColorWriter());
 
         String json = JSONValue.toJSONString(new MyColor(255, 128, 64));
-        assertThat(json).isEqualTo("{\"value\":\"FF8040\"}");
+        Assertions.assertThat(json).isEqualTo("{\"value\":\"FF8040\"}");
     }
 
-    private class MyColorWriter implements JSONWriter<MyColor> {
+    private static class MyColorWriter implements JSONWriter<MyColor> {
         @Override
         public <E extends MyColor> void writeJSONString(E value, Appendable out) throws IOException {
             byte[] bytes = {(byte) value.getR(), (byte) value.getG(), (byte) value.getB()};

@@ -17,16 +17,15 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.JSONValue;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.HashMap;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class TestBigValue {
-    private String bigStr = "12345678901234567890123456789";
+    private final String bigStr = "12345678901234567890123456789";
 
     /**
      * test BigDecimal serialization
@@ -38,10 +37,10 @@ public class TestBigValue {
         map.put("big", bigDec);
         String test = JSONValue.toJSONString(map);
         String result = "{\"big\":" + bigStr + "." + bigStr + "}";
-        assertThat(test).isEqualTo(result);
+        Assertions.assertThat(test).isEqualTo(result);
         JSONObject obj = (JSONObject) JSONValue.parse(test);
-        assertThat(obj.get("big")).isEqualTo(bigDec);
-        assertThat(obj.get("big")).isInstanceOf(BigDecimal.class);
+        Assertions.assertThat(obj).containsEntry("big", bigDec);
+        Assertions.assertThat(obj.get("big")).isInstanceOf(BigDecimal.class);
     }
 
     /**
@@ -54,9 +53,9 @@ public class TestBigValue {
         map.put("big", bigInt);
         String test = JSONValue.toJSONString(map);
         String result = "{\"big\":" + bigStr + "}";
-        assertThat(test).isEqualTo(result);
+        Assertions.assertThat(test).isEqualTo(result);
         JSONObject obj = (JSONObject) JSONValue.parse(test);
-        assertThat(obj.get("big")).isEqualTo(bigInt);
-        assertThat(obj.get("big")).isInstanceOf(BigInteger.class);
+        Assertions.assertThat(obj).containsEntry("big", bigInt);
+        Assertions.assertThat(obj.get("big")).isInstanceOf(BigInteger.class);
     }
 }

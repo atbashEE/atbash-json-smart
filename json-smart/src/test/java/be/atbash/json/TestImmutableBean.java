@@ -16,17 +16,16 @@
 package be.atbash.json;
 
 import be.atbash.json.testclasses.ImmutableBean;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class TestImmutableBean {
 
     @Test
     public void testImmutable() {
         ImmutableBean bean = JSONValue.parse("{\"name\":\"Atbash\",\"age\":2}", ImmutableBean.class);
-        assertThat(bean).isNotNull();
-        assertThat(bean.getName()).isEqualTo("Atbash");
-        assertThat(bean.getAge()).isEqualTo(2);
+        Assertions.assertThat(bean).isNotNull();
+        Assertions.assertThat(bean.getName()).isEqualTo("Atbash");
+        Assertions.assertThat(bean.getAge()).isEqualTo(2);
     }
 }

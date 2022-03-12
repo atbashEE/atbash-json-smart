@@ -49,7 +49,6 @@ class JStylerObj {
     }
 
     private static class Escape4Web implements StringProtector {
-        // FIXME Good candidate for Atbash StringUtils
 
         /**
          * Escape special chars form String including /
