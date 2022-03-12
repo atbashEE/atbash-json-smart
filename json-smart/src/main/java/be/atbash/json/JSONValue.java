@@ -74,7 +74,7 @@ public class JSONValue {
         return parser.parse(json, JSONEncoderFactory.getInstance().getEncoder(mapTo));
     }
 
-    public static Object parse(String json, TypeReference mapTo) {
+    public static <T> T parse(String json, TypeReference<T> mapTo) {
         JSONParser parser = new JSONParser();
         return parser.parse(json, JSONEncoderFactory.getInstance().getEncoder(mapTo.getType()));
     }
