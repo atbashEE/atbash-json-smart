@@ -1,6 +1,6 @@
 = Atbash JSON Smart
 Rudy De Busscher <rdebusscher@gmail.com>
-v1.0.0, 08/01/2022
+v1.1.0, 20/03/2022
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../../main/java]
@@ -8,6 +8,10 @@ ifndef::sourcedir[:sourcedir: ../../main/java]
 User manual for Atbash JSON.
 
 == Release Notes
+
+=== 1.1.0
+
+. Support for converting JSON Array to Java `Set`.
 
 === 1.0.0
 
