@@ -39,5 +39,10 @@ public class TestFloatStrict {
             String json = "{\"v\":" + s + "}";
             MustThrows.testStrictInvalidJson(json, -1);
         }
+
+        for (String s : TestFloat.PARSE_FAILURES) {
+            String json = "{\"v\":" + s + "}";
+            MustThrows.testStrictInvalidJson(json, -1);
+        }
     }
 }

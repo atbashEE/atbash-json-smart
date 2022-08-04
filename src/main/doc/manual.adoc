@@ -9,6 +9,10 @@ User manual for Atbash JSON.
 
 == Release Notes
 
+=== 1.1.1
+
+. Capture `NumberFormatException` for ill-formed JSON strings.
+
 === 1.1.0
 
 . Support for converting JSON Array to Java `Set`.
@@ -80,7 +84,9 @@ Without the TypeReference information, Atbash JSON is only capable of creating a
   String JSONValue.toJSONString(T);
 ----
 
-Converts the POJO T to a JSON String
+Converts the POJO T to a JSON String.
+
+Any method that parses JSON string can throw a `ParseException`.  It is a good practice to catch the `AtbashException` at a general location in your program to avoid any exception propagation to the end user.
 
 == Customizations
 

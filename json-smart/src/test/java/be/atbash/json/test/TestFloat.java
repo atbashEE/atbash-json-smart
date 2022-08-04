@@ -17,6 +17,7 @@ package be.atbash.json.test;
 
 import be.atbash.json.JSONObject;
 import be.atbash.json.parser.JSONParser;
+import be.atbash.json.parser.ParseException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,8 @@ public class TestFloat {
 
     static String[] FALSE_NUMBERS = new String[]{"1.0%", "123.45.6", "1.0E", "++123.456E12", "+-01",
             "1.0E+1.2"};
+
+    static String[] PARSE_FAILURES = new String[]{"-.", "2e+", "[45e-"};
 
     @Test
     public void testFloat() {
@@ -50,6 +53,18 @@ public class TestFloat {
 
             String correct = "{\"v\":\"" + s + "\"}";
             Assertions.assertThat(obj.toJSONString()).as("Should be re serialized as").isEqualTo(correct);
+        }
+    }
+
+    @Test
+    public void testParseException() {
+        JSONParser p = new JSONParser(JSONParser.MODE_PERMISSIVE);
+        for (String s : PARSE_FAILURES) {
+            String json = "{v:" + s + "}";
+            Assertions.assertThatThrownBy(
+                    () -> p.parse(json)
+            ).isInstanceOf(ParseException.class);
+
         }
     }
 
