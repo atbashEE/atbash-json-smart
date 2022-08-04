@@ -24,12 +24,12 @@
     <parent>
         <groupId>be.atbash.json</groupId>
         <artifactId>octopus-json-smart-parent</artifactId>
-        <version>1.1.1-SNAPSHOT</version>
+        <version>1.1.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>octopus-accessors-smart</artifactId>
-    <version>1.1.1-SNAPSHOT</version>
+    <version>1.1.1</version>
     <name>ASM based accessors helper used by json-smart</name>
 
     <dependencies>

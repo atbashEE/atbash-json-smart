@@ -1,6 +1,6 @@
 = Atbash JSON Smart
 Rudy De Busscher <rdebusscher@gmail.com>
-v1.1.0, 20/03/2022
+v1.1.1, 04/08/2022
 :example-caption!:
 ifndef::imagesdir[:imagesdir: images]
 ifndef::sourcedir[:sourcedir: ../../main/java]
