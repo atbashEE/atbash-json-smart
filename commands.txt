@@ -15,4 +15,4 @@ mvn clean deploy -Prelease
 
 # Setting versions
 
-mvn versions:set -DnewVersion=1.1.1 -DgenerateBackupPoms=false
+mvn versions:set -DnewVersion=1.1.2-SNAPSHOT -DgenerateBackupPoms=false
